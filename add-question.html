@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10b981">
+
+    <title>بنك الأسئلة | Atlas Platform</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(16,185,129,.08),
+                    transparent 35%
+                ),
+                #f6f8fb;
+            color: #172033;
+        }
+
+        button,
+        textarea,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+
+            background: rgba(255,255,255,.92);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid #e8edf2;
+        }
+
+        .topbar-inner {
+            max-width: 950px;
+            margin: auto;
+            padding: 14px 18px;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-button {
+            width: 42px;
+            height: 42px;
+
+            border: 0;
+            border-radius: 14px;
+
+            background: white;
+            color: #64748b;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 18px rgba(15,23,42,.06);
+        }
+
+        .back-button:hover {
+            color: #10b981;
+        }
+
+        .mini-logo {
+            width: 43px;
+            height: 43px;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color: white;
+
+            font-family: 'Reem Kufi', sans-serif;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 20px rgba(16,185,129,.18);
+        }
+
+        .top-title {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .top-title strong {
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .top-title span {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .main {
+            max-width: 950px;
+            margin: auto;
+            padding: 22px 18px 50px;
+        }
+
+        .page-title {
+            margin-bottom: 18px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            color: #94a3b8;
+        }
+
+        .card {
+            background: white;
+
+            border: 1px solid #e8edf2;
+
+            border-radius: 25px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            box-shadow:
+                0 8px 28px rgba(15,23,42,.045);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            margin-bottom: 18px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 13px;
+
+            background: #dcfce7;
+            color: #059669;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header strong {
+            display: block;
+
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .card-header span {
+            display: block;
+
+            font-size: 8px;
+            color: #94a3b8;
+
+            font-weight: 700;
+
+            margin-top: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .field label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 10px;
+            font-weight: 900;
+
+            color: #475569;
+        }
+
+        .field input,
+        .field select {
+
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border-radius: 15px;
+
+            border: 2px solid #eef2f6;
+
+            background: #f8fafc;
+
+            outline: none;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            transition: .2s;
+        }
+
+        .field input:focus,
+        .field select:focus {
+
+            border-color: #10b981;
+
+            background: white;
+
+            box-shadow:
+                0 7px 18px rgba(16,185,129,.08);
+        }
+
+        textarea {
+
+            width: 100%;
+
+            min-height: 330px;
+
+            resize: vertical;
+
+            border-radius: 18px;
+
+            border: 2px solid #eef2f6;
+
+            background: #f8fafc;
+
+            padding: 16px;
+
+            outline: none;
+
+            font-size: 12px;
+
+            line-height: 2;
+
+            font-weight: 600;
+
+            direction: rtl;
+
+            transition: .2s;
+        }
+
+        textarea:focus {
+
+            border-color: #10b981;
+
+            background: white;
+
+            box-shadow:
+                0 7px 18px rgba(16,185,129,.08);
+        }
+
+        .format-box {
+
+            background: #f8fafc;
+
+            border: 1px dashed #cbd5e1;
+
+            border-radius: 17px;
+
+            padding: 14px;
+
+            margin-top: 12px;
+
+            font-size: 9px;
+
+            line-height: 2;
+
+            color: #64748b;
+
+            font-weight: 700;
+        }
+
+        .format-box strong {
+            color: #059669;
+        }
+
+        .preview-header {
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+        }
+
+        .count {
+
+            background: #ecfdf5;
+
+            color: #059669;
+
+            padding: 6px 11px;
+
+            border-radius: 12px;
+
+            font-size: 9px;
+
+            font-weight: 900;
+        }
+
+        .preview-list {
+
+            display: grid;
+
+            gap: 12px;
+        }
+
+        .question-preview {
+
+            border: 1px solid #e8edf2;
+
+            border-radius: 18px;
+
+            padding: 15px;
+
+            background: #fbfdfe;
+        }
+
+        .question-number {
+
+            display: inline-flex;
+
+            width: 29px;
+            height: 29px;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color: white;
+
+            font-size: 9px;
+
+            font-weight: 900;
+
+            margin-left: 7px;
+        }
+
+        .question-text {
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            line-height: 1.9;
+
+            color: #1e293b;
+        }
+
+        .options-preview {
+
+            display: grid;
+
+            gap: 6px;
+
+            margin-top: 12px;
+        }
+
+        .preview-option {
+
+            padding: 8px 10px;
+
+            border-radius: 10px;
+
+            background: #f8fafc;
+
+            font-size: 9px;
+
+            color: #64748b;
+
+            font-weight: 700;
+        }
+
+        .preview-option.correct {
+
+            background: #ecfdf5;
+
+            color: #047857;
+
+            border: 1px solid #bbf7d0;
+        }
+
+        .preview-option b {
+            margin-left: 4px;
+        }
+
+        .actions {
+
+            display: grid;
+
+            grid-template-columns: 1fr;
+
+            gap: 10px;
+
+            margin-top: 15px;
+        }
+
+        .btn {
+
+            border: 0;
+
+            border-radius: 17px;
+
+            padding: 15px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            transition: .2s;
+        }
+
+        .btn:active {
+            transform: scale(.98);
+        }
+
+        .btn-preview {
+
+            background: #f1f5f9;
+
+            color: #475569;
+        }
+
+        .btn-save {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color: white;
+
+            box-shadow:
+                0 12px 25px rgba(16,185,129,.20);
+        }
+
+        .btn-save:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .empty {
+
+            padding: 30px 15px;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+
+            font-weight: 800;
+        }
+
+        .error-item {
+
+            background: #fff1f2;
+
+            border: 1px solid #fecdd3;
+
+            color: #be123c;
+
+            border-radius: 14px;
+
+            padding: 11px;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 700px) {
+
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .full {
+                grid-column: 1 / -1;
+            }
+
+            .actions {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            textarea {
+                min-height: 380px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <button
+            class="back-button"
+            onclick="window.location.href='dashboard.html'">
+
+            <i class="fas fa-arrow-right"></i>
+
+        </button>
+
+        <div class="mini-logo">
+            أطلس
+        </div>
+
+        <div class="top-title">
+
+            <strong>
+                بنك الأسئلة
+            </strong>
+
+            <span>
+                Atlas Platform
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<main class="main">
+
+
+    <div class="page-title">
+
+        <h1>
+            إضافة أسئلة بالجملة 🚀
+        </h1>
+
+        <p>
+            الصق مجموعة الأسئلة كاملة وسيقوم Atlas بتحويلها تلقائيًا.
+        </p>
+
+    </div>
+
+
+
+    <!-- =========================================
+         CLASSIFICATION
+    ========================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="card-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+
+            <div>
+
+                <strong>
+                    تصنيف المجموعة
+                </strong>
+
+                <span>
+                    هذه البيانات ستُطبق على جميع الأسئلة
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="grid">
+
+
+            <div class="field">
+
+                <label>
+                    المرحلة
+                </label>
+
+                <select id="stage">
+
+                    <option value="">
+                        اختر المرحلة
+                    </option>
+
+                    <option value="primary">
+                        المرحلة الابتدائية
+                    </option>
+
+                    <option value="preparatory">
+                        المرحلة الإعدادية
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    الصف الدراسي
+                </label>
+
+                <select id="grade">
+
+                    <option value="">
+                        اختر الصف
+                    </option>
+
+                    <option value="grade4">
+                        الصف الرابع الابتدائي
+                    </option>
+
+                    <option value="grade5">
+                        الصف الخامس الابتدائي
+                    </option>
+
+                    <option value="grade6">
+                        الصف السادس الابتدائي
+                    </option>
+
+                    <option value="grade7">
+                        الصف الأول الإعدادي
+                    </option>
+
+                    <option value="grade8">
+                        الصف الثاني الإعدادي
+                    </option>
+
+                    <option value="grade9">
+                        الصف الثالث الإعدادي
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    الوحدة
+                </label>
+
+                <input
+                    id="unit"
+                    placeholder="مثال: الوحدة الأولى">
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    الدرس
+                </label>
+
+                <input
+                    id="lesson"
+                    placeholder="مثال: الدرس الأول">
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         IMPORT
+    ========================================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <div class="card-icon">
+                <i class="fas fa-file-import"></i>
+            </div>
+
+            <div>
+
+                <strong>
+                    لصق الأسئلة
+                </strong>
+
+                <span>
+                    ضع جميع الأسئلة في المربع التالي
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <textarea
+            id="bulkInput"
+            placeholder="الصق الأسئلة هنا...
+
+مثال:
+
+1. ما المقصود بالمخطط؟
+أ) رسم مصغر يوضح المكان
+ب) صورة فوتوغرافية
+ج) رسم للكرة الأرضية
+د) لوحة فنية
+الإجابة: 1
+
+2. يفضل استخدام المخطط عند وصف مكان لأنه:
+أ) يزيد من جمال المكان
+ب) يوضح تفاصيل المكان بصورة أسهل
+ج) يحدد درجات الحرارة
+د) يبين عدد السكان
+الإجابة: 2"></textarea>
+
+
+        <div class="format-box">
+
+            <strong>الصيغة المقبولة:</strong>
+
+            <br>
+
+            1. نص السؤال
+
+            <br>
+            أ) الاختيار الأول
+
+            <br>
+            ب) الاختيار الثاني
+
+            <br>
+            ج) الاختيار الثالث
+
+            <br>
+            د) الاختيار الرابع
+
+            <br>
+            الإجابة: 1
+
+            <br><br>
+
+            ويمكنك لصق عشرات أو مئات الأسئلة مرة واحدة.
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="btn btn-preview"
+                onclick="parseQuestions()">
+
+                <i class="fas fa-eye"></i>
+
+                معاينة وتحليل الأسئلة
+
+            </button>
+
+
+            <button
+                id="saveAllBtn"
+                class="btn btn-save"
+                onclick="saveAllQuestions()"
+                disabled>
+
+                <i class="fas fa-cloud-arrow-up"></i>
+
+                حفظ جميع الأسئلة
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         ERRORS
+    ========================================== -->
+
+    <section
+        id="errorsCard"
+        class="card"
+        style="display:none;">
+
+        <div class="card-header">
+
+            <div class="card-icon"
+                 style="background:#fff1f2;color:#e11d48;">
+
+                <i class="fas fa-triangle-exclamation"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    تنبيهات التحليل
+                </strong>
+
+                <span>
+                    راجع الأسئلة التي تحتاج إلى تعديل
+                </span>
+
+            </div>
+
+        </div>
+
+        <div id="errorsList"></div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PREVIEW
+    ========================================== -->
+
+    <section
+        id="previewCard"
+        class="card"
+        style="display:none;">
+
+        <div class="preview-header">
+
+            <div class="card-header"
+                 style="margin:0;">
+
+                <div class="card-icon">
+
+                    <i class="fas fa-list-check"></i>
+
+                </div>
+
+                <div>
+
+                    <strong>
+                        معاينة الأسئلة
+                    </strong>
+
+                    <span>
+                        قبل الحفظ في Firestore
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="questionCount"
+                class="count">
+
+                0 سؤال
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="previewList"
+            class="preview-list">
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<script type="module">
+
+
+/* =========================================
+   FIREBASE
+========================================= */
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+let currentUser = null;
+
+let parsedQuestions = [];
+
+
+/* =========================================
+   AUTH
+========================================= */
+
+onAuthStateChanged(auth, user => {
+
+    if (!user) {
+
+        window.location.href = "index.html";
+
+        return;
+    }
+
+    currentUser = user;
+
+});
+
+
+
+/* =========================================
+   NORMALIZE ARABIC
+========================================= */
+
+function normalizeText(text) {
+
+    return text
+        .replace(/\r/g, "")
+        .replace(/[إأآ]/g, "ا")
+        .replace(/ى/g, "ي")
+        .replace(/ؤ/g, "و")
+        .replace(/ئ/g, "ي")
+        .trim();
+
+}
+
+
+
+/* =========================================
+   ANSWER CONVERSION
+========================================= */
+
+function answerToLetter(answer) {
+
+    const value = String(answer).trim();
+
+    const map = {
+
+        "1": "A",
+        "2": "B",
+        "3": "C",
+        "4": "D",
+
+        "أ": "A",
+        "ا": "A",
+
+        "ب": "B",
+
+        "ج": "C",
+
+        "د": "D"
+
+    };
+
+    return map[value] || null;
+
+}
+
+
+
+/* =========================================
+   PARSER
+========================================= */
+
+function parseQuestions() {
+
+    const raw =
+        document
+            .getElementById("bulkInput")
+            .value
+            .replace(/\r/g, "")
+            .trim();
+
+
+    if (!raw) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "لا توجد أسئلة",
+
+            text:
+                "الصق الأسئلة أولاً.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+        return;
+    }
+
+
+    const lines =
+        raw
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => x !== "");
+
+
+    parsedQuestions = [];
+
+    const errors = [];
+
+    let current = null;
+
+
+    function finishQuestion() {
+
+        if (!current)
+            return;
+
+
+        if (
+            !current.text ||
+            !current.A ||
+            !current.B ||
+            !current.C ||
+            !current.D ||
+            !current.answer
+        ) {
+
+            errors.push(
+                `السؤال رقم ${current.number || "غير معروف"} غير مكتمل.`
+            );
+
+        } else {
+
+            const correct =
+                answerToLetter(
+                    current.answer
+                );
+
+
+            if (!correct) {
+
+                errors.push(
+                    `السؤال رقم ${current.number}: الإجابة يجب أن تكون 1 أو 2 أو 3 أو 4.`
+                );
+
+            } else {
+
+                parsedQuestions.push({
+
+                    number:
+                        current.number,
+
+                    text:
+                        current.text,
+
+                    A:
+                        current.A,
+
+                    B:
+                        current.B,
+
+                    C:
+                        current.C,
+
+                    D:
+                        current.D,
+
+                    correctAnswer:
+                        correct
+
+                });
+
+            }
+
+        }
+
+    }
+
+
+
+    for (let line of lines) {
+
+
+        /* ================================
+           بداية سؤال
+        ================================= */
+
+        const questionMatch =
+            line.match(
+                /^(\d+)[\.\-ـ)]\s*(.+)$/
+            );
+
+
+        if (questionMatch) {
+
+            finishQuestion();
+
+
+            current = {
+
+                number:
+                    questionMatch[1],
+
+                text:
+                    questionMatch[2],
+
+                A: "",
+
+                B: "",
+
+                C: "",
+
+                D: "",
+
+                answer: ""
+
+            };
+
+
+            continue;
+
+        }
+
+
+        if (!current)
+            continue;
+
+
+        /* ================================
+           الاختيارات
+        ================================= */
+
+        const optionMatch =
+            line.match(
+                /^([أا-د])[\)\.:\-ـ]\s*(.+)$/
+            );
+
+
+        if (optionMatch) {
+
+            const letter =
+                optionMatch[1];
+
+            const text =
+                optionMatch[2].trim();
+
+
+            if (
+                letter === "أ" ||
+                letter === "ا"
+            ) {
+
+                current.A = text;
+
+            }
+
+            else if (letter === "ب") {
+
+                current.B = text;
+
+            }
+
+            else if (letter === "ج") {
+
+                current.C = text;
+
+            }
+
+            else if (letter === "د") {
+
+                current.D = text;
+
+            }
+
+
+            continue;
+
+        }
+
+
+        /* ================================
+           الإجابة
+        ================================= */
+
+        const answerMatch =
+            line.match(
+                /^الإجابة\s*[:：\-]?\s*(.+)$/i
+            );
+
+
+        if (answerMatch) {
+
+            current.answer =
+                answerMatch[1].trim();
+
+            continue;
+
+        }
+
+
+        /* ================================
+           استمرار نص السؤال
+        ================================= */
+
+        if (
+            !current.A &&
+            !current.B &&
+            !current.C &&
+            !current.D
+        ) {
+
+            current.text +=
+                " " + line;
+
+        }
+
+    }
+
+
+    finishQuestion();
+
+
+
+    /* =====================================
+       SHOW ERRORS
+    ===================================== */
+
+    const errorsCard =
+        document.getElementById(
+            "errorsCard"
+        );
+
+    const errorsList =
+        document.getElementById(
+            "errorsList"
+        );
+
+
+    if (errors.length) {
+
+        errorsCard.style.display =
+            "block";
+
+        errorsList.innerHTML =
+            errors
+                .map(
+                    e =>
+                        `<div class="error-item">
+                            <i class="fas fa-circle-exclamation"></i>
+                            ${escapeHtml(e)}
+                        </div>`
+                )
+                .join("");
+
+    } else {
+
+        errorsCard.style.display =
+            "none";
+
+    }
+
+
+
+    /* =====================================
+       SHOW PREVIEW
+    ===================================== */
+
+    const previewCard =
+        document.getElementById(
+            "previewCard"
+        );
+
+    const previewList =
+        document.getElementById(
+            "previewList"
+        );
+
+    const count =
+        document.getElementById(
+            "questionCount"
+        );
+
+
+    previewList.innerHTML = "";
+
+
+    if (!parsedQuestions.length) {
+
+        previewCard.style.display =
+            "none";
+
+        document
+            .getElementById("saveAllBtn")
+            .disabled = true;
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "لم أستطع قراءة الأسئلة",
+
+            text:
+                "راجع صيغة الأسئلة وحاول مرة أخرى.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+        return;
+
+    }
+
+
+    parsedQuestions.forEach(q => {
+
+        const options = [
+
+            ["A", "أ", q.A],
+            ["B", "ب", q.B],
+            ["C", "ج", q.C],
+            ["D", "د", q.D]
+
+        ];
+
+
+        const html = `
+
+            <div class="question-preview">
+
+                <div>
+
+                    <span class="question-number">
+                        ${escapeHtml(q.number)}
+                    </span>
+
+                    <span class="question-text">
+                        ${escapeHtml(q.text)}
+                    </span>
+
+                </div>
+
+
+                <div class="options-preview">
+
+                    ${options.map(o => `
+
+                        <div class="preview-option
+                            ${q.correctAnswer === o[0] ? "correct" : ""}">
+
+                            <b>${o[1]})</b>
+
+                            ${escapeHtml(o[2])}
+
+                            ${
+                                q.correctAnswer === o[0]
+                                ? ' ✓'
+                                : ''
+                            }
+
+                        </div>
+
+                    `).join("")}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        previewList.innerHTML += html;
+
+    });
+
+
+    count.innerText =
+        `${parsedQuestions.length} سؤال`;
+
+
+    previewCard.style.display =
+        "block";
+
+
+    document
+        .getElementById("saveAllBtn")
+        .disabled = false;
+
+
+    previewCard.scrollIntoView({
+
+        behavior: "smooth",
+
+        block: "start"
+
+    });
+
+}
+
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(text) {
+
+    return String(text)
+
+        .replace(/&/g, "&amp;")
+
+        .replace(/</g, "&lt;")
+
+        .replace(/>/g, "&gt;")
+
+        .replace(/"/g, "&quot;")
+
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =========================================
+   SAVE ALL
+========================================= */
+
+async function saveAllQuestions() {
+
+
+    if (!currentUser) {
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "لم يتم تسجيل الدخول",
+
+            text:
+                "يجب تسجيل الدخول بحساب المدير أولاً.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+        return;
+
+    }
+
+
+    if (!parsedQuestions.length) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "لا توجد أسئلة",
+
+            text:
+                "قم بتحليل الأسئلة أولاً.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+        return;
+
+    }
+
+
+    const stage =
+        document
+            .getElementById("stage")
+            .value;
+
+
+    const grade =
+        document
+            .getElementById("grade")
+            .value;
+
+
+    const unit =
+        document
+            .getElementById("unit")
+            .value
+            .trim();
+
+
+    const lesson =
+        document
+            .getElementById("lesson")
+            .value
+            .trim();
+
+
+
+    if (
+        !stage ||
+        !grade ||
+        !unit ||
+        !lesson
+    ) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "بيانات المجموعة ناقصة",
+
+            text:
+                "اختر المرحلة والصف واكتب الوحدة والدرس أولاً.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+        return;
+
+    }
+
+
+
+    const button =
+        document.getElementById(
+            "saveAllBtn"
+        );
+
+
+    button.disabled = true;
+
+
+    let saved = 0;
+
+
+    try {
+
+
+        for (
+            let i = 0;
+            i < parsedQuestions.length;
+            i++
+        ) {
+
+
+            const q =
+                parsedQuestions[i];
+
+
+            button.innerHTML = `
+
+                <i class="fas fa-spinner fa-spin"></i>
+
+                جاري حفظ ${i + 1}
+                من
+                ${parsedQuestions.length}
+
+            `;
+
+
+            await addDoc(
+
+                collection(
+                    db,
+                    "questions"
+                ),
+
+                {
+
+                    text:
+                        q.text,
+
+                    type:
+                        "mcq",
+
+                    stage:
+                        stage,
+
+                    grade:
+                        grade,
+
+                    unit:
+                        unit,
+
+                    lesson:
+                        lesson,
+
+                    options: {
+
+                        A:
+                            q.A,
+
+                        B:
+                            q.B,
+
+                        C:
+                            q.C,
+
+                        D:
+                            q.D
+
+                    },
+
+                    correctAnswer:
+                        q.correctAnswer,
+
+                    points:
+                        1,
+
+                    sourceNumber:
+                        Number(q.number),
+
+                    createdBy:
+                        currentUser.uid,
+
+                    createdAt:
+                        serverTimestamp()
+
+                }
+
+            );
+
+
+            saved++;
+
+        }
+
+
+
+        await Swal.fire({
+
+            icon: "success",
+
+            title: "تم الحفظ بنجاح 🎉",
+
+            html:
+                `تمت إضافة <b>${saved}</b> سؤال إلى بنك أسئلة Atlas.`,
+
+            confirmButtonText:
+                "ممتاز",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+
+        /* ==============================
+           RESET
+        =============================== */
+
+        document
+            .getElementById("bulkInput")
+            .value = "";
+
+
+        document
+            .getElementById("previewCard")
+            .style.display = "none";
+
+
+        document
+            .getElementById("errorsCard")
+            .style.display = "none";
+
+
+        document
+            .getElementById("saveAllBtn")
+            .disabled = true;
+
+
+        parsedQuestions = [];
+
+
+    } catch (error) {
+
+
+        console.error(error);
+
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "حدث خطأ أثناء الحفظ",
+
+            text:
+                "لم يتم استكمال عملية الحفظ. راجع Console لمعرفة الخطأ.",
+
+            confirmButtonColor:
+                "#10b981"
+
+        });
+
+    }
+
+
+    button.disabled =
+        parsedQuestions.length === 0;
+
+
+    button.innerHTML = `
+
+        <i class="fas fa-cloud-arrow-up"></i>
+
+        حفظ جميع الأسئلة
+
+    `;
+
+}
+
+
+</script>
+
+</body>
+
+</html>
