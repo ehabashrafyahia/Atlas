@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#10b981">
+
+    <title>لوحة التحكم | Atlas Platform</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            font-family: 'Cairo', sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(16,185,129,.09),
+                    transparent 32%
+                ),
+                #f6f8fb;
+
+            color: #172033;
+
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =====================================
+           APP
+        ===================================== */
+
+        .app {
+            min-height: 100vh;
+        }
+
+
+        /* =====================================
+           TOP BAR
+        ===================================== */
+
+        .topbar {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+
+            width: 100%;
+
+            background:
+                rgba(255,255,255,.88);
+
+            backdrop-filter:
+                blur(18px);
+
+            -webkit-backdrop-filter:
+                blur(18px);
+
+            border-bottom:
+                1px solid #e8edf2;
+        }
+
+        .topbar-inner {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                14px 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+        }
+
+
+        /* =====================================
+           BRAND
+        ===================================== */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+        .brand-logo {
+
+            width: 45px;
+            height: 45px;
+
+            border-radius: 15px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color: white;
+
+            font-family: 'Reem Kufi', sans-serif;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 20px rgba(16,185,129,.20);
+        }
+
+        .brand-info {
+
+            display: flex;
+
+            flex-direction: column;
+
+            line-height: 1.3;
+        }
+
+        .brand-info strong {
+
+            font-size: 14px;
+
+            font-weight: 900;
+
+            color: #172033;
+        }
+
+        .brand-info span {
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            color: #94a3b8;
+
+            margin-top: 2px;
+        }
+
+
+        /* =====================================
+           USER
+        ===================================== */
+
+        .top-actions {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .user-name {
+
+            display: none;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            color: #64748b;
+        }
+
+        .icon-button {
+
+            width: 42px;
+            height: 42px;
+
+            border: 0;
+
+            border-radius: 14px;
+
+            background: #ffffff;
+
+            color: #64748b;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 18px rgba(15,23,42,.05);
+
+            transition: .2s ease;
+        }
+
+        .icon-button:hover {
+
+            transform: translateY(-2px);
+
+            color: #10b981;
+        }
+
+        .logout:hover {
+
+            color: #ef4444;
+
+            background: #fff1f2;
+        }
+
+
+        /* =====================================
+           MAIN
+        ===================================== */
+
+        .main {
+
+            width: 100%;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                25px 18px 45px;
+        }
+
+
+        /* =====================================
+           WELCOME
+        ===================================== */
+
+        .welcome {
+
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 25px;
+
+            border-radius: 27px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #047857
+                );
+
+            box-shadow:
+                0 18px 40px rgba(16,185,129,.18);
+        }
+
+        .welcome::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 190px;
+            height: 190px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,.07);
+
+            left: -70px;
+            top: -80px;
+        }
+
+        .welcome::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 150px;
+            height: 150px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,.05);
+
+            right: -60px;
+            bottom: -70px;
+        }
+
+        .welcome-content {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        .welcome-small {
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            opacity: .85;
+
+            margin-bottom: 5px;
+        }
+
+        .welcome h1 {
+
+            margin: 0;
+
+            font-size: 22px;
+
+            font-weight: 900;
+        }
+
+        .welcome p {
+
+            margin: 7px 0 0;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            opacity: .88;
+        }
+
+        .welcome-icon {
+
+            position: absolute;
+
+            left: 25px;
+
+            bottom: 15px;
+
+            font-size: 65px;
+
+            opacity: .10;
+        }
+
+
+        /* =====================================
+           SECTION TITLE
+        ===================================== */
+
+        .section {
+
+            margin-top: 28px;
+        }
+
+        .section-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 13px;
+        }
+
+        .section-title-icon {
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 13px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #dcfce7;
+
+            color: #059669;
+
+            font-size: 14px;
+        }
+
+        .section-title h2 {
+
+            margin: 0;
+
+            font-size: 15px;
+
+            font-weight: 900;
+
+            color: #1e293b;
+        }
+
+        .section-title p {
+
+            margin: 2px 0 0;
+
+            font-size: 9px;
+
+            color: #94a3b8;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================
+           STAT GRID
+        ===================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .stat {
+
+            position: relative;
+
+            overflow: hidden;
+
+            background: white;
+
+            border:
+                1px solid #e8edf2;
+
+            border-radius: 22px;
+
+            padding: 17px;
+
+            box-shadow:
+                0 6px 22px rgba(15,23,42,.045);
+
+            transition: .2s ease;
+        }
+
+        .stat:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 14px 30px rgba(15,23,42,.08);
+        }
+
+        .stat-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+        .stat-icon {
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+        }
+
+        .green {
+
+            background: #dcfce7;
+
+            color: #059669;
+        }
+
+        .purple {
+
+            background: #f3e8ff;
+
+            color: #9333ea;
+        }
+
+        .blue {
+
+            background: #dbeafe;
+
+            color: #2563eb;
+        }
+
+        .orange {
+
+            background: #ffedd5;
+
+            color: #ea580c;
+        }
+
+        .stat-number {
+
+            margin-top: 13px;
+
+            font-size: 25px;
+
+            font-weight: 900;
+
+            color: #172033;
+        }
+
+        .stat-title {
+
+            margin-top: 2px;
+
+            font-size: 9px;
+
+            color: #94a3b8;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================
+           MANAGEMENT GRID
+        ===================================== */
+
+        .management {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .management-card {
+
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 16px;
+
+            min-height: 85px;
+
+            background: white;
+
+            border:
+                1px solid #e8edf2;
+
+            border-radius: 21px;
+
+            color: inherit;
+
+            text-decoration: none;
+
+            box-shadow:
+                0 6px 22px rgba(15,23,42,.045);
+
+            transition: .2s ease;
+        }
+
+        .management-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 14px 30px rgba(15,23,42,.08);
+        }
+
+        .management-icon {
+
+            flex: 0 0 48px;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 16px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: #ecfdf5;
+
+            color: #059669;
+
+            font-size: 17px;
+        }
+
+        .management-info {
+
+            flex: 1;
+
+            min-width: 0;
+        }
+
+        .management-info strong {
+
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 900;
+
+            color: #1e293b;
+        }
+
+        .management-info span {
+
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 8px;
+
+            color: #94a3b8;
+
+            font-weight: 700;
+        }
+
+        .management-arrow {
+
+            color: #cbd5e1;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================
+           QUICK ACTION
+        ===================================== */
+
+        .quick {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .quick-button {
+
+            border: 0;
+
+            min-height: 70px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981,
+                    #059669
+                );
+
+            color: white;
+
+            cursor: pointer;
+
+            font-weight: 900;
+
+            box-shadow:
+                0 10px 25px rgba(16,185,129,.18);
+
+            transition: .2s ease;
+        }
+
+        .quick-button:hover {
+
+            transform:
+                translateY(-2px);
+        }
+
+        .quick-button i {
+
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 17px;
+        }
+
+        .quick-button span {
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================
+           FOOTER
+        ===================================== */
+
+        footer {
+
+            padding:
+                15px 0 10px;
+
+            text-align: center;
+
+            color: #cbd5e1;
+
+            font-size: 9px;
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================
+           DESKTOP
+        ===================================== */
+
+        @media (min-width: 700px) {
+
+            .user-name {
+                display: block;
+            }
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(4, 1fr);
+
+            }
+
+            .management {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+            }
+
+            .quick {
+
+                grid-template-columns:
+                    repeat(4, 1fr);
+
+            }
+
+            .welcome {
+
+                padding: 30px;
+            }
+
+            .welcome h1 {
+
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================
+         TOP BAR
+    ====================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-inner">
+
+
+            <div class="brand">
+
+                <div class="brand-logo">
+                    أطلس
+                </div>
+
+                <div class="brand-info">
+
+                    <strong>
+                        Atlas Platform
+                    </strong>
+
+                    <span>
+                        لوحة تحكم المدرس
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <span
+                    class="user-name"
+                    id="adminName">
+                    أ. إيهاب أشرف
+                </span>
+
+                <button
+                    class="icon-button logout"
+                    id="logoutButton"
+                    title="تسجيل الخروج">
+
+                    <i class="fas fa-right-from-bracket"></i>
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
+    <main class="main">
+
+
+        <!-- WELCOME -->
+
+        <section class="welcome">
+
+            <div class="welcome-content">
+
+                <div class="welcome-small">
+                    لوحة الإدارة 👨‍🏫
+                </div>
+
+                <h1>
+                    أهلاً بك أستاذ إيهاب 👋
+                </h1>
+
+                <p>
+                    من هنا يمكنك إدارة المحتوى والطلاب والاختبارات.
+                </p>
+
+            </div>
+
+            <i class="fas fa-chart-line welcome-icon"></i>
+
+        </section>
+
+
+
+        <!-- =================================
+             STATISTICS
+        ================================== -->
+
+        <section class="section">
+
+            <div class="section-title">
+
+                <div class="section-title-icon">
+
+                    <i class="fas fa-chart-pie"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        نظرة عامة
+                    </h2>
+
+                    <p>
+                        إحصائيات المنصة الحالية
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="stats">
+
+
+                <!-- STUDENTS -->
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon blue">
+
+                            <i class="fas fa-user-graduate"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="studentsCount">
+
+                        0
+
+                    </div>
+
+                    <div class="stat-title">
+                        إجمالي الطلاب
+                    </div>
+
+                </div>
+
+
+                <!-- QUESTIONS -->
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon green">
+
+                            <i class="fas fa-circle-question"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="questionsCount">
+
+                        0
+
+                    </div>
+
+                    <div class="stat-title">
+                        بنك الأسئلة
+                    </div>
+
+                </div>
+
+
+                <!-- EXAMS -->
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon purple">
+
+                            <i class="fas fa-file-pen"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="examsCount">
+
+                        0
+
+                    </div>
+
+                    <div class="stat-title">
+                        الاختبارات
+                    </div>
+
+                </div>
+
+
+                <!-- RESULTS -->
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <div class="stat-icon orange">
+
+                            <i class="fas fa-chart-simple"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        class="stat-number"
+                        id="resultsCount">
+
+                        0
+
+                    </div>
+
+                    <div class="stat-title">
+                        محاولات الطلاب
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             QUICK ACTIONS
+        ================================== -->
+
+        <section class="section">
+
+            <div class="section-title">
+
+                <div class="section-title-icon">
+
+                    <i class="fas fa-bolt"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        إجراءات سريعة
+                    </h2>
+
+                    <p>
+                        الوصول إلى أهم أدوات الإدارة
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick">
+
+
+                <button
+                    class="quick-button"
+                    onclick="goTo('add-question.html')">
+
+                    <i class="fas fa-plus"></i>
+
+                    <span>
+                        إضافة سؤال
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-button"
+                    onclick="goTo('questions.html')">
+
+                    <i class="fas fa-database"></i>
+
+                    <span>
+                        بنك الأسئلة
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-button"
+                    onclick="goTo('exams.html')">
+
+                    <i class="fas fa-file-circle-plus"></i>
+
+                    <span>
+                        إنشاء اختبار
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-button"
+                    onclick="goTo('students.html')">
+
+                    <i class="fas fa-user-plus"></i>
+
+                    <span>
+                        الطلاب
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================
+             MANAGEMENT
+        ================================== -->
+
+        <section class="section">
+
+            <div class="section-title">
+
+                <div class="section-title-icon">
+
+                    <i class="fas fa-sliders"></i>
+
+                </div>
+
+                <div>
+
+                    <h2>
+                        إدارة المنصة
+                    </h2>
+
+                    <p>
+                        جميع أدوات التحكم
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="management">
+
+
+                <a
+                    href="add-question.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-circle-plus"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            إضافة سؤال
+                        </strong>
+
+                        <span>
+                            أضف سؤالًا جديدًا إلى البنك
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="questions.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-layer-group"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            بنك الأسئلة
+                        </strong>
+
+                        <span>
+                            تعديل وحذف والبحث عن الأسئلة
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="exams.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-file-signature"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            الاختبارات
+                        </strong>
+
+                        <span>
+                            إنشاء وإدارة الاختبارات
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="students.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-users"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            الطلاب
+                        </strong>
+
+                        <span>
+                            إدارة حسابات الطلاب
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="results.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-ranking-star"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            النتائج
+                        </strong>
+
+                        <span>
+                            متابعة أداء الطلاب
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+                <a
+                    href="settings.html"
+                    class="management-card">
+
+                    <div class="management-icon">
+
+                        <i class="fas fa-gear"></i>
+
+                    </div>
+
+                    <div class="management-info">
+
+                        <strong>
+                            إعدادات المنصة
+                        </strong>
+
+                        <span>
+                            التحكم في إعدادات النظام
+                        </span>
+
+                    </div>
+
+                    <i class="fas fa-chevron-left management-arrow"></i>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+
+        <footer>
+
+            Atlas Platform 2.0
+            •
+            إعداد وتصميم أ. إيهاب أشرف
+
+        </footer>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- =========================================
+     FIREBASE
+========================================= -->
+
+<script type="module">
+
+    import {
+        auth,
+        db
+    } from "./firebase.js";
+
+    import {
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import {
+        collection,
+        getCountFromServer,
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    /* =========================================
+       AUTHENTICATION GUARD
+    ========================================= */
+
+    onAuthStateChanged(auth, async (user) => {
+
+        if (!user) {
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+
+        try {
+
+            const userRef =
+                doc(db, "users", user.uid);
+
+            const userSnap =
+                await getDoc(userRef);
+
+
+            if (!userSnap.exists()) {
+
+                await signOut(auth);
+
+                window.location.href =
+                    "index.html";
+
+                return;
+
+            }
+
+
+            const userData =
+                userSnap.data();
+
+
+            if (userData.role !== "admin") {
+
+                await signOut(auth);
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "غير مسموح",
+
+                    text:
+                        "هذه الصفحة مخصصة للإدارة فقط.",
+
+                    confirmButtonColor:
+                        "#10b981"
+
+                }).then(() => {
+
+                    window.location.href =
+                        "index.html";
+
+                });
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "adminName"
+            ).textContent =
+                userData.name ||
+                "المدير";
+
+
+            document.querySelector(
+                ".welcome h1"
+            ).textContent =
+                `أهلاً بك ${userData.name || "أستاذ إيهاب"} 👋`;
+
+
+            loadStatistics();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    });
+
+
+    /* =========================================
+       STATISTICS
+    ========================================= */
+
+    async function loadStatistics() {
+
+        try {
+
+            const studentsSnapshot =
+                await getCountFromServer(
+                    collection(db, "users")
+                );
+
+
+            const questionsSnapshot =
+                await getCountFromServer(
+                    collection(db, "questions")
+                );
+
+
+            const examsSnapshot =
+                await getCountFromServer(
+                    collection(db, "exams")
+                );
+
+
+            const resultsSnapshot =
+                await getCountFromServer(
+                    collection(db, "attempts")
+                );
+
+
+            document.getElementById(
+                "studentsCount"
+            ).textContent =
+                studentsSnapshot.data().count;
+
+
+            document.getElementById(
+                "questionsCount"
+            ).textContent =
+                questionsSnapshot.data().count;
+
+
+            document.getElementById(
+                "examsCount"
+            ).textContent =
+                examsSnapshot.data().count;
+
+
+            document.getElementById(
+                "resultsCount"
+            ).textContent =
+                resultsSnapshot.data().count;
+
+
+        } catch (error) {
+
+            console.error(
+                "Statistics Error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /* =========================================
+       NAVIGATION
+    ========================================= */
+
+    window.goTo = function (page) {
+
+        window.location.href =
+            page;
+
+    };
+
+
+    /* =========================================
+       LOGOUT
+    ========================================= */
+
+    document
+        .getElementById("logoutButton")
+        .addEventListener(
+            "click",
+            async () => {
+
+                const result =
+                    await Swal.fire({
+
+                        icon: "question",
+
+                        title:
+                            "تسجيل الخروج؟",
+
+                        text:
+                            "هل تريد تسجيل الخروج من لوحة التحكم؟",
+
+                        showCancelButton:
+                            true,
+
+                        confirmButtonText:
+                            "تسجيل الخروج",
+
+                        cancelButtonText:
+                            "إلغاء",
+
+                        confirmButtonColor:
+                            "#ef4444",
+
+                        cancelButtonColor:
+                            "#64748b"
+
+                    });
+
+
+                if (result.isConfirmed) {
+
+                    await signOut(auth);
+
+                    sessionStorage.clear();
+
+                    window.location.href =
+                        "index.html";
+
+                }
+
+            }
+        );
+
+</script>
+
+</body>
+
+</html>
