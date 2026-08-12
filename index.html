@@ -4,36 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+          content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <meta name="theme-color" content="#10b981">
 
-    <title>Atlas Platform | منصة أطلس</title>
+    <title>Atlas | تسجيل الدخول</title>
 
-    <!-- ==============================
-         Tailwind
-    =============================== -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- ==============================
-         Google Fonts
-    =============================== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
           rel="stylesheet">
 
-    <!-- ==============================
-         Font Awesome
-    =============================== -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- ==============================
-         SweetAlert
-    =============================== -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
     <style>
 
@@ -42,48 +27,44 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
+        html,
+        body {
+            width: 100%;
             min-height: 100%;
-            background: #f8fafc;
+            margin: 0;
         }
 
         body {
-            margin: 0;
-            min-height: 100vh;
             font-family: 'Cairo', sans-serif;
             background:
                 radial-gradient(
-                    circle at top right,
+                    circle at 20% 10%,
                     rgba(16,185,129,.12),
-                    transparent 35%
+                    transparent 30%
                 ),
                 radial-gradient(
-                    circle at bottom left,
+                    circle at 90% 90%,
                     rgba(5,150,105,.08),
-                    transparent 35%
+                    transparent 30%
                 ),
                 #f8fafc;
 
-            color: #172033;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        button,
-        input {
-            font-family: inherit;
-        }
-
-
-        /* =====================================
+        /* =========================
            SPLASH
-        ===================================== */
+        ========================= */
 
         #splash {
             position: fixed;
             inset: 0;
+
             z-index: 9999;
 
             display: flex;
+            flex-direction: column;
+
             align-items: center;
             justify-content: center;
 
@@ -94,365 +75,286 @@
                 visibility .7s ease;
         }
 
-        #splash.hide {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .splash-content {
-            text-align: center;
-            animation: splashEnter .8s ease;
-        }
-
-        @keyframes splashEnter {
-
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-
-        }
-
-
-        /* =====================================
-           LOGO
-        ===================================== */
-
-        .logo {
+        .atlas-logo {
             position: relative;
 
-            width: 125px;
-            height: 100px;
-
-            margin: auto;
+            width: 145px;
+            height: 115px;
 
             display: flex;
             align-items: center;
             justify-content: center;
+
+            animation:
+                logoFloat 2.5s ease-in-out infinite;
         }
 
         .logo-shape {
             position: absolute;
+
             inset: 0;
 
             background:
                 linear-gradient(
                     135deg,
-                    #10b981,
-                    #059669
+                    #34d399,
+                    #10b981 45%,
+                    #047857
                 );
 
             border-radius:
-                32% 68% 64% 36% /
-                38% 38% 62% 62%;
+                35% 65% 65% 35%
+                /
+                35% 35% 65% 65%;
 
             box-shadow:
-                0 20px 45px rgba(16,185,129,.25);
+                0 25px 55px rgba(16,185,129,.28);
 
-            animation: morph 6s linear infinite;
-        }
-
-        @keyframes morph {
-
-            0%,
-            100% {
-                border-radius:
-                    32% 68% 64% 36% /
-                    38% 38% 62% 62%;
-            }
-
-            50% {
-                border-radius:
-                    50% 50% 35% 65% /
-                    55% 30% 70% 45%;
-            }
-
+            animation:
+                morph 7s ease-in-out infinite;
         }
 
         .logo-text {
             position: relative;
+
             z-index: 2;
 
             color: white;
 
             font-family: 'Reem Kufi', sans-serif;
 
-            font-size: 2.6rem;
+            font-size: 42px;
+
             font-weight: 700;
+
+            text-shadow:
+                0 4px 12px rgba(0,0,0,.12);
         }
 
-
-        /* =====================================
-           SPLASH TEXT
-        ===================================== */
-
         .splash-title {
-
-            margin-top: 25px;
+            margin-top: 30px;
 
             font-size: 22px;
+
             font-weight: 900;
 
-            color: #172033;
+            color: #0f172a;
         }
 
         .splash-subtitle {
-
-            margin-top: 5px;
+            margin-top: 4px;
 
             font-size: 11px;
-            font-weight: 700;
 
             color: #94a3b8;
+
+            font-weight: 700;
         }
 
-        .loading {
+        .loader {
+            margin-top: 25px;
 
-            width: 120px;
+            width: 80px;
             height: 4px;
 
-            margin: 25px auto 0;
+            border-radius: 10px;
 
             background: #e2e8f0;
-
-            border-radius: 20px;
 
             overflow: hidden;
         }
 
-        .loading::after {
-
+        .loader::after {
             content: "";
 
             display: block;
 
-            width: 50%;
+            width: 35%;
+
             height: 100%;
 
             background:
                 linear-gradient(
                     90deg,
                     #10b981,
-                    #059669
+                    #34d399
                 );
 
-            border-radius: 20px;
+            border-radius: inherit;
 
-            animation: loading 1.3s infinite;
+            animation:
+                loading 1.2s infinite ease-in-out;
         }
 
-        @keyframes loading {
+        /* =========================
+           LOGIN
+        ========================= */
 
-            0% {
-                transform: translateX(-200%);
-            }
-
-            100% {
-                transform: translateX(300%);
-            }
-
-        }
-
-
-        /* =====================================
-           LOGIN WRAPPER
-        ===================================== */
-
-        .page {
-
+        #app {
             min-height: 100vh;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
-            padding: 25px;
+            padding: 20px;
 
             opacity: 0;
 
-            transform: translateY(15px);
+            transform: translateY(20px);
 
             transition:
                 opacity .7s ease,
                 transform .7s ease;
         }
 
-        .page.show {
-
-            opacity: 1;
-
-            transform: translateY(0);
-        }
-
-
-        /* =====================================
-           LOGIN CARD
-        ===================================== */
-
         .login-card {
 
             width: 100%;
-            max-width: 430px;
+            max-width: 420px;
+
+            padding: 35px 28px 25px;
 
             background:
                 rgba(255,255,255,.90);
 
-            backdrop-filter:
-                blur(18px);
-
-            -webkit-backdrop-filter:
-                blur(18px);
-
             border:
-                1px solid rgba(255,255,255,.8);
+                1px solid rgba(226,232,240,.9);
 
-            border-radius: 32px;
-
-            padding: 32px 25px;
+            border-radius: 34px;
 
             box-shadow:
                 0 25px 70px rgba(15,23,42,.08);
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
         }
 
+        .login-logo {
 
-        /* =====================================
-           HEADER
-        ===================================== */
+            width: 92px;
+            height: 74px;
 
-        .brand {
+            margin: 0 auto 20px;
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-logo .logo-shape {
+            box-shadow:
+                0 15px 35px rgba(16,185,129,.20);
+        }
+
+        .login-logo .logo-text {
+
+            font-size: 28px;
+        }
+
+        .welcome {
 
             text-align: center;
 
-            margin-bottom: 28px;
-        }
-
-        .brand .logo {
-
-            width: 90px;
-            height: 72px;
-
-            margin-bottom: 18px;
-        }
-
-        .brand .logo-text {
-
-            font-size: 1.9rem;
-        }
-
-        .brand h1 {
-
-            margin: 0;
-
-            font-size: 23px;
+            font-size: 22px;
 
             font-weight: 900;
 
-            color: #172033;
+            color: #0f172a;
+
+            margin: 0;
         }
 
-        .brand p {
+        .description {
 
-            margin-top: 6px;
+            text-align: center;
 
-            font-size: 11px;
+            color: #94a3b8;
+
+            font-size: 10px;
 
             font-weight: 700;
 
-            color: #94a3b8;
+            margin:
+                5px 0 28px;
         }
-
-
-        /* =====================================
-           INPUT
-        ===================================== */
 
         .field {
 
             position: relative;
 
-            margin-bottom: 15px;
+            margin-bottom: 13px;
         }
 
-        .field-icon {
-
-            position: absolute;
-
-            right: 17px;
-
-            top: 50%;
-
-            transform: translateY(-50%);
-
-            color: #94a3b8;
-
-            font-size: 14px;
-
-            pointer-events: none;
-        }
-
-        .input {
+        .field input {
 
             width: 100%;
 
             height: 58px;
 
-            border: 2px solid transparent;
+            border: 2px solid #eef2f7;
+
+            border-radius: 17px;
 
             outline: none;
 
-            border-radius: 18px;
-
-            background: #f1f5f9;
+            background: #f8fafc;
 
             padding:
-                0 48px 0 48px;
+                0 48px
+                0 16px;
 
-            font-size: 13px;
+            font-family: inherit;
+
+            font-size: 12px;
 
             font-weight: 700;
 
-            color: #172033;
-
-            transition: .25s ease;
+            transition: .25s;
         }
 
-        .input::placeholder {
+        .field input:focus {
 
-            color: #94a3b8;
-        }
-
-        .input:focus {
-
-            background: #ffffff;
+            background: white;
 
             border-color: #10b981;
 
             box-shadow:
-                0 8px 25px rgba(16,185,129,.08);
+                0 10px 25px rgba(16,185,129,.08);
         }
 
+        .field i {
 
-        /* =====================================
-           PASSWORD BUTTON
-        ===================================== */
+            position: absolute;
+
+            right: 18px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #94a3b8;
+
+            font-size: 14px;
+        }
 
         .password-toggle {
 
             position: absolute;
 
-            left: 14px;
+            left: 17px;
 
             top: 50%;
 
-            transform: translateY(-50%);
-
-            width: 34px;
-            height: 34px;
+            transform:
+                translateY(-50%);
 
             border: 0;
 
@@ -461,21 +363,7 @@
             color: #94a3b8;
 
             cursor: pointer;
-
-            border-radius: 10px;
         }
-
-        .password-toggle:active {
-
-            transform:
-                translateY(-50%)
-                scale(.9);
-        }
-
-
-        /* =====================================
-           LOGIN BUTTON
-        ===================================== */
 
         .login-button {
 
@@ -483,13 +371,11 @@
 
             height: 58px;
 
-            margin-top: 5px;
+            margin-top: 8px;
 
             border: 0;
 
-            border-radius: 18px;
-
-            cursor: pointer;
+            border-radius: 17px;
 
             background:
                 linear-gradient(
@@ -500,46 +386,49 @@
 
             color: white;
 
-            font-size: 14px;
+            font-family: inherit;
+
+            font-size: 12px;
 
             font-weight: 900;
 
-            box-shadow:
-                0 12px 28px rgba(16,185,129,.22);
+            cursor: pointer;
 
-            transition: .25s ease;
+            box-shadow:
+                0 15px 30px rgba(16,185,129,.20);
+
+            transition: .2s;
         }
 
         .login-button:hover {
 
-            transform: translateY(-2px);
+            transform:
+                translateY(-2px);
 
             box-shadow:
-                0 16px 32px rgba(16,185,129,.28);
+                0 18px 35px rgba(16,185,129,.27);
         }
 
         .login-button:active {
 
-            transform: scale(.98);
+            transform:
+                scale(.98);
         }
 
-        .login-button.loading {
+        .login-button:disabled {
 
-            pointer-events: none;
+            opacity: .65;
 
-            opacity: .75;
+            cursor: not-allowed;
+
+            transform: none;
         }
-
-
-        /* =====================================
-           FOOTER
-        ===================================== */
 
         .footer {
 
             margin-top: 25px;
 
-            padding-top: 20px;
+            padding-top: 18px;
 
             border-top:
                 1px dashed #e2e8f0;
@@ -551,7 +440,7 @@
 
             margin: 0;
 
-            font-size: 10px;
+            font-size: 9px;
 
             color: #94a3b8;
 
@@ -560,42 +449,115 @@
 
         .footer strong {
 
-            color: #10b981;
-
-            font-weight: 900;
+            color: #059669;
         }
 
+        /* =========================
+           ANIMATIONS
+        ========================= */
 
-        /* =====================================
-           RESPONSIVE
-        ===================================== */
+        @keyframes morph {
 
-        @media (min-width: 700px) {
+            0%,
+            100% {
 
-            .login-card {
-
-                padding: 42px 35px;
-
+                border-radius:
+                    35% 65% 65% 35%
+                    /
+                    35% 35% 65% 65%;
             }
 
+            50% {
+
+                border-radius:
+                    60% 40% 35% 65%
+                    /
+                    45% 60% 40% 55%;
+            }
+        }
+
+        @keyframes logoFloat {
+
+            0%,
+            100% {
+                transform:
+                    translateY(0);
+            }
+
+            50% {
+                transform:
+                    translateY(-7px);
+            }
+        }
+
+        @keyframes loading {
+
+            0% {
+                transform:
+                    translateX(300%);
+            }
+
+            100% {
+                transform:
+                    translateX(-300%);
+            }
+        }
+
+        @media (max-width: 420px) {
+
+            .login-card {
+                padding:
+                    30px 20px 22px;
+            }
+
+            .welcome {
+                font-size: 20px;
+            }
         }
 
     </style>
 </head>
 
-
 <body>
 
-
-<!-- =========================================
+<!-- =========================
      SPLASH
-========================================= -->
+========================= -->
 
 <div id="splash">
 
-    <div class="splash-content">
+    <div class="atlas-logo">
 
-        <div class="logo">
+        <div class="logo-shape"></div>
+
+        <div class="logo-text">
+            أطلس
+        </div>
+
+    </div>
+
+    <div class="splash-title">
+        أهلاً بك في منصة أطلس
+    </div>
+
+    <div class="splash-subtitle">
+        منصة مستر إيهاب أشرف للدراسات الاجتماعية
+    </div>
+
+    <div class="loader"></div>
+
+</div>
+
+
+<!-- =========================
+     LOGIN APP
+========================= -->
+
+<main id="app">
+
+    <div class="login-card">
+
+        <div class="login-logo">
 
             <div class="logo-shape"></div>
 
@@ -605,113 +567,71 @@
 
         </div>
 
-        <div class="splash-title">
-            منصة أطلس التعليمية
-        </div>
+        <h1 class="welcome">
+            مرحباً بك يا بطل 👋
+        </h1>
 
-        <div class="splash-subtitle">
-            طريقك نحو القمة
-        </div>
-
-        <div class="loading"></div>
-
-    </div>
-
-</div>
-
-
-
-<!-- =========================================
-     LOGIN PAGE
-========================================= -->
-
-<main class="page" id="page">
-
-    <section class="login-card">
-
-
-        <div class="brand">
-
-            <div class="logo">
-
-                <div class="logo-shape"></div>
-
-                <div class="logo-text">
-                    أطلس
-                </div>
-
-            </div>
-
-            <h1>
-                أهلاً بك في أطلس 👋
-            </h1>
-
-            <p>
-                سجّل دخولك للمتابعة إلى منصتك التعليمية
-            </p>
-
-        </div>
-
+        <p class="description">
+            سجل دخولك للوصول إلى منصة Atlas
+        </p>
 
 
         <!-- EMAIL -->
 
         <div class="field">
 
-            <i class="fas fa-envelope field-icon"></i>
+            <i class="fas fa-envelope"></i>
 
             <input
-                id="email"
-                class="input"
                 type="email"
+                id="email"
                 placeholder="البريد الإلكتروني"
-                autocomplete="email">
+                autocomplete="email"
+            >
 
         </div>
-
 
 
         <!-- PASSWORD -->
 
         <div class="field">
 
-            <i class="fas fa-lock field-icon"></i>
+            <i class="fas fa-lock"></i>
 
             <input
-                id="password"
-                class="input"
                 type="password"
+                id="password"
                 placeholder="كلمة المرور"
-                autocomplete="current-password">
+                autocomplete="current-password"
+            >
 
             <button
                 type="button"
                 class="password-toggle"
-                id="togglePassword"
-                aria-label="إظهار كلمة المرور">
+                onclick="togglePassword()">
 
-                <i class="fas fa-eye"></i>
+                <i
+                    id="passwordIcon"
+                    class="fas fa-eye">
+                </i>
 
             </button>
 
         </div>
 
 
-
         <!-- LOGIN -->
 
         <button
+            id="loginButton"
             class="login-button"
-            id="loginButton">
+            onclick="login()">
 
-            <span id="loginText">
-                دخول المنصة
-            </span>
+            <i class="fas fa-right-to-bracket"></i>
 
-            <i class="fas fa-arrow-left mr-2"></i>
+            دخول المنصة
 
         </button>
-
 
 
         <div class="footer">
@@ -725,137 +645,134 @@
 
         </div>
 
-    </section>
+    </div>
 
 </main>
 
 
-
-<!-- =========================================
-     FIREBASE LOGIN
-========================================= -->
-
 <script type="module">
 
-    import {
-        auth,
-        db
-    } from "./firebase.js";
+    import { auth } from "./firebase.js";
 
     import {
         signInWithEmailAndPassword,
         onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-    import {
-        doc,
-        getDoc
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-
-    /* =========================================
-       ELEMENTS
-    ========================================= */
-
-    const splash =
-        document.getElementById("splash");
-
-    const page =
-        document.getElementById("page");
-
-    const emailInput =
-        document.getElementById("email");
-
-    const passwordInput =
-        document.getElementById("password");
-
-    const loginButton =
-        document.getElementById("loginButton");
-
-    const loginText =
-        document.getElementById("loginText");
-
-    const togglePassword =
-        document.getElementById("togglePassword");
-
-
-    /* =========================================
+    /* =========================
        SPLASH
-    ========================================= */
+    ========================= */
 
     window.addEventListener("load", () => {
 
         setTimeout(() => {
 
-            splash.classList.add("hide");
+            const splash =
+                document.getElementById("splash");
 
-            setTimeout(() => {
+            const app =
+                document.getElementById("app");
 
-                page.classList.add("show");
+            splash.style.opacity = "0";
 
-            }, 250);
+            splash.style.visibility =
+                "hidden";
 
-        }, 1500);
+            app.style.opacity = "1";
 
-    });
+            app.style.transform =
+                "translateY(0)";
 
-
-    /* =========================================
-       SHOW / HIDE PASSWORD
-    ========================================= */
-
-    togglePassword.addEventListener("click", () => {
-
-        const isPassword =
-            passwordInput.type === "password";
-
-        passwordInput.type =
-            isPassword ? "text" : "password";
-
-        togglePassword.innerHTML =
-            isPassword
-                ? '<i class="fas fa-eye-slash"></i>'
-                : '<i class="fas fa-eye"></i>';
+        }, 1800);
 
     });
 
 
-    /* =========================================
-       LOGIN
-    ========================================= */
+    /* =========================
+       PASSWORD
+    ========================= */
 
-    loginButton.addEventListener("click", async () => {
-
-        const email =
-            emailInput.value.trim();
+    window.togglePassword = function () {
 
         const password =
-            passwordInput.value;
+            document.getElementById("password");
+
+        const icon =
+            document.getElementById("passwordIcon");
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.className =
+                "fas fa-eye-slash";
+
+        } else {
+
+            password.type = "password";
+
+            icon.className =
+                "fas fa-eye";
+
+        }
+
+    };
+
+
+    /* =========================
+       LOGIN
+    ========================= */
+
+    window.login = async function () {
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+        const button =
+            document
+                .getElementById("loginButton");
 
 
         if (!email || !password) {
 
             Swal.fire({
+
                 icon: "warning",
+
                 title: "بيانات ناقصة",
-                text: "اكتب البريد الإلكتروني وكلمة المرور.",
-                confirmButtonText: "حسنًا",
-                confirmButtonColor: "#10b981"
+
+                text:
+                    "اكتب البريد الإلكتروني وكلمة المرور.",
+
+                confirmButtonColor:
+                    "#10b981"
+
             });
 
             return;
         }
 
 
-        loginButton.classList.add("loading");
+        button.disabled = true;
 
-        loginText.innerText =
-            "جاري تسجيل الدخول...";
+        button.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري تسجيل الدخول...
+        `;
 
 
         try {
 
-            const credential =
+            const result =
                 await signInWithEmailAndPassword(
                     auth,
                     email,
@@ -863,49 +780,14 @@
                 );
 
 
-            const uid =
-                credential.user.uid;
-
-
-            /*
-             * قراءة بيانات المستخدم
-             * من Firestore
-             */
-
-            const userRef =
-                doc(db, "users", uid);
-
-            const userSnap =
-                await getDoc(userRef);
-
-
-            if (!userSnap.exists()) {
-
-                throw new Error(
-                    "USER_PROFILE_NOT_FOUND"
-                );
-
-            }
-
-
-            const userData =
-                userSnap.data();
-
-
-            /*
-             * تخزين بيانات بسيطة
-             * للواجهة فقط
-             */
+            sessionStorage.setItem(
+                "atlas_auth",
+                "true"
+            );
 
             sessionStorage.setItem(
-                "atlas_user",
-                JSON.stringify({
-                    uid: uid,
-                    email: credential.user.email,
-                    name: userData.name || "",
-                    role: userData.role || "student",
-                    grade: userData.grade || null
-                })
+                "atlas_uid",
+                result.user.uid
             );
 
 
@@ -913,39 +795,20 @@
 
                 icon: "success",
 
-                title: "تم تسجيل الدخول",
+                title: "تم الدخول بنجاح 🎉",
 
                 text:
-                    `أهلاً بك ${userData.name || ""}`,
+                    "مرحباً بك في Atlas Platform",
 
-                confirmButtonText:
-                    "متابعة",
+                showConfirmButton: false,
 
-                confirmButtonColor:
-                    "#10b981",
-
-                timer: 1300,
-
-                timerProgressBar: true
+                timer: 1200
 
             });
 
 
-            /*
-             * تحديد الصفحة حسب الدور
-             */
-
-            if (userData.role === "admin") {
-
-                window.location.href =
-                    "dashboard.html";
-
-            } else {
-
-                window.location.href =
-                    "home.html";
-
-            }
+            window.location.href =
+                "dashboard.html";
 
 
         } catch (error) {
@@ -965,29 +828,45 @@
                 message =
                     "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
 
-            } else if (
+            }
+
+            else if (
                 error.code ===
-                "auth/user-disabled"
+                "auth/user-not-found"
             ) {
 
                 message =
-                    "هذا الحساب تم تعطيله.";
+                    "لا يوجد حساب بهذا البريد الإلكتروني.";
 
-            } else if (
+            }
+
+            else if (
+                error.code ===
+                "auth/wrong-password"
+            ) {
+
+                message =
+                    "كلمة المرور غير صحيحة.";
+
+            }
+
+            else if (
+                error.code ===
+                "auth/invalid-email"
+            ) {
+
+                message =
+                    "البريد الإلكتروني غير صحيح.";
+
+            }
+
+            else if (
                 error.code ===
                 "auth/too-many-requests"
             ) {
 
                 message =
-                    "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقًا.";
-
-            } else if (
-                error.message ===
-                "USER_PROFILE_NOT_FOUND"
-            ) {
-
-                message =
-                    "تم تسجيل الدخول، لكن بيانات الحساب غير موجودة في قاعدة البيانات.";
+                    "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
 
             }
 
@@ -1000,45 +879,71 @@
 
                 text: message,
 
-                confirmButtonText:
-                    "حاول مرة أخرى",
-
                 confirmButtonColor:
                     "#10b981"
 
             });
 
-        } finally {
 
-            loginButton.classList.remove("loading");
+            button.disabled = false;
 
-            loginText.innerText =
-                "دخول المنصة";
+            button.innerHTML = `
+                <i class="fas fa-right-to-bracket"></i>
+                دخول المنصة
+            `;
 
         }
 
-    });
+    };
 
 
-    /* =========================================
+    /* =========================
        ENTER KEY
-    ========================================= */
+    ========================= */
 
-    passwordInput.addEventListener(
-        "keydown",
-        (event) => {
+    document
+        .getElementById("password")
+        .addEventListener(
+            "keydown",
+            event => {
 
-            if (event.key === "Enter") {
+                if (
+                    event.key === "Enter"
+                ) {
 
-                loginButton.click();
+                    login();
+
+                }
+
+            }
+        );
+
+
+    /* =========================
+       AUTH STATE
+    ========================= */
+
+    onAuthStateChanged(
+        auth,
+        user => {
+
+            if (user) {
+
+                // لا نحول تلقائياً هنا
+                // حتى لا يحدث Loop أثناء فتح الصفحة.
+
+                console.log(
+                    "Atlas user:",
+                    user.email
+                );
 
             }
 
         }
     );
 
-
 </script>
 
 </body>
+
 </html>
