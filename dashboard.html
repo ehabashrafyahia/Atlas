@@ -3,26 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <meta name="theme-color" content="#10b981">
+    <meta name="theme-color" content="#059669">
 
-    <title>لوحة التحكم | Atlas Platform</title>
+    <title>Atlas | لوحة التحكم</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@500;600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
           rel="stylesheet">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 
     <style>
 
@@ -37,19 +33,15 @@
 
         body {
             margin: 0;
-
             font-family: 'Cairo', sans-serif;
-
+            color: #172033;
             background:
                 radial-gradient(
-                    circle at top right,
-                    rgba(16,185,129,.09),
-                    transparent 32%
+                    circle at 90% -10%,
+                    rgba(16,185,129,.14),
+                    transparent 30%
                 ),
-                #f6f8fb;
-
-            color: #172033;
-
+                #f5f7fa;
             overflow-x: hidden;
         }
 
@@ -58,233 +50,117 @@
             font-family: inherit;
         }
 
+        /* =========================================
+           LOADING
+        ========================================= */
 
-        /* =====================================
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .4s;
+        }
+
+        .loader-box {
+            text-align: center;
+        }
+
+        .loader-logo {
+            width: 72px;
+            height: 72px;
+            margin: auto;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,#10b981,#047857);
+            color: white;
+            font-family: 'Reem Kufi';
+            font-size: 22px;
+            box-shadow: 0 18px 40px rgba(16,185,129,.25);
+            animation: pulse 1.4s infinite;
+        }
+
+        .loader-box p {
+            margin-top: 15px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        @keyframes pulse {
+            0%,100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+            }
+        }
+
+        /* =========================================
            APP
-        ===================================== */
+        ========================================= */
 
         .app {
             min-height: 100vh;
         }
 
-
-        /* =====================================
-           TOP BAR
-        ===================================== */
+        /* =========================================
+           TOPBAR
+        ========================================= */
 
         .topbar {
-
             position: sticky;
-
             top: 0;
+            z-index: 1000;
 
-            z-index: 100;
+            background: rgba(255,255,255,.88);
 
-            width: 100%;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
 
-            background:
-                rgba(255,255,255,.88);
-
-            backdrop-filter:
-                blur(18px);
-
-            -webkit-backdrop-filter:
-                blur(18px);
-
-            border-bottom:
-                1px solid #e8edf2;
+            border-bottom: 1px solid #e8edf2;
         }
 
         .topbar-inner {
-
-            max-width: 1200px;
-
+            max-width: 1250px;
             margin: auto;
-
-            padding:
-                14px 18px;
+            min-height: 72px;
+            padding: 12px 18px;
 
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
-
             gap: 15px;
         }
 
-
-        /* =====================================
+        /* =========================================
            BRAND
-        ===================================== */
+        ========================================= */
 
         .brand {
-
             display: flex;
-
             align-items: center;
-
             gap: 11px;
         }
 
         .brand-logo {
-
-            width: 45px;
-            height: 45px;
-
-            border-radius: 15px;
+            width: 47px;
+            height: 47px;
+            border-radius: 16px;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
 
-            background:
-                linear-gradient(
-                    135deg,
-                    #10b981,
-                    #059669
-                );
-
             color: white;
-
-            font-family: 'Reem Kufi', sans-serif;
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            box-shadow:
-                0 8px 20px rgba(16,185,129,.20);
-        }
-
-        .brand-info {
-
-            display: flex;
-
-            flex-direction: column;
-
-            line-height: 1.3;
-        }
-
-        .brand-info strong {
-
+            font-family: 'Reem Kufi';
             font-size: 14px;
-
-            font-weight: 900;
-
-            color: #172033;
-        }
-
-        .brand-info span {
-
-            font-size: 9px;
-
-            font-weight: 700;
-
-            color: #94a3b8;
-
-            margin-top: 2px;
-        }
-
-
-        /* =====================================
-           USER
-        ===================================== */
-
-        .top-actions {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-        }
-
-        .user-name {
-
-            display: none;
-
-            font-size: 11px;
-
-            font-weight: 800;
-
-            color: #64748b;
-        }
-
-        .icon-button {
-
-            width: 42px;
-            height: 42px;
-
-            border: 0;
-
-            border-radius: 14px;
-
-            background: #ffffff;
-
-            color: #64748b;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 5px 18px rgba(15,23,42,.05);
-
-            transition: .2s ease;
-        }
-
-        .icon-button:hover {
-
-            transform: translateY(-2px);
-
-            color: #10b981;
-        }
-
-        .logout:hover {
-
-            color: #ef4444;
-
-            background: #fff1f2;
-        }
-
-
-        /* =====================================
-           MAIN
-        ===================================== */
-
-        .main {
-
-            width: 100%;
-
-            max-width: 1200px;
-
-            margin: auto;
-
-            padding:
-                25px 18px 45px;
-        }
-
-
-        /* =====================================
-           WELCOME
-        ===================================== */
-
-        .welcome {
-
-            position: relative;
-
-            overflow: hidden;
-
-            padding: 25px;
-
-            border-radius: 27px;
-
-            color: white;
 
             background:
                 linear-gradient(
@@ -294,413 +170,354 @@
                 );
 
             box-shadow:
-                0 18px 40px rgba(16,185,129,.18);
+                0 10px 25px rgba(16,185,129,.22);
         }
 
-        .welcome::before {
-
-            content: "";
-
-            position: absolute;
-
-            width: 190px;
-            height: 190px;
-
-            border-radius: 50%;
-
-            background:
-                rgba(255,255,255,.07);
-
-            left: -70px;
-            top: -80px;
-        }
-
-        .welcome::after {
-
-            content: "";
-
-            position: absolute;
-
-            width: 150px;
-            height: 150px;
-
-            border-radius: 50%;
-
-            background:
-                rgba(255,255,255,.05);
-
-            right: -60px;
-            bottom: -70px;
-        }
-
-        .welcome-content {
-
-            position: relative;
-
-            z-index: 2;
-        }
-
-        .welcome-small {
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-            opacity: .85;
-
-            margin-bottom: 5px;
-        }
-
-        .welcome h1 {
-
-            margin: 0;
-
-            font-size: 22px;
-
+        .brand-info strong {
+            display: block;
+            font-size: 14px;
             font-weight: 900;
         }
 
-        .welcome p {
+        .brand-info span {
+            display: block;
+            margin-top: 2px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 800;
+        }
 
-            margin: 7px 0 0;
+        /* =========================================
+           TOP ACTIONS
+        ========================================= */
 
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-chip {
+            display: none;
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 12px;
+
+            border-radius: 14px;
+
+            background: #f8fafc;
+            border: 1px solid #edf1f5;
+        }
+
+        .admin-avatar {
+            width: 30px;
+            height: 30px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .admin-chip span {
             font-size: 10px;
+            font-weight: 900;
+            color: #475569;
+        }
 
+        .icon-btn {
+            width: 42px;
+            height: 42px;
+
+            border: 0;
+            border-radius: 14px;
+
+            background: white;
+            color: #64748b;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 18px rgba(15,23,42,.05);
+
+            transition: .2s;
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            color: #059669;
+        }
+
+        .logout:hover {
+            color: #ef4444;
+            background: #fff1f2;
+        }
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 25px 18px 50px;
+        }
+
+        /* =========================================
+           HERO
+        ========================================= */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            min-height: 190px;
+
+            padding: 28px;
+
+            border-radius: 30px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #10b981 0%,
+                    #059669 50%,
+                    #047857 100%
+                );
+
+            box-shadow:
+                0 20px 45px rgba(16,185,129,.20);
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,.07);
+        }
+
+        .hero::before {
+            width: 260px;
+            height: 260px;
+            left: -90px;
+            top: -130px;
+        }
+
+        .hero::after {
+            width: 220px;
+            height: 220px;
+            right: -90px;
+            bottom: -140px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-label {
+            font-size: 10px;
+            font-weight: 700;
+            opacity: .85;
+        }
+
+        .hero h1 {
+            margin: 6px 0 0;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .hero p {
+            margin: 8px 0 0;
+            max-width: 600px;
+            font-size: 10px;
             font-weight: 600;
-
             opacity: .88;
         }
 
-        .welcome-icon {
-
+        .hero-icon {
             position: absolute;
-
-            left: 25px;
-
-            bottom: 15px;
-
-            font-size: 65px;
-
+            left: 35px;
+            bottom: 18px;
+            font-size: 78px;
             opacity: .10;
         }
 
-
-        /* =====================================
-           SECTION TITLE
-        ===================================== */
+        /* =========================================
+           SECTION
+        ========================================= */
 
         .section {
+            margin-top: 30px;
+        }
 
-            margin-top: 28px;
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
         }
 
         .section-title {
-
             display: flex;
-
             align-items: center;
-
             gap: 10px;
-
-            margin-bottom: 13px;
         }
 
-        .section-title-icon {
-
-            width: 38px;
-            height: 38px;
+        .section-icon {
+            width: 39px;
+            height: 39px;
 
             border-radius: 13px;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
 
             background: #dcfce7;
-
             color: #059669;
+        }
 
+        .section-title strong {
+            display: block;
             font-size: 14px;
-        }
-
-        .section-title h2 {
-
-            margin: 0;
-
-            font-size: 15px;
-
             font-weight: 900;
-
-            color: #1e293b;
         }
 
-        .section-title p {
-
-            margin: 2px 0 0;
-
-            font-size: 9px;
-
+        .section-title span {
+            display: block;
+            margin-top: 2px;
+            font-size: 8px;
             color: #94a3b8;
-
-            font-weight: 700;
+            font-weight: 800;
         }
 
-
-        /* =====================================
-           STAT GRID
-        ===================================== */
+        /* =========================================
+           STATS
+        ========================================= */
 
         .stats {
-
             display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
+            grid-template-columns: repeat(2,1fr);
             gap: 12px;
         }
 
-        .stat {
-
+        .stat-card {
             position: relative;
-
             overflow: hidden;
+
+            padding: 18px;
 
             background: white;
 
-            border:
-                1px solid #e8edf2;
+            border: 1px solid #e8edf2;
 
-            border-radius: 22px;
-
-            padding: 17px;
+            border-radius: 23px;
 
             box-shadow:
-                0 6px 22px rgba(15,23,42,.045);
+                0 7px 25px rgba(15,23,42,.045);
 
-            transition: .2s ease;
+            transition: .25s;
         }
 
-        .stat:hover {
-
-            transform:
-                translateY(-3px);
-
+        .stat-card:hover {
+            transform: translateY(-4px);
             box-shadow:
-                0 14px 30px rgba(15,23,42,.08);
+                0 15px 35px rgba(15,23,42,.08);
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(16,185,129,.035);
+            left: -30px;
+            bottom: -35px;
         }
 
         .stat-top {
-
             display: flex;
-
-            align-items: center;
-
             justify-content: space-between;
+            align-items: center;
         }
 
         .stat-icon {
-
-            width: 42px;
-            height: 42px;
-
+            width: 43px;
+            height: 43px;
             border-radius: 14px;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
-
-            font-size: 15px;
         }
 
-        .green {
-
+        .stat-green {
             background: #dcfce7;
-
             color: #059669;
         }
 
-        .purple {
-
-            background: #f3e8ff;
-
-            color: #9333ea;
-        }
-
-        .blue {
-
+        .stat-blue {
             background: #dbeafe;
-
             color: #2563eb;
         }
 
-        .orange {
+        .stat-purple {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
 
+        .stat-orange {
             background: #ffedd5;
-
             color: #ea580c;
         }
 
         .stat-number {
-
             margin-top: 13px;
-
-            font-size: 25px;
-
+            font-size: 27px;
             font-weight: 900;
-
-            color: #172033;
         }
 
         .stat-title {
-
-            margin-top: 2px;
-
+            margin-top: 1px;
+            color: #94a3b8;
             font-size: 9px;
-
-            color: #94a3b8;
-
-            font-weight: 700;
+            font-weight: 800;
         }
 
+        /* =========================================
+           QUICK
+        ========================================= */
 
-        /* =====================================
-           MANAGEMENT GRID
-        ===================================== */
-
-        .management {
-
+        .quick-grid {
             display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
+            grid-template-columns: repeat(2,1fr);
             gap: 12px;
         }
 
-        .management-card {
-
-            position: relative;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            padding: 16px;
-
-            min-height: 85px;
-
-            background: white;
-
-            border:
-                1px solid #e8edf2;
-
-            border-radius: 21px;
-
-            color: inherit;
-
-            text-decoration: none;
-
-            box-shadow:
-                0 6px 22px rgba(15,23,42,.045);
-
-            transition: .2s ease;
-        }
-
-        .management-card:hover {
-
-            transform:
-                translateY(-3px);
-
-            box-shadow:
-                0 14px 30px rgba(15,23,42,.08);
-        }
-
-        .management-icon {
-
-            flex: 0 0 48px;
-
-            width: 48px;
-            height: 48px;
-
-            border-radius: 16px;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            background: #ecfdf5;
-
-            color: #059669;
-
-            font-size: 17px;
-        }
-
-        .management-info {
-
-            flex: 1;
-
-            min-width: 0;
-        }
-
-        .management-info strong {
-
-            display: block;
-
-            font-size: 12px;
-
-            font-weight: 900;
-
-            color: #1e293b;
-        }
-
-        .management-info span {
-
-            display: block;
-
-            margin-top: 3px;
-
-            font-size: 8px;
-
-            color: #94a3b8;
-
-            font-weight: 700;
-        }
-
-        .management-arrow {
-
-            color: #cbd5e1;
-
-            font-size: 10px;
-        }
-
-
-        /* =====================================
-           QUICK ACTION
-        ===================================== */
-
-        .quick {
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 12px;
-        }
-
-        .quick-button {
+        .quick-card {
+            min-height: 105px;
 
             border: 0;
 
-            min-height: 70px;
+            border-radius: 22px;
 
-            border-radius: 20px;
+            padding: 16px;
+
+            color: white;
+
+            text-align: right;
+
+            cursor: pointer;
 
             background:
                 linear-gradient(
@@ -709,690 +526,1020 @@
                     #059669
                 );
 
-            color: white;
-
-            cursor: pointer;
-
-            font-weight: 900;
-
             box-shadow:
-                0 10px 25px rgba(16,185,129,.18);
+                0 12px 28px rgba(16,185,129,.16);
 
-            transition: .2s ease;
+            transition: .25s;
         }
 
-        .quick-button:hover {
-
-            transform:
-                translateY(-2px);
+        .quick-card:hover {
+            transform: translateY(-4px);
         }
 
-        .quick-button i {
-
+        .quick-card i {
             display: block;
-
-            margin-bottom: 6px;
-
-            font-size: 17px;
+            font-size: 20px;
+            margin-bottom: 12px;
         }
 
-        .quick-button span {
-
-            font-size: 10px;
+        .quick-card strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 900;
         }
 
-
-        /* =====================================
-           FOOTER
-        ===================================== */
-
-        footer {
-
-            padding:
-                15px 0 10px;
-
-            text-align: center;
-
-            color: #cbd5e1;
-
-            font-size: 9px;
-
+        .quick-card span {
+            display: block;
+            margin-top: 3px;
+            font-size: 8px;
+            opacity: .82;
             font-weight: 700;
         }
 
+        /* =========================================
+           DISTRIBUTION
+        ========================================= */
 
-        /* =====================================
+        .distribution {
+            display: grid;
+            gap: 10px;
+        }
+
+        .grade-row {
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 17px;
+            padding: 12px 14px;
+        }
+
+        .grade-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 7px;
+        }
+
+        .grade-name {
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .grade-count {
+            font-size: 9px;
+            font-weight: 900;
+            color: #059669;
+        }
+
+        .bar {
+            height: 7px;
+            background: #f1f5f9;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background:
+                linear-gradient(
+                    90deg,
+                    #10b981,
+                    #047857
+                );
+            transition: width .8s ease;
+        }
+
+        /* =========================================
+           MANAGEMENT
+        ========================================= */
+
+        .management {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 12px;
+        }
+
+        .manage-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 15px;
+
+            min-height: 82px;
+
+            background: white;
+
+            border: 1px solid #e8edf2;
+
+            border-radius: 21px;
+
+            text-decoration: none;
+
+            color: inherit;
+
+            box-shadow:
+                0 6px 22px rgba(15,23,42,.045);
+
+            transition: .2s;
+        }
+
+        .manage-card:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 13px 30px rgba(15,23,42,.08);
+        }
+
+        .manage-icon {
+            flex: 0 0 46px;
+
+            width: 46px;
+            height: 46px;
+
+            border-radius: 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .manage-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .manage-info strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .manage-info span {
+            display: block;
+            margin-top: 3px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .manage-arrow {
+            color: #cbd5e1;
+            font-size: 9px;
+        }
+
+        /* =========================================
+           RECENT QUESTIONS
+        ========================================= */
+
+        .recent-box {
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 23px;
+            overflow: hidden;
+            box-shadow:
+                0 7px 25px rgba(15,23,42,.045);
+        }
+
+        .recent-item {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .recent-item:last-child {
+            border-bottom: 0;
+        }
+
+        .recent-item strong {
+            display: block;
+            font-size: 10px;
+            line-height: 1.8;
+        }
+
+        .recent-meta {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+            margin-top: 7px;
+        }
+
+        .tag {
+            padding: 4px 8px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 7px;
+            font-weight: 800;
+        }
+
+        .empty {
+            padding: 28px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+            padding: 25px 0 10px;
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        /* =========================================
            DESKTOP
-        ===================================== */
+        ========================================= */
 
-        @media (min-width: 700px) {
+        @media (min-width:700px) {
 
-            .user-name {
-                display: block;
+            .admin-chip {
+                display: flex;
             }
 
             .stats {
+                grid-template-columns: repeat(4,1fr);
+            }
 
-                grid-template-columns:
-                    repeat(4, 1fr);
-
+            .quick-grid {
+                grid-template-columns: repeat(4,1fr);
             }
 
             .management {
-
-                grid-template-columns:
-                    repeat(3, 1fr);
-
+                grid-template-columns: repeat(3,1fr);
             }
 
-            .quick {
-
-                grid-template-columns:
-                    repeat(4, 1fr);
-
+            .hero {
+                min-height: 210px;
+                padding: 35px;
             }
 
-            .welcome {
-
-                padding: 30px;
+            .hero h1 {
+                font-size: 29px;
             }
 
-            .welcome h1 {
-
-                font-size: 26px;
+            .distribution {
+                grid-template-columns: repeat(2,1fr);
             }
-
         }
 
     </style>
+
 </head>
 
 
 <body>
 
 
+<!-- LOADER -->
+
+<div id="pageLoader">
+
+    <div class="loader-box">
+
+        <div class="loader-logo">
+            أطلس
+        </div>
+
+        <p>
+            جاري تجهيز لوحة التحكم...
+        </p>
+
+    </div>
+
+</div>
+
+
 <div class="app">
 
 
-    <!-- =====================================
-         TOP BAR
-    ====================================== -->
+<!-- =========================================
+     TOPBAR
+========================================= -->
 
-    <header class="topbar">
+<header class="topbar">
 
-        <div class="topbar-inner">
+    <div class="topbar-inner">
 
+        <div class="brand">
 
-            <div class="brand">
-
-                <div class="brand-logo">
-                    أطلس
-                </div>
-
-                <div class="brand-info">
-
-                    <strong>
-                        Atlas Platform
-                    </strong>
-
-                    <span>
-                        لوحة تحكم المدرس
-                    </span>
-
-                </div>
-
+            <div class="brand-logo">
+                أطلس
             </div>
 
+            <div class="brand-info">
 
-            <div class="top-actions">
+                <strong>
+                    Atlas Platform
+                </strong>
 
-                <span
-                    class="user-name"
-                    id="adminName">
-                    أ. إيهاب أشرف
+                <span>
+                    نظام إدارة المنصة التعليمية
                 </span>
 
-                <button
-                    class="icon-button logout"
-                    id="logoutButton"
-                    title="تسجيل الخروج">
-
-                    <i class="fas fa-right-from-bracket"></i>
-
-                </button>
-
             </div>
-
 
         </div>
 
-    </header>
 
+        <div class="top-actions">
 
+            <div class="admin-chip">
 
-    <!-- =====================================
-         MAIN
-    ====================================== -->
+                <div class="admin-avatar">
 
-    <main class="main">
-
-
-        <!-- WELCOME -->
-
-        <section class="welcome">
-
-            <div class="welcome-content">
-
-                <div class="welcome-small">
-                    لوحة الإدارة 👨‍🏫
-                </div>
-
-                <h1>
-                    أهلاً بك أستاذ إيهاب 👋
-                </h1>
-
-                <p>
-                    من هنا يمكنك إدارة المحتوى والطلاب والاختبارات.
-                </p>
-
-            </div>
-
-            <i class="fas fa-chart-line welcome-icon"></i>
-
-        </section>
-
-
-
-        <!-- =================================
-             STATISTICS
-        ================================== -->
-
-        <section class="section">
-
-            <div class="section-title">
-
-                <div class="section-title-icon">
-
-                    <i class="fas fa-chart-pie"></i>
+                    <i class="fas fa-user-tie"></i>
 
                 </div>
 
-                <div>
-
-                    <h2>
-                        نظرة عامة
-                    </h2>
-
-                    <p>
-                        إحصائيات المنصة الحالية
-                    </p>
-
-                </div>
+                <span id="adminName">
+                    المدير
+                </span>
 
             </div>
 
 
-            <div class="stats">
+            <button
+                id="logoutButton"
+                class="icon-btn logout"
+                title="تسجيل الخروج">
+
+                <i class="fas fa-right-from-bracket"></i>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
 
 
-                <!-- STUDENTS -->
 
-                <div class="stat">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon blue">
-
-                            <i class="fas fa-user-graduate"></i>
-
-                        </div>
-
-                    </div>
-
-                    <div
-                        class="stat-number"
-                        id="studentsCount">
-
-                        0
-
-                    </div>
-
-                    <div class="stat-title">
-                        إجمالي الطلاب
-                    </div>
-
-                </div>
+<main class="main">
 
 
-                <!-- QUESTIONS -->
+<!-- =========================================
+     HERO
+========================================= -->
 
-                <div class="stat">
+<section class="hero">
 
-                    <div class="stat-top">
+    <div class="hero-content">
 
-                        <div class="stat-icon green">
+        <div class="hero-label">
+            لوحة الإدارة • Atlas 2.0
+        </div>
 
-                            <i class="fas fa-circle-question"></i>
+        <h1 id="welcomeTitle">
+            أهلاً بك أستاذ إيهاب 👋
+        </h1>
 
-                        </div>
+        <p>
+            من هنا يمكنك إدارة بنك الأسئلة والاختبارات
+            والطلاب ومتابعة نتائجهم من مكان واحد.
+        </p>
 
-                    </div>
+    </div>
 
-                    <div
-                        class="stat-number"
-                        id="questionsCount">
+    <i class="fas fa-chart-line hero-icon"></i>
 
-                        0
-
-                    </div>
-
-                    <div class="stat-title">
-                        بنك الأسئلة
-                    </div>
-
-                </div>
-
-
-                <!-- EXAMS -->
-
-                <div class="stat">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon purple">
-
-                            <i class="fas fa-file-pen"></i>
-
-                        </div>
-
-                    </div>
-
-                    <div
-                        class="stat-number"
-                        id="examsCount">
-
-                        0
-
-                    </div>
-
-                    <div class="stat-title">
-                        الاختبارات
-                    </div>
-
-                </div>
+</section>
 
 
-                <!-- RESULTS -->
 
-                <div class="stat">
+<!-- =========================================
+     STATISTICS
+========================================= -->
 
-                    <div class="stat-top">
+<section class="section">
 
-                        <div class="stat-icon orange">
+    <div class="section-head">
 
-                            <i class="fas fa-chart-simple"></i>
+        <div class="section-title">
 
-                        </div>
+            <div class="section-icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
 
-                    </div>
+            <div>
 
-                    <div
-                        class="stat-number"
-                        id="resultsCount">
+                <strong>
+                    نظرة سريعة
+                </strong>
 
-                        0
-
-                    </div>
-
-                    <div class="stat-title">
-                        محاولات الطلاب
-                    </div>
-
-                </div>
-
+                <span>
+                    بيانات المنصة الحالية
+                </span>
 
             </div>
 
-        </section>
+        </div>
+
+    </div>
 
 
+    <div class="stats">
 
-        <!-- =================================
-             QUICK ACTIONS
-        ================================== -->
 
-        <section class="section">
+        <div class="stat-card">
 
-            <div class="section-title">
+            <div class="stat-top">
 
-                <div class="section-title-icon">
+                <div class="stat-icon stat-green">
 
-                    <i class="fas fa-bolt"></i>
-
-                </div>
-
-                <div>
-
-                    <h2>
-                        إجراءات سريعة
-                    </h2>
-
-                    <p>
-                        الوصول إلى أهم أدوات الإدارة
-                    </p>
+                    <i class="fas fa-circle-question"></i>
 
                 </div>
 
             </div>
 
+            <div
+                class="stat-number"
+                id="questionsCount">
 
-            <div class="quick">
-
-
-                <button
-                    class="quick-button"
-                    onclick="goTo('add-question.html')">
-
-                    <i class="fas fa-plus"></i>
-
-                    <span>
-                        إضافة سؤال
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="quick-button"
-                    onclick="goTo('questions.html')">
-
-                    <i class="fas fa-database"></i>
-
-                    <span>
-                        بنك الأسئلة
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="quick-button"
-                    onclick="goTo('exams.html')">
-
-                    <i class="fas fa-file-circle-plus"></i>
-
-                    <span>
-                        إنشاء اختبار
-                    </span>
-
-                </button>
-
-
-                <button
-                    class="quick-button"
-                    onclick="goTo('students.html')">
-
-                    <i class="fas fa-user-plus"></i>
-
-                    <span>
-                        الطلاب
-                    </span>
-
-                </button>
-
+                0
 
             </div>
 
-        </section>
+            <div class="stat-title">
+                سؤال في بنك الأسئلة
+            </div>
+
+        </div>
 
 
+        <div class="stat-card">
 
-        <!-- =================================
-             MANAGEMENT
-        ================================== -->
+            <div class="stat-top">
 
-        <section class="section">
+                <div class="stat-icon stat-blue">
 
-            <div class="section-title">
-
-                <div class="section-title-icon">
-
-                    <i class="fas fa-sliders"></i>
-
-                </div>
-
-                <div>
-
-                    <h2>
-                        إدارة المنصة
-                    </h2>
-
-                    <p>
-                        جميع أدوات التحكم
-                    </p>
+                    <i class="fas fa-user-graduate"></i>
 
                 </div>
 
             </div>
 
-
-            <div class="management">
-
-
-                <a
-                    href="add-question.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-circle-plus"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            إضافة سؤال
-                        </strong>
-
-                        <span>
-                            أضف سؤالًا جديدًا إلى البنك
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
-
-                <a
-                    href="questions.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-layer-group"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            بنك الأسئلة
-                        </strong>
-
-                        <span>
-                            تعديل وحذف والبحث عن الأسئلة
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
-
-                <a
-                    href="exams.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-file-signature"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            الاختبارات
-                        </strong>
-
-                        <span>
-                            إنشاء وإدارة الاختبارات
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
-
-                <a
-                    href="students.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-users"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            الطلاب
-                        </strong>
-
-                        <span>
-                            إدارة حسابات الطلاب
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
-
-                <a
-                    href="results.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-ranking-star"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            النتائج
-                        </strong>
-
-                        <span>
-                            متابعة أداء الطلاب
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
-
-                <a
-                    href="settings.html"
-                    class="management-card">
-
-                    <div class="management-icon">
-
-                        <i class="fas fa-gear"></i>
-
-                    </div>
-
-                    <div class="management-info">
-
-                        <strong>
-                            إعدادات المنصة
-                        </strong>
-
-                        <span>
-                            التحكم في إعدادات النظام
-                        </span>
-
-                    </div>
-
-                    <i class="fas fa-chevron-left management-arrow"></i>
-
-                </a>
-
+            <div
+                class="stat-number"
+                id="studentsCount">
+
+                0
 
             </div>
 
-        </section>
+            <div class="stat-title">
+                طالب مسجل
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon stat-purple">
+
+                    <i class="fas fa-file-signature"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="examsCount">
+
+                0
+
+            </div>
+
+            <div class="stat-title">
+                اختبار
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <div class="stat-icon stat-orange">
+
+                    <i class="fas fa-chart-simple"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="stat-number"
+                id="resultsCount">
+
+                0
+
+            </div>
+
+            <div class="stat-title">
+                محاولة اختبار
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
 
 
 
-        <footer>
+<!-- =========================================
+     QUICK ACTIONS
+========================================= -->
 
-            Atlas Platform 2.0
-            •
-            إعداد وتصميم أ. إيهاب أشرف
+<section class="section">
 
-        </footer>
+    <div class="section-head">
+
+        <div class="section-title">
+
+            <div class="section-icon">
+
+                <i class="fas fa-bolt"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    إجراءات سريعة
+                </strong>
+
+                <span>
+                    أكثر الأدوات استخدامًا
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
 
 
-    </main>
+    <div class="quick-grid">
+
+
+        <button
+            class="quick-card"
+            onclick="goTo('add-question.html')">
+
+            <i class="fas fa-file-import"></i>
+
+            <strong>
+                إضافة أسئلة بالجملة
+            </strong>
+
+            <span>
+                استيراد عشرات الأسئلة مرة واحدة
+            </span>
+
+        </button>
+
+
+        <button
+            class="quick-card"
+            onclick="goTo('questions.html')">
+
+            <i class="fas fa-database"></i>
+
+            <strong>
+                بنك الأسئلة
+            </strong>
+
+            <span>
+                بحث وتعديل وحذف الأسئلة
+            </span>
+
+        </button>
+
+
+        <button
+            class="quick-card"
+            onclick="goTo('exams.html')">
+
+            <i class="fas fa-file-circle-plus"></i>
+
+            <strong>
+                إنشاء اختبار
+            </strong>
+
+            <span>
+                أنشئ اختبارًا من بنك الأسئلة
+            </span>
+
+        </button>
+
+
+        <button
+            class="quick-card"
+            onclick="goTo('students.html')">
+
+            <i class="fas fa-user-plus"></i>
+
+            <strong>
+                إدارة الطلاب
+            </strong>
+
+            <span>
+                حسابات الطلاب وبياناتهم
+            </span>
+
+        </button>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     QUESTION DISTRIBUTION
+========================================= -->
+
+<section class="section">
+
+    <div class="section-head">
+
+        <div class="section-title">
+
+            <div class="section-icon">
+
+                <i class="fas fa-layer-group"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    توزيع بنك الأسئلة
+                </strong>
+
+                <span>
+                    عدد الأسئلة حسب الصف الدراسي
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="distribution"
+        class="distribution">
+
+        <div class="empty">
+            جاري تحميل التوزيع...
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     RECENT QUESTIONS
+========================================= -->
+
+<section class="section">
+
+    <div class="section-head">
+
+        <div class="section-title">
+
+            <div class="section-icon">
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    آخر الأسئلة المضافة
+                </strong>
+
+                <span>
+                    أحدث محتوى في بنك الأسئلة
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="recentQuestions"
+        class="recent-box">
+
+        <div class="empty">
+            جاري تحميل الأسئلة...
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================
+     MANAGEMENT
+========================================= -->
+
+<section class="section">
+
+    <div class="section-head">
+
+        <div class="section-title">
+
+            <div class="section-icon">
+
+                <i class="fas fa-sliders"></i>
+
+            </div>
+
+            <div>
+
+                <strong>
+                    إدارة المنصة
+                </strong>
+
+                <span>
+                    جميع أقسام Atlas
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="management">
+
+
+        <a href="add-question.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-circle-plus"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    إضافة سؤال
+                </strong>
+
+                <span>
+                    إضافة أسئلة بالجملة
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+        <a href="questions.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-database"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    بنك الأسئلة
+                </strong>
+
+                <span>
+                    البحث والتعديل والحذف
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+        <a href="exams.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-file-signature"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    الاختبارات
+                </strong>
+
+                <span>
+                    إنشاء وإدارة الاختبارات
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+        <a href="students.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-users"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    الطلاب
+                </strong>
+
+                <span>
+                    إدارة حسابات الطلاب
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+        <a href="results.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-ranking-star"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    النتائج
+                </strong>
+
+                <span>
+                    متابعة أداء الطلاب
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+        <a href="settings.html"
+           class="manage-card">
+
+            <div class="manage-icon">
+                <i class="fas fa-gear"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    إعدادات المنصة
+                </strong>
+
+                <span>
+                    إعدادات النظام
+                </span>
+
+            </div>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
+    </div>
+
+</section>
+
+
+
+<footer>
+
+    Atlas Platform 2.0
+    •
+    إعداد وتصميم أ. إيهاب أشرف
+
+</footer>
+
+
+</main>
 
 </div>
 
 
 
-<!-- =========================================
-     FIREBASE
-========================================= -->
-
 <script type="module">
 
-    import {
-        auth,
-        db
-    } from "./firebase.js";
+/* =========================================
+   FIREBASE
+========================================= */
 
-    import {
-        onAuthStateChanged,
-        signOut
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import {
+    auth,
+    db
+} from "./firebase.js";
 
-    import {
-        collection,
-        getCountFromServer,
-        doc,
-        getDoc
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    collection,
+    getCountFromServer,
+    getDocs,
+    query,
+    orderBy,
+    limit,
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-    /* =========================================
-       AUTHENTICATION GUARD
-    ========================================= */
+/* =========================================
+   GRADE NAMES
+========================================= */
 
-    onAuthStateChanged(auth, async (user) => {
+const gradeNames = {
 
-        if (!user) {
+    grade4: "الرابع الابتدائي",
+    grade5: "الخامس الابتدائي",
+    grade6: "السادس الابتدائي",
+
+    grade7: "الأول الإعدادي",
+    grade8: "الثاني الإعدادي",
+    grade9: "الثالث الإعدادي"
+
+};
+
+
+/* =========================================
+   AUTH GUARD
+========================================= */
+
+onAuthStateChanged(auth, async user => {
+
+    if (!user) {
+
+        window.location.href = "index.html";
+
+        return;
+    }
+
+
+    try {
+
+        const userRef =
+            doc(db, "users", user.uid);
+
+        const userSnap =
+            await getDoc(userRef);
+
+
+        if (!userSnap.exists()) {
+
+            await signOut(auth);
 
             window.location.href =
                 "index.html";
@@ -1402,216 +1549,558 @@
         }
 
 
-        try {
-
-            const userRef =
-                doc(db, "users", user.uid);
-
-            const userSnap =
-                await getDoc(userRef);
+        const userData =
+            userSnap.data();
 
 
-            if (!userSnap.exists()) {
+        if (userData.role !== "admin") {
+
+            await signOut(auth);
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "غير مسموح",
+
+                text:
+                    "هذه الصفحة مخصصة للمدير فقط.",
+
+                confirmButtonColor:
+                    "#059669"
+
+            }).then(() => {
+
+                window.location.href =
+                    "index.html";
+
+            });
+
+            return;
+
+        }
+
+
+        const name =
+            userData.name ||
+            "أستاذ إيهاب";
+
+
+        document.getElementById(
+            "adminName"
+        ).textContent = name;
+
+
+        document.getElementById(
+            "welcomeTitle"
+        ).textContent =
+            `أهلاً بك ${name} 👋`;
+
+
+        await loadDashboard();
+
+
+        hideLoader();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        hideLoader();
+
+        Swal.fire({
+
+            icon: "error",
+
+            title: "حدث خطأ",
+
+            text:
+                "تعذر تحميل بيانات لوحة التحكم.",
+
+            confirmButtonColor:
+                "#059669"
+
+        });
+
+    }
+
+});
+
+
+/* =========================================
+   DASHBOARD DATA
+========================================= */
+
+async function loadDashboard() {
+
+    await Promise.all([
+
+        loadStatistics(),
+
+        loadDistribution(),
+
+        loadRecentQuestions()
+
+    ]);
+
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+async function loadStatistics() {
+
+    try {
+
+        const questions =
+            await getCountFromServer(
+                collection(db, "questions")
+            );
+
+
+        const exams =
+            await getCountFromServer(
+                collection(db, "exams")
+            );
+
+
+        const attempts =
+            await getCountFromServer(
+                collection(db, "attempts")
+            );
+
+
+        /*
+         * users collection
+         * نحسب الطلاب فقط
+         */
+
+        const usersSnapshot =
+            await getDocs(
+                collection(db, "users")
+            );
+
+
+        let students = 0;
+
+
+        usersSnapshot.forEach(item => {
+
+            const data =
+                item.data();
+
+            if (data.role === "student") {
+
+                students++;
+
+            }
+
+        });
+
+
+        document.getElementById(
+            "questionsCount"
+        ).textContent =
+            questions.data().count;
+
+
+        document.getElementById(
+            "studentsCount"
+        ).textContent =
+            students;
+
+
+        document.getElementById(
+            "examsCount"
+        ).textContent =
+            exams.data().count;
+
+
+        document.getElementById(
+            "resultsCount"
+        ).textContent =
+            attempts.data().count;
+
+
+    } catch (error) {
+
+        console.error(
+            "Statistics Error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   QUESTION DISTRIBUTION
+========================================= */
+
+async function loadDistribution() {
+
+    const container =
+        document.getElementById(
+            "distribution"
+        );
+
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(db, "questions")
+            );
+
+
+        const counts = {
+
+            grade4: 0,
+            grade5: 0,
+            grade6: 0,
+
+            grade7: 0,
+            grade8: 0,
+            grade9: 0
+
+        };
+
+
+        snapshot.forEach(item => {
+
+            const data =
+                item.data();
+
+
+            if (
+                Object.prototype.hasOwnProperty
+                .call(counts, data.grade)
+            ) {
+
+                counts[data.grade]++;
+
+            }
+
+        });
+
+
+        const total =
+            snapshot.size;
+
+
+        container.innerHTML = "";
+
+
+        Object.keys(counts).forEach(grade => {
+
+            const percentage =
+                total > 0
+                ? Math.round(
+                    (counts[grade] / total) * 100
+                )
+                : 0;
+
+
+            container.innerHTML += `
+
+                <div class="grade-row">
+
+                    <div class="grade-top">
+
+                        <span class="grade-name">
+
+                            ${gradeNames[grade]}
+
+                        </span>
+
+                        <span class="grade-count">
+
+                            ${counts[grade]} سؤال
+
+                        </span>
+
+                    </div>
+
+                    <div class="bar">
+
+                        <div
+                            class="bar-fill"
+                            style="width:${percentage}%">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                تعذر تحميل توزيع الأسئلة.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   RECENT QUESTIONS
+========================================= */
+
+async function loadRecentQuestions() {
+
+    const container =
+        document.getElementById(
+            "recentQuestions"
+        );
+
+
+    try {
+
+        const questionsQuery =
+            query(
+
+                collection(
+                    db,
+                    "questions"
+                ),
+
+                orderBy(
+                    "createdAt",
+                    "desc"
+                ),
+
+                limit(5)
+
+            );
+
+
+        const snapshot =
+            await getDocs(
+                questionsQuery
+            );
+
+
+        if (snapshot.empty) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    لا توجد أسئلة مضافة حتى الآن.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        snapshot.forEach(item => {
+
+            const data =
+                item.data();
+
+
+            container.innerHTML += `
+
+                <div class="recent-item">
+
+                    <strong>
+
+                        ${escapeHtml(
+                            data.text ||
+                            "سؤال بدون نص"
+                        )}
+
+                    </strong>
+
+
+                    <div class="recent-meta">
+
+                        <span class="tag">
+
+                            ${gradeNames[data.grade] || "غير محدد"}
+
+                        </span>
+
+                        <span class="tag">
+
+                            ${escapeHtml(
+                                data.unit ||
+                                "بدون وحدة"
+                            )}
+
+                        </span>
+
+                        <span class="tag">
+
+                            ${escapeHtml(
+                                data.lesson ||
+                                "بدون درس"
+                            )}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        /*
+         * لو createdAt غير موجود
+         * لا نوقف Dashboard كلها.
+         */
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                لم يتم العثور على أسئلة حديثة.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(text) {
+
+    return String(text)
+
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================
+   NAVIGATION
+========================================= */
+
+window.goTo = function(page) {
+
+    window.location.href = page;
+
+};
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+document
+    .getElementById("logoutButton")
+    .addEventListener(
+        "click",
+        async () => {
+
+            const result =
+                await Swal.fire({
+
+                    icon: "question",
+
+                    title:
+                        "تسجيل الخروج؟",
+
+                    text:
+                        "هل تريد تسجيل الخروج من Atlas؟",
+
+                    showCancelButton:
+                        true,
+
+                    confirmButtonText:
+                        "تسجيل الخروج",
+
+                    cancelButtonText:
+                        "إلغاء",
+
+                    confirmButtonColor:
+                        "#ef4444",
+
+                    cancelButtonColor:
+                        "#64748b"
+
+                });
+
+
+            if (result.isConfirmed) {
 
                 await signOut(auth);
 
                 window.location.href =
                     "index.html";
 
-                return;
-
             }
-
-
-            const userData =
-                userSnap.data();
-
-
-            if (userData.role !== "admin") {
-
-                await signOut(auth);
-
-                Swal.fire({
-
-                    icon: "error",
-
-                    title: "غير مسموح",
-
-                    text:
-                        "هذه الصفحة مخصصة للإدارة فقط.",
-
-                    confirmButtonColor:
-                        "#10b981"
-
-                }).then(() => {
-
-                    window.location.href =
-                        "index.html";
-
-                });
-
-                return;
-
-            }
-
-
-            document.getElementById(
-                "adminName"
-            ).textContent =
-                userData.name ||
-                "المدير";
-
-
-            document.querySelector(
-                ".welcome h1"
-            ).textContent =
-                `أهلاً بك ${userData.name || "أستاذ إيهاب"} 👋`;
-
-
-            loadStatistics();
-
-
-        } catch (error) {
-
-            console.error(error);
 
         }
-
-    });
-
-
-    /* =========================================
-       STATISTICS
-    ========================================= */
-
-    async function loadStatistics() {
-
-        try {
-
-            const studentsSnapshot =
-                await getCountFromServer(
-                    collection(db, "users")
-                );
+    );
 
 
-            const questionsSnapshot =
-                await getCountFromServer(
-                    collection(db, "questions")
-                );
+/* =========================================
+   HIDE LOADER
+========================================= */
 
+function hideLoader() {
 
-            const examsSnapshot =
-                await getCountFromServer(
-                    collection(db, "exams")
-                );
-
-
-            const resultsSnapshot =
-                await getCountFromServer(
-                    collection(db, "attempts")
-                );
-
-
-            document.getElementById(
-                "studentsCount"
-            ).textContent =
-                studentsSnapshot.data().count;
-
-
-            document.getElementById(
-                "questionsCount"
-            ).textContent =
-                questionsSnapshot.data().count;
-
-
-            document.getElementById(
-                "examsCount"
-            ).textContent =
-                examsSnapshot.data().count;
-
-
-            document.getElementById(
-                "resultsCount"
-            ).textContent =
-                resultsSnapshot.data().count;
-
-
-        } catch (error) {
-
-            console.error(
-                "Statistics Error:",
-                error
-            );
-
-        }
-
-    }
-
-
-    /* =========================================
-       NAVIGATION
-    ========================================= */
-
-    window.goTo = function (page) {
-
-        window.location.href =
-            page;
-
-    };
-
-
-    /* =========================================
-       LOGOUT
-    ========================================= */
-
-    document
-        .getElementById("logoutButton")
-        .addEventListener(
-            "click",
-            async () => {
-
-                const result =
-                    await Swal.fire({
-
-                        icon: "question",
-
-                        title:
-                            "تسجيل الخروج؟",
-
-                        text:
-                            "هل تريد تسجيل الخروج من لوحة التحكم؟",
-
-                        showCancelButton:
-                            true,
-
-                        confirmButtonText:
-                            "تسجيل الخروج",
-
-                        cancelButtonText:
-                            "إلغاء",
-
-                        confirmButtonColor:
-                            "#ef4444",
-
-                        cancelButtonColor:
-                            "#64748b"
-
-                    });
-
-
-                if (result.isConfirmed) {
-
-                    await signOut(auth);
-
-                    sessionStorage.clear();
-
-                    window.location.href =
-                        "index.html";
-
-                }
-
-            }
+    const loader =
+        document.getElementById(
+            "pageLoader"
         );
+
+
+    loader.style.opacity = "0";
+
+
+    setTimeout(() => {
+
+        loader.style.display =
+            "none";
+
+    }, 400);
+
+}
 
 </script>
 
