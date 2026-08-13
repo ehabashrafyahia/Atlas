@@ -259,6 +259,13 @@
             background: white;
         }
 
+        .hint {
+            margin-top: 5px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
         .actions {
             display: flex;
             gap: 8px;
@@ -272,6 +279,11 @@
             cursor: pointer;
             font-size: 10px;
             font-weight: 900;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
         }
 
         .btn-primary {
@@ -355,8 +367,15 @@
             font-weight: 900;
         }
 
+        .badge.code {
+            background: #eff6ff;
+            color: #2563eb;
+            letter-spacing: .5px;
+        }
+
         .student-actions {
             display: flex;
+            flex-direction: column;
             gap: 5px;
         }
 
@@ -368,6 +387,11 @@
             cursor: pointer;
             background: #f1f5f9;
             color: #64748b;
+        }
+
+        .small-btn.code:hover {
+            color: #2563eb;
+            background: #dbeafe;
         }
 
         .small-btn.edit:hover {
@@ -394,6 +418,20 @@
             color: #94a3b8;
         }
 
+        .code-display {
+            text-align: center;
+            padding: 18px;
+            background: #ecfdf5;
+            border: 2px dashed #10b981;
+            border-radius: 16px;
+            font-size: 30px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            color: #047857;
+            margin: 10px 0;
+            direction: ltr;
+        }
+
         @media (min-width:700px) {
 
             .cards {
@@ -406,6 +444,10 @@
 
             .filters {
                 grid-template-columns: 2fr 1fr;
+            }
+
+            .student-actions {
+                flex-direction: row;
             }
 
         }
@@ -442,7 +484,7 @@
         <h1>الطلاب 👨‍🎓</h1>
 
         <p>
-            إدارة بيانات الطلاب وتنظيمهم داخل منصة Atlas.
+            إدارة بيانات الطلاب وحسابات الدخول الخاصة بهم داخل منصة Atlas.
         </p>
 
     </section>
@@ -528,7 +570,7 @@
                 </strong>
 
                 <span>
-                    أضف بيانات الطالب إلى Firestore
+                    سيتم إنشاء كود دخول تلقائي للطالب
                 </span>
             </div>
 
@@ -549,11 +591,11 @@
 
             <div>
 
-                <label>البريد الإلكتروني</label>
+                <label>البريد الإلكتروني (اختياري)</label>
 
                 <input id="studentEmail"
                        type="email"
-                       placeholder="student@email.com">
+                       placeholder="للتواصل فقط - غير مستخدم للدخول">
 
             </div>
 
@@ -602,6 +644,11 @@
 
             </div>
 
+        </div>
+
+        <div class="hint" id="formHint">
+            <i class="fas fa-circle-info"></i>
+            عند حفظ طالب جديد سيتم توليد كود دخول من 6 أرقام تلقائيًا وعرضه لك مرة واحدة.
         </div>
 
 
@@ -706,24 +753,36 @@
 
 import {
     auth,
-    db
+    db,
+    secondaryAuth
 } from "./firebase.js";
 
 import {
-    onAuthStateChanged
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
     collection,
     getDocs,
     addDoc,
+    setDoc,
     updateDoc,
     deleteDoc,
     doc,
     serverTimestamp,
-    query,
-    orderBy
+    query
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+/*
+   نطاق البريد الإلكتروني الوهمي المستخدم
+   لإنشاء حسابات الطلاب في Firebase Auth.
+   الطالب لا يرى هذا البريد أبدًا، فقط الكود.
+*/
+
+const STUDENT_EMAIL_DOMAIN = "atlas-students.app";
 
 
 let currentUser = null;
@@ -980,7 +1039,7 @@ function renderStudents() {
 
                         <span>
                             ${escapeHtml(
-                                student.email || "بدون بريد"
+                                student.email || "بدون بريد تواصل"
                             )}
                         </span>
 
@@ -998,11 +1057,37 @@ function renderStudents() {
                                 }
                             </span>
 
+                            ${
+                                student.loginCode
+                                ? `<span class="badge code">
+                                     <i class="fas fa-key"></i>
+                                     ${escapeHtml(student.loginCode)}
+                                   </span>`
+                                : `<span class="badge" style="background:#fff1f2;color:#e11d48">
+                                     بدون كود دخول
+                                   </span>`
+                            }
+
                         </div>
 
                     </div>
 
                     <div class="student-actions">
+
+                        ${
+                            student.loginCode
+                            ? `
+                            <button
+                                class="small-btn code"
+                                title="عرض كود الدخول"
+                                onclick="showCode('${student.id}')">
+
+                                <i class="fas fa-key"></i>
+
+                            </button>
+                            `
+                            : ""
+                        }
 
                         <button
                             class="small-btn edit"
@@ -1055,6 +1140,37 @@ function gradeName(grade) {
 
 
 /* ================================
+   توليد كود دخول فريد من 6 أرقام
+================================ */
+
+function generateLoginCode() {
+
+    const existing =
+        new Set(
+            students
+                .map(s => s.loginCode)
+                .filter(Boolean)
+        );
+
+    let code;
+
+    do {
+
+        code =
+            String(
+                Math.floor(
+                    100000 + Math.random() * 900000
+                )
+            );
+
+    } while (existing.has(code));
+
+    return code;
+
+}
+
+
+/* ================================
    إضافة / تعديل
 ================================ */
 
@@ -1079,12 +1195,12 @@ document
         .value;
 
 
-    if (!name || !email || !stage || !grade) {
+    if (!name || !stage || !grade) {
 
         Swal.fire({
             icon:"warning",
             title:"بيانات ناقصة",
-            text:"أكمل بيانات الطالب أولاً.",
+            text:"اكتب اسم الطالب واختر المرحلة والصف على الأقل.",
             confirmButtonColor:"#10b981"
         });
 
@@ -1108,6 +1224,11 @@ document
 
         if (editingId) {
 
+            /*
+               تعديل بيانات طالب موجود فقط.
+               لا نلمس حساب Auth أو كود الدخول هنا.
+            */
+
             await updateDoc(
                 doc(db,"users",editingId),
                 {
@@ -1119,17 +1240,53 @@ document
                 }
             );
 
-            Swal.fire({
+            await Swal.fire({
                 icon:"success",
                 title:"تم التعديل",
                 text:"تم تحديث بيانات الطالب.",
                 confirmButtonColor:"#10b981"
             });
 
+            resetForm();
+            await loadStudents();
+
         } else {
 
-            await addDoc(
-                collection(db,"users"),
+            /*
+               طالب جديد:
+               1) توليد كود دخول من 6 أرقام
+               2) إنشاء حساب Auth عبر secondaryAuth
+                  حتى لا نسجل خروج الأدمن من حسابه
+               3) حفظ بيانات الطالب في Firestore
+                  بنفس uid الخاص بحساب Auth
+               4) تسجيل الخروج من secondaryAuth فورًا
+            */
+
+            const loginCode =
+                generateLoginCode();
+
+            const fakeEmail =
+                `${loginCode}@${STUDENT_EMAIL_DOMAIN}`;
+
+            const credential =
+                await createUserWithEmailAndPassword(
+                    secondaryAuth,
+                    fakeEmail,
+                    loginCode
+                );
+
+            const newUid =
+                credential.user.uid;
+
+            /*
+               تسجيل الخروج من الحساب الثانوي فورًا
+               حتى لا يظل مسجلاً دخوله بالخطأ.
+            */
+
+            await signOut(secondaryAuth);
+
+            await setDoc(
+                doc(db,"users",newUid),
                 {
                     name,
                     email,
@@ -1137,32 +1294,64 @@ document
                     grade,
                     role:"student",
                     active:true,
+                    loginCode,
                     createdBy:currentUser.uid,
                     createdAt:serverTimestamp()
                 }
             );
 
-            Swal.fire({
+            resetForm();
+            await loadStudents();
+
+            await Swal.fire({
+
                 icon:"success",
-                title:"تمت الإضافة 🎉",
-                text:"تم إضافة الطالب إلى المنصة.",
+
+                title:"تمت إضافة الطالب 🎉",
+
+                html:`
+
+                    <p style="font-size:12px;font-weight:700;color:#475569">
+                        كود دخول <b>${escapeHtml(name)}</b> إلى منصة Atlas هو:
+                    </p>
+
+                    <div class="code-display">
+                        ${escapeHtml(loginCode)}
+                    </div>
+
+                    <p style="font-size:10px;color:#94a3b8;font-weight:700">
+                        احفظ هذا الكود أو سلّمه للطالب الآن — لن يظهر بهذا الشكل مرة أخرى تلقائيًا،
+                        لكن يمكنك مراجعته لاحقًا من زر "عرض الكود".
+                    </p>
+
+                `,
+
+                confirmButtonText:"تم الحفظ",
+
                 confirmButtonColor:"#10b981"
+
             });
 
         }
-
-
-        resetForm();
-        await loadStudents();
 
     } catch(error) {
 
         console.error(error);
 
+        let message =
+            "تعذر حفظ بيانات الطالب.";
+
+        if (error.code === "auth/email-already-in-use") {
+
+            message =
+                "حدث تعارض في توليد الكود، حاول الحفظ مرة أخرى.";
+
+        }
+
         Swal.fire({
             icon:"error",
             title:"حدث خطأ",
-            text:"تعذر حفظ بيانات الطالب.",
+            text:message,
             confirmButtonColor:"#10b981"
         });
 
@@ -1177,6 +1366,40 @@ document
     `;
 
 });
+
+
+/* ================================
+   عرض كود الدخول لطالب موجود
+================================ */
+
+window.showCode = function(id) {
+
+    const student =
+        students.find(
+            s => s.id === id
+        );
+
+    if (!student || !student.loginCode) return;
+
+    Swal.fire({
+
+        icon:"info",
+
+        title:`كود دخول ${student.name || "الطالب"}`,
+
+        html:`
+            <div class="code-display">
+                ${escapeHtml(student.loginCode)}
+            </div>
+        `,
+
+        confirmButtonText:"تم",
+
+        confirmButtonColor:"#10b981"
+
+    });
+
+};
 
 
 /* ================================
@@ -1211,6 +1434,12 @@ window.editStudent = function(id) {
 
     document.getElementById("formTitle")
         .textContent = "تعديل بيانات الطالب";
+
+    document.getElementById("formHint")
+        .innerHTML = `
+            <i class="fas fa-circle-info"></i>
+            التعديل هنا لا يغيّر كود دخول الطالب الحالي.
+        `;
 
     document.getElementById("cancelButton")
         .style.display = "block";
@@ -1248,7 +1477,13 @@ window.removeStudent = async function(id) {
             html:
                 `سيتم حذف بيانات <b>${escapeHtml(
                     student.name || "الطالب"
-                )}</b> من Firestore.`,
+                )}</b> من Firestore.
+                 <br><br>
+                 <span style="font-size:10px;color:#e11d48">
+                 ملحوظة: حساب الدخول (Auth) الخاص به لن يُحذف تلقائيًا
+                 من هذه الصفحة، ويحتاج حذفًا يدويًا من Firebase Console
+                 أو عبر Cloud Function لاحقًا.
+                 </span>`,
 
             showCancelButton:true,
 
@@ -1280,7 +1515,7 @@ window.removeStudent = async function(id) {
 
             title:"تم الحذف",
 
-            text:"تم حذف بيانات الطالب.",
+            text:"تم حذف بيانات الطالب من Firestore.",
 
             confirmButtonColor:"#10b981"
 
@@ -1337,6 +1572,12 @@ function resetForm() {
 
     document.getElementById("formTitle")
         .textContent = "إضافة طالب جديد";
+
+    document.getElementById("formHint")
+        .innerHTML = `
+            <i class="fas fa-circle-info"></i>
+            عند حفظ طالب جديد سيتم توليد كود دخول من 6 أرقام تلقائيًا وعرضه لك مرة واحدة.
+        `;
 
     document.getElementById("cancelButton")
         .style.display = "none";
