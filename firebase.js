@@ -22,7 +22,7 @@ const firebaseConfig = {
 };
 
 // ============================================
-// Initialize Firebase
+// Initialize Firebase (Primary App)
 // ============================================
 
 const app = initializeApp(firebaseConfig);
@@ -37,6 +37,19 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 // ============================================
+// Secondary App
+// ============================================
+// يُستخدم فقط لإنشاء حسابات الطلاب (Auth) من صفحة
+// students.html بدون التأثير على جلسة دخول الأدمن
+// الحالية. لو أنشأنا الحساب بالـ auth الأساسي، فايربيز
+// بيسجّل دخول تلقائي بالحساب الجديد ويطلع الأدمن.
+// ============================================
+
+const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+
+const secondaryAuth = getAuth(secondaryApp);
+
+// ============================================
 // Export
 // ============================================
 
@@ -44,5 +57,6 @@ export {
     app,
     auth,
     db,
-    storage
+    storage,
+    secondaryAuth
 };
