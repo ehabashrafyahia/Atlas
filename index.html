@@ -214,7 +214,7 @@
             width: 100%;
             max-width: 420px;
 
-            padding: 35px 28px 25px;
+            padding: 30px 28px 25px;
 
             background:
                 rgba(255,255,255,.90);
@@ -239,7 +239,7 @@
             width: 92px;
             height: 74px;
 
-            margin: 0 auto 20px;
+            margin: 0 auto 18px;
 
             position: relative;
 
@@ -262,7 +262,7 @@
 
             text-align: center;
 
-            font-size: 22px;
+            font-size: 21px;
 
             font-weight: 900;
 
@@ -282,8 +282,143 @@
             font-weight: 700;
 
             margin:
-                5px 0 28px;
+                5px 0 22px;
         }
+
+        /* =========================
+           TABS
+        ========================= */
+
+        .tabs {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 6px;
+
+            background: #f1f5f9;
+
+            border-radius: 16px;
+
+            padding: 5px;
+
+            margin-bottom: 22px;
+        }
+
+        .tab {
+
+            border: 0;
+
+            border-radius: 12px;
+
+            padding: 11px 8px;
+
+            background: transparent;
+
+            color: #64748b;
+
+            font-family: inherit;
+
+            font-size: 11px;
+
+            font-weight: 900;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 6px;
+
+            transition: .2s;
+        }
+
+        .tab.active {
+
+            background: white;
+
+            color: #059669;
+
+            box-shadow:
+                0 6px 16px rgba(15,23,42,.08);
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* =========================
+           STUDENT PANEL
+        ========================= */
+
+        .code-field {
+
+            position: relative;
+
+            margin-bottom: 15px;
+        }
+
+        .code-field input {
+
+            width: 100%;
+
+            height: 72px;
+
+            border: 2px solid #eef2f7;
+
+            border-radius: 20px;
+
+            outline: none;
+
+            background: #f8fafc;
+
+            padding: 0 16px;
+
+            font-family: inherit;
+
+            font-size: 26px;
+
+            font-weight: 900;
+
+            letter-spacing: 10px;
+
+            text-align: center;
+
+            direction: ltr;
+
+            transition: .25s;
+        }
+
+        .code-field input:focus {
+
+            background: white;
+
+            border-color: #10b981;
+
+            box-shadow:
+                0 10px 25px rgba(16,185,129,.08);
+        }
+
+        .code-field input::placeholder {
+
+            letter-spacing: normal;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+        /* =========================
+           TEACHER PANEL
+        ========================= */
 
         .field {
 
@@ -365,13 +500,17 @@
             cursor: pointer;
         }
 
+        /* =========================
+           SHARED
+        ========================= */
+
         .login-button {
 
             width: 100%;
 
             height: 58px;
 
-            margin-top: 8px;
+            margin-top: 6px;
 
             border: 0;
 
@@ -426,7 +565,7 @@
 
         .footer {
 
-            margin-top: 25px;
+            margin-top: 22px;
 
             padding-top: 18px;
 
@@ -507,12 +646,18 @@
 
             .login-card {
                 padding:
-                    30px 20px 22px;
+                    26px 20px 22px;
             }
 
             .welcome {
-                font-size: 20px;
+                font-size: 19px;
             }
+
+            .code-field input {
+                font-size: 22px;
+                letter-spacing: 7px;
+            }
+
         }
 
     </style>
@@ -568,70 +713,139 @@
         </div>
 
         <h1 class="welcome">
-            مرحباً بك يا بطل 👋
+            أهلاً بك 👋
         </h1>
 
         <p class="description">
-            سجل دخولك للوصول إلى منصة Atlas
+            اختر نوع حسابك وسجّل دخولك لمنصة Atlas
         </p>
 
 
-        <!-- EMAIL -->
+        <!-- TABS -->
 
-        <div class="field">
-
-            <i class="fas fa-envelope"></i>
-
-            <input
-                type="email"
-                id="email"
-                placeholder="البريد الإلكتروني"
-                autocomplete="email"
-            >
-
-        </div>
-
-
-        <!-- PASSWORD -->
-
-        <div class="field">
-
-            <i class="fas fa-lock"></i>
-
-            <input
-                type="password"
-                id="password"
-                placeholder="كلمة المرور"
-                autocomplete="current-password"
-            >
+        <div class="tabs">
 
             <button
                 type="button"
-                class="password-toggle"
-                onclick="togglePassword()">
+                class="tab active"
+                id="studentTabBtn"
+                onclick="switchTab('student')">
 
-                <i
-                    id="passwordIcon"
-                    class="fas fa-eye">
-                </i>
+                <i class="fas fa-user-graduate"></i>
+                طالب
+
+            </button>
+
+            <button
+                type="button"
+                class="tab"
+                id="teacherTabBtn"
+                onclick="switchTab('teacher')">
+
+                <i class="fas fa-user-tie"></i>
+                معلم
 
             </button>
 
         </div>
 
 
-        <!-- LOGIN -->
+        <!-- =========================
+             STUDENT PANEL
+        ========================= -->
 
-        <button
-            id="loginButton"
-            class="login-button"
-            onclick="login()">
+        <div
+            id="studentPanel"
+            class="panel active">
 
-            <i class="fas fa-right-to-bracket"></i>
+            <div class="code-field">
 
-            دخول المنصة
+                <input
+                    type="text"
+                    id="loginCode"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="000000"
+                    autocomplete="off"
+                >
 
-        </button>
+            </div>
+
+
+            <button
+                id="studentLoginButton"
+                class="login-button"
+                onclick="studentLogin()">
+
+                <i class="fas fa-right-to-bracket"></i>
+
+                دخول
+
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             TEACHER PANEL
+        ========================= -->
+
+        <div
+            id="teacherPanel"
+            class="panel">
+
+            <div class="field">
+
+                <i class="fas fa-envelope"></i>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="البريد الإلكتروني"
+                    autocomplete="email"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <i class="fas fa-lock"></i>
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="كلمة المرور"
+                    autocomplete="current-password"
+                >
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword()">
+
+                    <i
+                        id="passwordIcon"
+                        class="fas fa-eye">
+                    </i>
+
+                </button>
+
+            </div>
+
+
+            <button
+                id="teacherLoginButton"
+                class="login-button"
+                onclick="teacherLogin()">
+
+                <i class="fas fa-right-to-bracket"></i>
+
+                دخول المنصة
+
+            </button>
+
+        </div>
 
 
         <div class="footer">
@@ -652,12 +866,21 @@
 
 <script type="module">
 
-    import { auth } from "./firebase.js";
+    import { auth, db } from "./firebase.js";
 
     import {
         signInWithEmailAndPassword,
+        signOut,
         onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+    import {
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    const STUDENT_EMAIL_DOMAIN = "atlas-students.app";
 
 
     /* =========================
@@ -684,13 +907,288 @@
             app.style.transform =
                 "translateY(0)";
 
+            document
+                .getElementById("loginCode")
+                .focus();
+
         }, 1800);
 
     });
 
 
     /* =========================
-       PASSWORD
+       TABS
+    ========================= */
+
+    window.switchTab = function (tab) {
+
+        const studentTabBtn =
+            document.getElementById("studentTabBtn");
+
+        const teacherTabBtn =
+            document.getElementById("teacherTabBtn");
+
+        const studentPanel =
+            document.getElementById("studentPanel");
+
+        const teacherPanel =
+            document.getElementById("teacherPanel");
+
+
+        if (tab === "student") {
+
+            studentTabBtn.classList.add("active");
+            teacherTabBtn.classList.remove("active");
+
+            studentPanel.classList.add("active");
+            teacherPanel.classList.remove("active");
+
+            document
+                .getElementById("loginCode")
+                .focus();
+
+        } else {
+
+            teacherTabBtn.classList.add("active");
+            studentTabBtn.classList.remove("active");
+
+            teacherPanel.classList.add("active");
+            studentPanel.classList.remove("active");
+
+            document
+                .getElementById("email")
+                .focus();
+
+        }
+
+    };
+
+
+    /* =========================
+       STUDENT CODE INPUT
+    ========================= */
+
+    document
+        .getElementById("loginCode")
+        .addEventListener("input", event => {
+
+            event.target.value =
+                event.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 6);
+
+        });
+
+
+    document
+        .getElementById("loginCode")
+        .addEventListener(
+            "keydown",
+            event => {
+
+                if (event.key === "Enter") {
+
+                    studentLogin();
+
+                }
+
+            }
+        );
+
+
+    /* =========================
+       STUDENT LOGIN
+    ========================= */
+
+    window.studentLogin = async function () {
+
+        const code =
+            document
+                .getElementById("loginCode")
+                .value
+                .trim();
+
+        const button =
+            document
+                .getElementById("studentLoginButton");
+
+
+        if (!code || code.length !== 6) {
+
+            Swal.fire({
+
+                icon: "warning",
+
+                title: "كود غير صحيح",
+
+                text:
+                    "اكتب كود الدخول المكوّن من 6 أرقام.",
+
+                confirmButtonColor:
+                    "#10b981"
+
+            });
+
+            return;
+        }
+
+
+        button.disabled = true;
+
+        button.innerHTML = `
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري تسجيل الدخول...
+        `;
+
+
+        const fakeEmail =
+            `${code}@${STUDENT_EMAIL_DOMAIN}`;
+
+
+        try {
+
+            const result =
+                await signInWithEmailAndPassword(
+                    auth,
+                    fakeEmail,
+                    code
+                );
+
+
+            const userSnap =
+                await getDoc(
+                    doc(db, "users", result.user.uid)
+                );
+
+
+            if (
+                !userSnap.exists() ||
+                userSnap.data().role !== "student"
+            ) {
+
+                await signOut(auth);
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "كود غير صالح",
+
+                    text:
+                        "هذا الكود غير مرتبط بحساب طالب.",
+
+                    confirmButtonColor:
+                        "#10b981"
+
+                });
+
+                resetStudentButton();
+
+                return;
+
+            }
+
+
+            if (userSnap.data().active === false) {
+
+                await signOut(auth);
+
+                Swal.fire({
+
+                    icon: "error",
+
+                    title: "الحساب غير مفعّل",
+
+                    text:
+                        "تواصل مع المدرّس لتفعيل حسابك.",
+
+                    confirmButtonColor:
+                        "#10b981"
+
+                });
+
+                resetStudentButton();
+
+                return;
+
+            }
+
+
+            await Swal.fire({
+
+                icon: "success",
+
+                title: "تم الدخول بنجاح 🎉",
+
+                text:
+                    `أهلاً بك ${userSnap.data().name || ""}`,
+
+                showConfirmButton: false,
+
+                timer: 1200
+
+            });
+
+
+            window.location.href =
+                "student-dashboard.html";
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            let message =
+                "الكود غير صحيح أو غير مسجل.";
+
+
+            if (
+                error.code ===
+                "auth/too-many-requests"
+            ) {
+
+                message =
+                    "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
+
+            }
+
+
+            Swal.fire({
+
+                icon: "error",
+
+                title: "تعذر تسجيل الدخول",
+
+                text: message,
+
+                confirmButtonColor:
+                    "#10b981"
+
+            });
+
+
+            resetStudentButton();
+
+        }
+
+
+        function resetStudentButton() {
+
+            button.disabled = false;
+
+            button.innerHTML = `
+                <i class="fas fa-right-to-bracket"></i>
+                دخول
+            `;
+
+        }
+
+    };
+
+
+    /* =========================
+       PASSWORD TOGGLE
     ========================= */
 
     window.togglePassword = function () {
@@ -721,10 +1219,10 @@
 
 
     /* =========================
-       LOGIN
+       TEACHER LOGIN
     ========================= */
 
-    window.login = async function () {
+    window.teacherLogin = async function () {
 
         const email =
             document
@@ -739,7 +1237,7 @@
 
         const button =
             document
-                .getElementById("loginButton");
+                .getElementById("teacherLoginButton");
 
 
         if (!email || !password) {
@@ -778,17 +1276,6 @@
                     email,
                     password
                 );
-
-
-            sessionStorage.setItem(
-                "atlas_auth",
-                "true"
-            );
-
-            sessionStorage.setItem(
-                "atlas_uid",
-                result.user.uid
-            );
 
 
             await Swal.fire({
@@ -897,10 +1384,6 @@
     };
 
 
-    /* =========================
-       ENTER KEY
-    ========================= */
-
     document
         .getElementById("password")
         .addEventListener(
@@ -911,7 +1394,7 @@
                     event.key === "Enter"
                 ) {
 
-                    login();
+                    teacherLogin();
 
                 }
 
@@ -931,6 +1414,8 @@
 
                 // لا نحول تلقائياً هنا
                 // حتى لا يحدث Loop أثناء فتح الصفحة.
+                // كل من dashboard.html و student-dashboard.html
+                // يتحقق بنفسه من صلاحية المستخدم (admin / student).
 
                 console.log(
                     "Atlas user:",
