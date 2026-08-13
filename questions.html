@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#10b981">
+
+<title>بنك الأسئلة | Atlas Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+margin:0;
+font-family:'Cairo',sans-serif;
+background:
+radial-gradient(circle at top right,rgba(16,185,129,.08),transparent 35%),
+#f6f8fb;
+color:#172033;
+}
+
+button,input,select{
+font-family:inherit;
+}
+
+.topbar{
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border-bottom:1px solid #e8edf2;
+}
+
+.topbar-inner{
+max-width:1200px;
+margin:auto;
+padding:13px 18px;
+display:flex;
+align-items:center;
+gap:11px;
+}
+
+.back{
+width:42px;
+height:42px;
+border:0;
+border-radius:14px;
+background:white;
+color:#64748b;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+box-shadow:0 5px 18px rgba(15,23,42,.06);
+}
+
+.back:hover{
+color:#10b981;
+}
+
+.logo{
+width:43px;
+height:43px;
+border-radius:14px;
+background:linear-gradient(135deg,#10b981,#047857);
+color:white;
+font-family:'Reem Kufi',sans-serif;
+font-size:14px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 8px 20px rgba(16,185,129,.18);
+}
+
+.title{
+display:flex;
+flex-direction:column;
+line-height:1.3;
+}
+
+.title strong{
+font-size:14px;
+font-weight:900;
+}
+
+.title span{
+font-size:9px;
+color:#94a3b8;
+font-weight:700;
+}
+
+.main{
+max-width:1200px;
+margin:auto;
+padding:22px 18px 50px;
+}
+
+.hero{
+background:linear-gradient(135deg,#10b981,#047857);
+color:white;
+border-radius:25px;
+padding:22px;
+position:relative;
+overflow:hidden;
+box-shadow:0 15px 35px rgba(16,185,129,.16);
+}
+
+.hero:after{
+content:"";
+position:absolute;
+width:180px;
+height:180px;
+border-radius:50%;
+background:rgba(255,255,255,.07);
+left:-60px;
+bottom:-90px;
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+}
+
+.hero h1{
+margin:0;
+font-size:22px;
+font-weight:900;
+}
+
+.hero p{
+margin:6px 0 0;
+font-size:10px;
+font-weight:600;
+opacity:.9;
+}
+
+.hero-stats{
+display:flex;
+gap:9px;
+margin-top:17px;
+flex-wrap:wrap;
+}
+
+.hero-stat{
+background:rgba(255,255,255,.13);
+border:1px solid rgba(255,255,255,.12);
+padding:7px 11px;
+border-radius:12px;
+font-size:9px;
+font-weight:800;
+}
+
+.toolbar{
+background:white;
+border:1px solid #e8edf2;
+border-radius:23px;
+padding:16px;
+margin-top:15px;
+box-shadow:0 7px 25px rgba(15,23,42,.045);
+}
+
+.search{
+position:relative;
+}
+
+.search i{
+position:absolute;
+right:14px;
+top:50%;
+transform:translateY(-50%);
+color:#94a3b8;
+font-size:12px;
+}
+
+.search input{
+width:100%;
+padding:13px 40px 13px 13px;
+border:2px solid #eef2f6;
+background:#f8fafc;
+border-radius:15px;
+outline:none;
+font-size:11px;
+font-weight:700;
+}
+
+.search input:focus{
+border-color:#10b981;
+background:white;
+}
+
+.filters{
+display:grid;
+grid-template-columns:1fr;
+gap:9px;
+margin-top:10px;
+}
+
+.filters select{
+width:100%;
+padding:12px;
+border:2px solid #eef2f6;
+background:#f8fafc;
+border-radius:14px;
+outline:none;
+font-size:10px;
+font-weight:800;
+}
+
+.filters select:focus{
+border-color:#10b981;
+}
+
+.actions-row{
+display:flex;
+gap:9px;
+margin-top:10px;
+}
+
+.action-btn{
+flex:1;
+border:0;
+border-radius:14px;
+padding:12px;
+cursor:pointer;
+font-size:10px;
+font-weight:900;
+}
+
+.select-all{
+background:#ecfdf5;
+color:#047857;
+}
+
+.create-exam{
+background:linear-gradient(135deg,#10b981,#059669);
+color:white;
+box-shadow:0 8px 20px rgba(16,185,129,.15);
+}
+
+.create-exam:disabled{
+opacity:.45;
+cursor:not-allowed;
+}
+
+.section-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin:20px 0 11px;
+}
+
+.section-head h2{
+margin:0;
+font-size:14px;
+font-weight:900;
+}
+
+.count{
+background:#ecfdf5;
+color:#047857;
+padding:6px 10px;
+border-radius:11px;
+font-size:9px;
+font-weight:900;
+}
+
+.questions{
+display:grid;
+gap:12px;
+}
+
+.question{
+background:white;
+border:1px solid #e8edf2;
+border-radius:21px;
+padding:15px;
+box-shadow:0 6px 22px rgba(15,23,42,.04);
+transition:.2s;
+}
+
+.question:hover{
+transform:translateY(-2px);
+}
+
+.question-top{
+display:flex;
+align-items:flex-start;
+gap:10px;
+}
+
+.check{
+width:22px;
+height:22px;
+accent-color:#10b981;
+margin-top:3px;
+cursor:pointer;
+}
+
+.number{
+width:32px;
+height:32px;
+flex:0 0 32px;
+border-radius:10px;
+background:linear-gradient(135deg,#10b981,#059669);
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:9px;
+font-weight:900;
+}
+
+.question-body{
+flex:1;
+min-width:0;
+}
+
+.question-text{
+font-size:11px;
+font-weight:900;
+line-height:1.9;
+color:#1e293b;
+}
+
+.meta{
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+margin-top:8px;
+}
+
+.tag{
+padding:4px 7px;
+border-radius:8px;
+background:#f1f5f9;
+color:#64748b;
+font-size:8px;
+font-weight:800;
+}
+
+.options{
+display:grid;
+gap:6px;
+margin-top:13px;
+}
+
+.option{
+padding:8px 10px;
+border-radius:10px;
+background:#f8fafc;
+font-size:9px;
+font-weight:700;
+color:#64748b;
+}
+
+.option.correct{
+background:#ecfdf5;
+border:1px solid #bbf7d0;
+color:#047857;
+font-weight:900;
+}
+
+.option b{
+margin-left:4px;
+}
+
+.question-actions{
+display:flex;
+gap:7px;
+margin-top:12px;
+padding-top:10px;
+border-top:1px solid #f1f5f9;
+}
+
+.small-btn{
+border:0;
+border-radius:11px;
+padding:8px 11px;
+cursor:pointer;
+font-size:9px;
+font-weight:900;
+}
+
+.edit{
+background:#eff6ff;
+color:#2563eb;
+}
+
+.delete{
+background:#fff1f2;
+color:#e11d48;
+}
+
+.empty{
+background:white;
+border:1px dashed #cbd5e1;
+border-radius:20px;
+padding:45px 20px;
+text-align:center;
+color:#94a3b8;
+}
+
+.empty i{
+font-size:35px;
+margin-bottom:12px;
+color:#cbd5e1;
+}
+
+.empty strong{
+display:block;
+font-size:12px;
+color:#64748b;
+}
+
+.empty span{
+display:block;
+font-size:9px;
+margin-top:5px;
+}
+
+.loading{
+text-align:center;
+padding:45px;
+color:#94a3b8;
+font-size:11px;
+font-weight:800;
+}
+
+.loading i{
+display:block;
+font-size:25px;
+margin-bottom:10px;
+color:#10b981;
+}
+
+@media(min-width:700px){
+
+.filters{
+grid-template-columns:repeat(3,1fr);
+}
+
+.questions{
+grid-template-columns:repeat(2,1fr);
+}
+
+.hero h1{
+font-size:26px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+<div class="topbar-inner">
+
+<button class="back" onclick="location.href='dashboard.html'">
+<i class="fas fa-arrow-right"></i>
+</button>
+
+<div class="logo">أطلس</div>
+
+<div class="title">
+<strong>بنك الأسئلة</strong>
+<span>Atlas Platform</span>
+</div>
+
+</div>
+
+</header>
+
+<main class="main">
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+بنك أسئلة Atlas 📚
+</h1>
+
+<p>
+إدارة جميع الأسئلة المحفوظة في Firestore بسهولة.
+</p>
+
+<div class="hero-stats">
+
+<div class="hero-stat">
+<i class="fas fa-database"></i>
+ <span id="heroCount">0</span> سؤال
+</div>
+
+<div class="hero-stat">
+<i class="fas fa-check"></i>
+ <span id="selectedCount">0</span> محدد
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="toolbar">
+
+<div class="search">
+
+<i class="fas fa-search"></i>
+
+<input
+id="search"
+type="text"
+placeholder="ابحث داخل الأسئلة..."
+>
+
+</div>
+
+
+<div class="filters">
+
+<select id="stageFilter">
+
+<option value="">كل المراحل</option>
+
+<option value="primary">
+المرحلة الابتدائية
+</option>
+
+<option value="preparatory">
+المرحلة الإعدادية
+</option>
+
+</select>
+
+
+<select id="gradeFilter">
+
+<option value="">كل الصفوف</option>
+
+<option value="grade4">الرابع الابتدائي</option>
+<option value="grade5">الخامس الابتدائي</option>
+<option value="grade6">السادس الابتدائي</option>
+<option value="grade7">الأول الإعدادي</option>
+<option value="grade8">الثاني الإعدادي</option>
+<option value="grade9">الثالث الإعدادي</option>
+
+</select>
+
+
+<select id="lessonFilter">
+
+<option value="">كل الدروس</option>
+
+</select>
+
+</div>
+
+
+<div class="actions-row">
+
+<button
+class="action-btn select-all"
+id="selectAllBtn">
+
+<i class="fas fa-check-double"></i>
+ تحديد الكل
+
+</button>
+
+
+<button
+class="action-btn create-exam"
+id="createExamBtn"
+disabled>
+
+<i class="fas fa-file-circle-plus"></i>
+ إنشاء اختبار من المحدد
+
+</button>
+
+</div>
+
+</section>
+
+
+<div class="section-head">
+
+<h2>
+الأسئلة المحفوظة
+</h2>
+
+<div class="count" id="resultCount">
+0 سؤال
+</div>
+
+</div>
+
+
+<section id="questionsList" class="questions">
+
+<div class="loading">
+
+<i class="fas fa-spinner fa-spin"></i>
+
+جاري تحميل بنك الأسئلة...
+
+</div>
+
+</section>
+
+</main>
+
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+collection,
+getDocs,
+query,
+orderBy,
+deleteDoc,
+doc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+let currentUser = null;
+let allQuestions = [];
+let selectedQuestions = new Set();
+
+
+/* =========================================
+AUTH
+========================================= */
+
+onAuthStateChanged(auth, async user => {
+
+if(!user){
+
+location.href="index.html";
+return;
+
+}
+
+currentUser=user;
+
+try{
+
+const snapshot=await getDocs(
+query(
+collection(db,"users")
+)
+);
+
+let allowed=false;
+
+snapshot.forEach(d=>{
+
+if(
+d.id===user.uid &&
+d.data().role==="admin"
+){
+
+allowed=true;
+
+}
+
+});
+
+if(!allowed){
+
+await Swal.fire({
+
+icon:"error",
+title:"غير مسموح",
+text:"هذه الصفحة مخصصة للإدارة فقط.",
+confirmButtonColor:"#10b981"
+
+});
+
+location.href="index.html";
+return;
+
+}
+
+loadQuestions();
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+icon:"error",
+title:"خطأ",
+text:"تعذر التحقق من صلاحيات الحساب.",
+confirmButtonColor:"#10b981"
+});
+
+}
+
+});
+
+
+/* =========================================
+LOAD QUESTIONS
+========================================= */
+
+async function loadQuestions(){
+
+const list=document.getElementById("questionsList");
+
+list.innerHTML=`
+
+<div class="loading">
+
+<i class="fas fa-spinner fa-spin"></i>
+
+جاري تحميل الأسئلة...
+
+</div>
+
+`;
+
+try{
+
+const snapshot=await getDocs(
+collection(db,"questions")
+);
+
+allQuestions=[];
+
+snapshot.forEach(item=>{
+
+allQuestions.push({
+
+id:item.id,
+...item.data()
+
+});
+
+});
+
+allQuestions.sort((a,b)=>{
+
+const x=a.sourceNumber || 0;
+const y=b.sourceNumber || 0;
+
+return x-y;
+
+});
+
+updateLessons();
+
+renderQuestions();
+
+}catch(error){
+
+console.error(error);
+
+list.innerHTML=`
+
+<div class="empty">
+
+<i class="fas fa-triangle-exclamation"></i>
+
+<strong>
+تعذر تحميل بنك الأسئلة
+</strong>
+
+<span>
+تأكد من إعدادات Firestore وقواعد الأمان.
+</span>
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* =========================================
+LESSONS
+========================================= */
+
+function updateLessons(){
+
+const select=document.getElementById("lessonFilter");
+
+const lessons=[
+...new Set(
+allQuestions
+.map(q=>q.lesson)
+.filter(Boolean)
+)
+];
+
+select.innerHTML=
+`<option value="">كل الدروس</option>`+
+lessons
+.map(
+lesson=>
+`<option value="${escapeHtml(lesson)}">
+${escapeHtml(lesson)}
+</option>`
+)
+.join("");
+
+}
+
+
+/* =========================================
+FILTER
+========================================= */
+
+function getFilteredQuestions(){
+
+const search=
+document.getElementById("search")
+.value
+.trim()
+.toLowerCase();
+
+const stage=
+document.getElementById("stageFilter").value;
+
+const grade=
+document.getElementById("gradeFilter").value;
+
+const lesson=
+document.getElementById("lessonFilter").value;
+
+
+return allQuestions.filter(q=>{
+
+const text=`
+
+${q.text || ""}
+${q.unit || ""}
+${q.lesson || ""}
+${q.grade || ""}
+`.toLowerCase();
+
+return(
+
+(!search || text.includes(search)) &&
+
+(!stage || q.stage===stage) &&
+
+(!grade || q.grade===grade) &&
+
+(!lesson || q.lesson===lesson)
+
+);
+
+});
+
+}
+
+
+/* =========================================
+RENDER
+========================================= */
+
+function renderQuestions(){
+
+const list=
+document.getElementById("questionsList");
+
+const questions=
+getFilteredQuestions();
+
+document.getElementById("resultCount")
+.textContent=
+`${questions.length} سؤال`;
+
+document.getElementById("heroCount")
+.textContent=
+allQuestions.length;
+
+
+if(!questions.length){
+
+list.innerHTML=`
+
+<div class="empty">
+
+<i class="fas fa-folder-open"></i>
+
+<strong>
+لا توجد أسئلة
+</strong>
+
+<span>
+جرّب تغيير البحث أو الفلاتر أو أضف أسئلة جديدة.
+</span>
+
+</div>
+
+`;
+
+updateSelectionUI();
+
+return;
+
+}
+
+
+list.innerHTML=
+questions.map(q=>{
+
+const options=[
+["A","أ",q.options?.A],
+["B","ب",q.options?.B],
+["C","ج",q.options?.C],
+["D","د",q.options?.D]
+];
+
+return`
+
+<article class="question">
+
+<div class="question-top">
+
+<input
+class="check"
+type="checkbox"
+data-id="${q.id}"
+${selectedQuestions.has(q.id)?"checked":""}
+>
+
+<div class="number">
+${escapeHtml(q.sourceNumber || "—")}
+</div>
+
+<div class="question-body">
+
+<div class="question-text">
+${escapeHtml(q.text || "")}
+</div>
+
+<div class="meta">
+
+${q.stage ? `<span class="tag">${stageName(q.stage)}</span>`:""}
+
+${q.grade ? `<span class="tag">${gradeName(q.grade)}</span>`:""}
+
+${q.unit ? `<span class="tag">${escapeHtml(q.unit)}</span>`:""}
+
+${q.lesson ? `<span class="tag">${escapeHtml(q.lesson)}</span>`:""}
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="options">
+
+${options.map(o=>`
+
+<div class="option ${q.correctAnswer===o[0]?"correct":""}">
+
+<b>${o[1]})</b>
+
+${escapeHtml(o[2] || "")}
+
+${q.correctAnswer===o[0]?" ✓":""}
+
+</div>
+
+`).join("")}
+
+</div>
+
+
+<div class="question-actions">
+
+<button
+class="small-btn edit"
+data-edit="${q.id}">
+
+<i class="fas fa-pen"></i>
+ تعديل
+
+</button>
+
+
+<button
+class="small-btn delete"
+data-delete="${q.id}">
+
+<i class="fas fa-trash"></i>
+ حذف
+
+</button>
+
+</div>
+
+</article>
+
+`;
+
+}).join("");
+
+
+document
+.querySelectorAll(".check")
+.forEach(check=>{
+
+check.addEventListener("change",()=>{
+
+if(check.checked){
+
+selectedQuestions.add(check.dataset.id);
+
+}else{
+
+selectedQuestions.delete(check.dataset.id);
+
+}
+
+updateSelectionUI();
+
+});
+
+});
+
+
+document
+.querySelectorAll("[data-delete]")
+.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+deleteQuestion(btn.dataset.delete);
+
+});
+
+});
+
+
+document
+.querySelectorAll("[data-edit]")
+.forEach(btn=>{
+
+btn.addEventListener("click",()=>{
+
+editQuestion(btn.dataset.edit);
+
+});
+
+});
+
+
+updateSelectionUI();
+
+}
+
+
+/* =========================================
+SELECTION
+========================================= */
+
+function updateSelectionUI(){
+
+document.getElementById("selectedCount")
+.textContent=
+selectedQuestions.size;
+
+const btn=
+document.getElementById("createExamBtn");
+
+btn.disabled=
+selectedQuestions.size===0;
+
+}
+
+
+document
+.getElementById("selectAllBtn")
+.addEventListener("click",()=>{
+
+const visible=getFilteredQuestions();
+
+if(!visible.length)return;
+
+const allSelected=
+visible.every(q=>selectedQuestions.has(q.id));
+
+visible.forEach(q=>{
+
+if(allSelected){
+
+selectedQuestions.delete(q.id);
+
+}else{
+
+selectedQuestions.add(q.id);
+
+}
+
+});
+
+renderQuestions();
+
+});
+
+
+/* =========================================
+FILTER EVENTS
+========================================= */
+
+["search","stageFilter","gradeFilter","lessonFilter"]
+.forEach(id=>{
+
+document
+.getElementById(id)
+.addEventListener("input",renderQuestions);
+
+document
+.getElementById(id)
+.addEventListener("change",renderQuestions);
+
+});
+
+
+/* =========================================
+DELETE
+========================================= */
+
+async function deleteQuestion(id){
+
+const question=
+allQuestions.find(q=>q.id===id);
+
+if(!question)return;
+
+
+const result=
+await Swal.fire({
+
+icon:"warning",
+
+title:"حذف السؤال؟",
+
+html:
+`هل تريد حذف السؤال:<br><br>
+<b>${escapeHtml(question.text)}</b>`,
+
+showCancelButton:true,
+
+confirmButtonText:"نعم، احذف",
+
+cancelButtonText:"إلغاء",
+
+confirmButtonColor:"#e11d48",
+
+cancelButtonColor:"#64748b"
+
+});
+
+
+if(!result.isConfirmed)return;
+
+
+try{
+
+await deleteDoc(
+doc(db,"questions",id)
+);
+
+selectedQuestions.delete(id);
+
+await Swal.fire({
+
+icon:"success",
+
+title:"تم الحذف",
+
+text:"تم حذف السؤال من بنك الأسئلة.",
+
+confirmButtonColor:"#10b981",
+
+timer:1300,
+showConfirmButton:false
+
+});
+
+loadQuestions();
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+
+title:"فشل الحذف",
+
+text:"حدث خطأ أثناء حذف السؤال.",
+
+confirmButtonColor:"#10b981"
+
+});
+
+}
+
+}
+
+
+/* =========================================
+EDIT
+========================================= */
+
+async function editQuestion(id){
+
+const q=
+allQuestions.find(x=>x.id===id);
+
+if(!q)return;
+
+
+const result=
+await Swal.fire({
+
+title:"تعديل السؤال",
+
+width:650,
+
+html:`
+
+<div style="text-align:right;direction:rtl">
+
+<label style="font-size:12px;font-weight:800">
+السؤال
+</label>
+
+<textarea
+id="editText"
+style="
+width:100%;
+height:100px;
+margin:6px 0 12px;
+padding:10px;
+border:1px solid #ddd;
+border-radius:10px;
+font-family:Cairo;
+">${escapeHtml(q.text || "")}</textarea>
+
+
+<label style="font-size:12px;font-weight:800">
+الاختيار أ
+</label>
+
+<input
+id="editA"
+value="${escapeAttr(q.options?.A || "")}"
+style="width:100%;padding:9px;margin:5px 0 10px;border:1px solid #ddd;border-radius:9px;font-family:Cairo"
+>
+
+
+<label style="font-size:12px;font-weight:800">
+الاختيار ب
+</label>
+
+<input
+id="editB"
+value="${escapeAttr(q.options?.B || "")}"
+style="width:100%;padding:9px;margin:5px 0 10px;border:1px solid #ddd;border-radius:9px;font-family:Cairo"
+>
+
+
+<label style="font-size:12px;font-weight:800">
+الاختيار ج
+</label>
+
+<input
+id="editC"
+value="${escapeAttr(q.options?.C || "")}"
+style="width:100%;padding:9px;margin:5px 0 10px;border:1px solid #ddd;border-radius:9px;font-family:Cairo"
+>
+
+
+<label style="font-size:12px;font-weight:800">
+الاختيار د
+</label>
+
+<input
+id="editD"
+value="${escapeAttr(q.options?.D || "")}"
+style="width:100%;padding:9px;margin:5px 0 10px;border:1px solid #ddd;border-radius:9px;font-family:Cairo"
+>
+
+
+<label style="font-size:12px;font-weight:800">
+الإجابة الصحيحة
+</label>
+
+<select
+id="editAnswer"
+style="width:100%;padding:9px;border:1px solid #ddd;border-radius:9px;font-family:Cairo"
+>
+
+<option value="A" ${q.correctAnswer==="A"?"selected":""}>أ</option>
+<option value="B" ${q.correctAnswer==="B"?"selected":""}>ب</option>
+<option value="C" ${q.correctAnswer==="C"?"selected":""}>ج</option>
+<option value="D" ${q.correctAnswer==="D"?"selected":""}>د</option>
+
+</select>
+
+</div>
+
+`,
+
+showCancelButton:true,
+
+confirmButtonText:"حفظ التعديل",
+
+cancelButtonText:"إلغاء",
+
+confirmButtonColor:"#10b981",
+
+cancelButtonColor:"#64748b",
+
+preConfirm:()=>{
+
+return{
+
+text:document.getElementById("editText").value.trim(),
+
+A:document.getElementById("editA").value.trim(),
+
+B:document.getElementById("editB").value.trim(),
+
+C:document.getElementById("editC").value.trim(),
+
+D:document.getElementById("editD").value.trim(),
+
+answer:document.getElementById("editAnswer").value
+
+};
+
+}
+
+});
+
+
+if(!result.isConfirmed)return;
+
+
+const data=result.value;
+
+
+if(
+!data.text ||
+!data.A ||
+!data.B ||
+!data.C ||
+!data.D
+){
+
+Swal.fire({
+
+icon:"warning",
+title:"بيانات ناقصة",
+text:"يجب كتابة السؤال وجميع الاختيارات.",
+confirmButtonColor:"#10b981"
+
+});
+
+return;
+
+}
+
+
+try{
+
+const {updateDoc}=await import(
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js"
+);
+
+await updateDoc(
+
+doc(db,"questions",id),
+
+{
+
+text:data.text,
+
+options:{
+A:data.A,
+B:data.B,
+C:data.C,
+D:data.D
+},
+
+correctAnswer:data.answer
+
+}
+
+);
+
+
+await Swal.fire({
+
+icon:"success",
+title:"تم التعديل ✓",
+
+timer:1200,
+showConfirmButton:false
+
+});
+
+loadQuestions();
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+title:"فشل التعديل",
+text:"تعذر حفظ التعديل.",
+confirmButtonColor:"#10b981"
+
+});
+
+}
+
+}
+
+
+/* =========================================
+CREATE EXAM
+========================================= */
+
+document
+.getElementById("createExamBtn")
+.addEventListener("click",()=>{
+
+if(!selectedQuestions.size)return;
+
+
+/*
+نرسل معرفات الأسئلة إلى صفحة الاختبارات
+*/
+
+const ids=
+Array.from(selectedQuestions);
+
+sessionStorage.setItem(
+"selectedQuestionIds",
+JSON.stringify(ids)
+);
+
+location.href="exams.html";
+
+});
+
+
+/* =========================================
+HELPERS
+========================================= */
+
+function stageName(stage){
+
+return stage==="primary"
+?"ابتدائي"
+:"إعدادي";
+
+}
+
+
+function gradeName(grade){
+
+const map={
+
+grade4:"رابع ابتدائي",
+grade5:"خامس ابتدائي",
+grade6:"سادس ابتدائي",
+
+grade7:"أول إعدادي",
+grade8:"ثاني إعدادي",
+grade9:"ثالث إعدادي"
+
+};
+
+return map[grade] || grade;
+
+}
+
+
+function escapeHtml(text){
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+function escapeAttr(text){
+
+return escapeHtml(text);
+
+}
+
+</script>
+
+</body>
+</html>
