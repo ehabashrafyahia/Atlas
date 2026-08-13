@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#10b981">
+
+<title>إدارة الاختبارات | Atlas Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+margin:0;
+font-family:'Cairo',sans-serif;
+background:
+radial-gradient(circle at top right,rgba(16,185,129,.08),transparent 35%),
+#f6f8fb;
+color:#172033;
+}
+
+button,input,select{
+font-family:inherit;
+}
+
+.topbar{
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(255,255,255,.93);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border-bottom:1px solid #e8edf2;
+}
+
+.topbar-inner{
+max-width:1200px;
+margin:auto;
+padding:13px 18px;
+display:flex;
+align-items:center;
+gap:11px;
+}
+
+.back{
+width:42px;
+height:42px;
+border:0;
+border-radius:14px;
+background:white;
+color:#64748b;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+box-shadow:0 5px 18px rgba(15,23,42,.06);
+}
+
+.logo{
+width:43px;
+height:43px;
+border-radius:14px;
+background:linear-gradient(135deg,#10b981,#047857);
+color:white;
+font-family:'Reem Kufi',sans-serif;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:14px;
+font-weight:700;
+}
+
+.title{
+display:flex;
+flex-direction:column;
+line-height:1.3;
+}
+
+.title strong{
+font-size:14px;
+font-weight:900;
+}
+
+.title span{
+font-size:9px;
+color:#94a3b8;
+font-weight:700;
+}
+
+.main{
+max-width:1200px;
+margin:auto;
+padding:22px 18px 50px;
+}
+
+.hero{
+background:linear-gradient(135deg,#10b981,#047857);
+color:white;
+border-radius:25px;
+padding:23px;
+box-shadow:0 16px 35px rgba(16,185,129,.18);
+position:relative;
+overflow:hidden;
+}
+
+.hero:after{
+content:"";
+position:absolute;
+width:190px;
+height:190px;
+border-radius:50%;
+background:rgba(255,255,255,.07);
+left:-65px;
+bottom:-95px;
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+}
+
+.hero h1{
+margin:0;
+font-size:22px;
+font-weight:900;
+}
+
+.hero p{
+margin:6px 0 0;
+font-size:10px;
+font-weight:600;
+opacity:.9;
+}
+
+.stats{
+display:flex;
+gap:8px;
+margin-top:17px;
+flex-wrap:wrap;
+}
+
+.stat{
+padding:7px 11px;
+border-radius:11px;
+background:rgba(255,255,255,.13);
+border:1px solid rgba(255,255,255,.12);
+font-size:9px;
+font-weight:800;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr;
+gap:13px;
+margin-top:15px;
+}
+
+.card{
+background:white;
+border:1px solid #e8edf2;
+border-radius:23px;
+padding:18px;
+box-shadow:0 7px 25px rgba(15,23,42,.045);
+}
+
+.card-title{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:16px;
+}
+
+.card-icon{
+width:40px;
+height:40px;
+border-radius:13px;
+background:#dcfce7;
+color:#059669;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.card-title strong{
+display:block;
+font-size:13px;
+font-weight:900;
+}
+
+.card-title span{
+display:block;
+font-size:8px;
+color:#94a3b8;
+font-weight:700;
+margin-top:2px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:10px;
+}
+
+.field label{
+display:block;
+margin-bottom:6px;
+font-size:9px;
+font-weight:900;
+color:#475569;
+}
+
+.field input,
+.field select{
+width:100%;
+padding:12px;
+border:2px solid #eef2f6;
+background:#f8fafc;
+border-radius:14px;
+outline:none;
+font-size:10px;
+font-weight:700;
+}
+
+.field input:focus,
+.field select:focus{
+border-color:#10b981;
+background:white;
+}
+
+.full{
+grid-column:1/-1;
+}
+
+.question-list{
+display:grid;
+gap:9px;
+max-height:600px;
+overflow:auto;
+padding-right:2px;
+}
+
+.question-item{
+display:flex;
+gap:10px;
+align-items:flex-start;
+padding:12px;
+border:1px solid #e8edf2;
+border-radius:16px;
+background:#fbfdfe;
+cursor:pointer;
+transition:.18s;
+}
+
+.question-item:hover{
+border-color:#a7f3d0;
+}
+
+.question-item.selected{
+background:#ecfdf5;
+border-color:#86efac;
+}
+
+.question-check{
+width:20px;
+height:20px;
+accent-color:#10b981;
+margin-top:3px;
+cursor:pointer;
+}
+
+.q-number{
+width:29px;
+height:29px;
+border-radius:9px;
+background:#f1f5f9;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:8px;
+font-weight:900;
+color:#64748b;
+flex:0 0 29px;
+}
+
+.question-item.selected .q-number{
+background:#10b981;
+color:white;
+}
+
+.q-text{
+font-size:9px;
+font-weight:800;
+line-height:1.8;
+color:#334155;
+}
+
+.q-meta{
+display:flex;
+gap:4px;
+flex-wrap:wrap;
+margin-top:5px;
+}
+
+.tag{
+background:#f1f5f9;
+padding:3px 6px;
+border-radius:7px;
+font-size:7px;
+font-weight:800;
+color:#64748b;
+}
+
+.selected-box{
+margin-top:12px;
+background:#ecfdf5;
+border:1px solid #bbf7d0;
+border-radius:15px;
+padding:11px;
+text-align:center;
+font-size:10px;
+font-weight:900;
+color:#047857;
+}
+
+.save{
+width:100%;
+border:0;
+border-radius:17px;
+padding:15px;
+background:linear-gradient(135deg,#10b981,#059669);
+color:white;
+font-size:11px;
+font-weight:900;
+cursor:pointer;
+box-shadow:0 11px 25px rgba(16,185,129,.18);
+margin-top:13px;
+}
+
+.save:disabled{
+opacity:.5;
+cursor:not-allowed;
+}
+
+.clear{
+width:100%;
+border:0;
+border-radius:15px;
+padding:12px;
+background:#f1f5f9;
+color:#64748b;
+font-size:10px;
+font-weight:900;
+cursor:pointer;
+margin-top:9px;
+}
+
+.exams-title{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin:22px 0 11px;
+}
+
+.exams-title h2{
+margin:0;
+font-size:14px;
+font-weight:900;
+}
+
+.count{
+background:#ecfdf5;
+color:#047857;
+padding:6px 10px;
+border-radius:11px;
+font-size:9px;
+font-weight:900;
+}
+
+.exams{
+display:grid;
+grid-template-columns:1fr;
+gap:11px;
+}
+
+.exam{
+background:white;
+border:1px solid #e8edf2;
+border-radius:20px;
+padding:16px;
+box-shadow:0 6px 22px rgba(15,23,42,.04);
+}
+
+.exam-top{
+display:flex;
+align-items:flex-start;
+gap:10px;
+}
+
+.exam-icon{
+width:43px;
+height:43px;
+border-radius:14px;
+background:#ecfdf5;
+color:#059669;
+display:flex;
+align-items:center;
+justify-content:center;
+flex:0 0 43px;
+}
+
+.exam-name{
+font-size:12px;
+font-weight:900;
+}
+
+.exam-date{
+font-size:8px;
+color:#94a3b8;
+margin-top:3px;
+font-weight:700;
+}
+
+.exam-meta{
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+margin-top:12px;
+}
+
+.exam-actions{
+display:flex;
+gap:7px;
+margin-top:12px;
+padding-top:10px;
+border-top:1px solid #f1f5f9;
+}
+
+.exam-btn{
+border:0;
+border-radius:10px;
+padding:8px 11px;
+font-size:8px;
+font-weight:900;
+cursor:pointer;
+}
+
+.delete{
+background:#fff1f2;
+color:#e11d48;
+}
+
+.empty{
+background:white;
+border:1px dashed #cbd5e1;
+border-radius:20px;
+padding:35px;
+text-align:center;
+color:#94a3b8;
+font-size:10px;
+font-weight:800;
+}
+
+.loading{
+padding:35px;
+text-align:center;
+color:#94a3b8;
+font-size:10px;
+font-weight:800;
+}
+
+.loading i{
+font-size:24px;
+color:#10b981;
+display:block;
+margin-bottom:10px;
+}
+
+@media(min-width:700px){
+
+.grid{
+grid-template-columns:420px 1fr;
+align-items:start;
+}
+
+.form-grid{
+grid-template-columns:1fr 1fr;
+}
+
+.exams{
+grid-template-columns:repeat(2,1fr);
+}
+
+.hero h1{
+font-size:26px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+<div class="topbar-inner">
+
+<button class="back" onclick="location.href='dashboard.html'">
+<i class="fas fa-arrow-right"></i>
+</button>
+
+<div class="logo">
+أطلس
+</div>
+
+<div class="title">
+<strong>إدارة الاختبارات</strong>
+<span>Atlas Platform</span>
+</div>
+
+</div>
+
+</header>
+
+
+<main class="main">
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+إنشاء وإدارة الاختبارات 📝
+</h1>
+
+<p>
+كوّن اختبارك من بنك الأسئلة واحفظه مباشرة في Firestore.
+</p>
+
+<div class="stats">
+
+<div class="stat">
+<i class="fas fa-file-lines"></i>
+<span id="examCount">0</span> اختبار
+</div>
+
+<div class="stat">
+<i class="fas fa-circle-question"></i>
+<span id="questionCount">0</span> سؤال
+</div>
+
+<div class="stat">
+<i class="fas fa-check"></i>
+<span id="selectedCount">0</span> محدد
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<div class="grid">
+
+
+<section class="card">
+
+<div class="card-title">
+
+<div class="card-icon">
+<i class="fas fa-file-circle-plus"></i>
+</div>
+
+<div>
+<strong>بيانات الاختبار</strong>
+<span>حدد المعلومات الأساسية للاختبار</span>
+</div>
+
+</div>
+
+
+<div class="form-grid">
+
+
+<div class="field full">
+
+<label>
+اسم الاختبار
+</label>
+
+<input
+id="examTitle"
+placeholder="مثال: اختبار الوحدة الأولى"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+المرحلة
+</label>
+
+<select id="stage">
+
+<option value="">اختر المرحلة</option>
+
+<option value="primary">
+المرحلة الابتدائية
+</option>
+
+<option value="preparatory">
+المرحلة الإعدادية
+</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+الصف
+</label>
+
+<select id="grade">
+
+<option value="">اختر الصف</option>
+
+<option value="grade4">الرابع الابتدائي</option>
+<option value="grade5">الخامس الابتدائي</option>
+<option value="grade6">السادس الابتدائي</option>
+<option value="grade7">الأول الإعدادي</option>
+<option value="grade8">الثاني الإعدادي</option>
+<option value="grade9">الثالث الإعدادي</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+الوحدة
+</label>
+
+<input
+id="unit"
+placeholder="مثال: الوحدة الأولى"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+الدرس
+</label>
+
+<input
+id="lesson"
+placeholder="مثال: الدرس الأول"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+مدة الاختبار بالدقائق
+</label>
+
+<input
+id="duration"
+type="number"
+min="1"
+value="30"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+درجة السؤال
+</label>
+
+<input
+id="points"
+type="number"
+min="1"
+value="1"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+درجة النجاح
+</label>
+
+<input
+id="passPercent"
+type="number"
+min="0"
+max="100"
+value="50"
+>
+
+</div>
+
+</div>
+
+
+<div class="selected-box">
+
+<i class="fas fa-check-circle"></i>
+
+تم تحديد
+<span id="selectedNumber">0</span>
+سؤال
+
+</div>
+
+
+<button
+id="saveExam"
+class="save"
+disabled>
+
+<i class="fas fa-cloud-arrow-up"></i>
+
+حفظ الاختبار
+
+</button>
+
+
+<button
+id="clearSelection"
+class="clear">
+
+<i class="fas fa-rotate-left"></i>
+
+إلغاء التحديد
+
+</button>
+
+</section>
+
+
+<section class="card">
+
+<div class="card-title">
+
+<div class="card-icon">
+<i class="fas fa-list-check"></i>
+</div>
+
+<div>
+<strong>اختيار الأسئلة</strong>
+<span>حدد الأسئلة التي تريد إضافتها للاختبار</span>
+</div>
+
+</div>
+
+
+<div class="question-list" id="questionList">
+
+<div class="loading">
+
+<i class="fas fa-spinner fa-spin"></i>
+
+جاري تحميل بنك الأسئلة...
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<div class="exams-title">
+
+<h2>
+الاختبارات المحفوظة
+</h2>
+
+<div class="count" id="savedCount">
+0 اختبار
+</div>
+
+</div>
+
+
+<section class="exams" id="examsList">
+
+<div class="loading">
+
+<i class="fas fa-spinner fa-spin"></i>
+
+جاري تحميل الاختبارات...
+
+</div>
+
+</section>
+
+</main>
+
+
+<script type="module">
+
+import {
+auth,
+db
+} from "./firebase.js";
+
+
+import {
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+collection,
+getDocs,
+addDoc,
+deleteDoc,
+doc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+let currentUser=null;
+
+let questions=[];
+
+let exams=[];
+
+let selectedIds=new Set();
+
+
+/* =========================================
+AUTH
+========================================= */
+
+onAuthStateChanged(auth,async user=>{
+
+if(!user){
+
+location.href="index.html";
+return;
+
+}
+
+currentUser=user;
+
+loadData();
+
+});
+
+
+/* =========================================
+LOAD DATA
+========================================= */
+
+async function loadData(){
+
+await Promise.all([
+loadQuestions(),
+loadExams()
+]);
+
+applySessionSelection();
+
+}
+
+
+/* =========================================
+QUESTIONS
+========================================= */
+
+async function loadQuestions(){
+
+const snapshot=
+await getDocs(
+collection(db,"questions")
+);
+
+questions=[];
+
+snapshot.forEach(item=>{
+
+questions.push({
+
+id:item.id,
+...item.data()
+
+});
+
+});
+
+questions.sort(
+(a,b)=>
+(a.sourceNumber||0)-(b.sourceNumber||0)
+);
+
+document.getElementById("questionCount")
+.textContent=questions.length;
+
+renderQuestions();
+
+}
+
+
+/* =========================================
+RENDER QUESTIONS
+========================================= */
+
+function renderQuestions(){
+
+const list=
+document.getElementById("questionList");
+
+
+if(!questions.length){
+
+list.innerHTML=`
+
+<div class="empty">
+
+<i class="fas fa-folder-open"></i>
+
+<br>
+
+لا توجد أسئلة في بنك الأسئلة.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+list.innerHTML=
+questions.map(q=>`
+
+<label
+class="question-item ${selectedIds.has(q.id)?"selected":""}"
+data-id="${q.id}"
+>
+
+<input
+class="question-check"
+type="checkbox"
+${selectedIds.has(q.id)?"checked":""}
+>
+
+<div class="q-number">
+${escapeHtml(q.sourceNumber||"—")}
+</div>
+
+<div>
+
+<div class="q-text">
+${escapeHtml(q.text||"")}
+</div>
+
+<div class="q-meta">
+
+${q.grade?
+`<span class="tag">${gradeName(q.grade)}</span>`
+:""}
+
+${q.lesson?
+`<span class="tag">${escapeHtml(q.lesson)}</span>`
+:""}
+
+</div>
+
+</div>
+
+</label>
+
+`).join("");
+
+
+document
+.querySelectorAll(".question-item")
+.forEach(item=>{
+
+const checkbox=
+item.querySelector("input");
+
+checkbox.addEventListener(
+"change",
+()=>{
+
+const id=item.dataset.id;
+
+if(checkbox.checked){
+
+selectedIds.add(id);
+item.classList.add("selected");
+
+}else{
+
+selectedIds.delete(id);
+item.classList.remove("selected");
+
+}
+
+updateSelectedUI();
+
+});
+
+});
+
+updateSelectedUI();
+
+}
+
+
+/* =========================================
+SESSION SELECTION
+========================================= */
+
+function applySessionSelection(){
+
+try{
+
+const saved=
+sessionStorage.getItem(
+"selectedQuestionIds"
+);
+
+if(!saved)return;
+
+const ids=
+JSON.parse(saved);
+
+ids.forEach(id=>{
+selectedIds.add(id);
+});
+
+sessionStorage.removeItem(
+"selectedQuestionIds"
+);
+
+renderQuestions();
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+
+/* =========================================
+SELECT UI
+========================================= */
+
+function updateSelectedUI(){
+
+const count=
+selectedIds.size;
+
+document.getElementById(
+"selectedCount"
+).textContent=count;
+
+document.getElementById(
+"selectedNumber"
+).textContent=count;
+
+document.getElementById(
+"saveExam"
+).disabled=
+count===0;
+
+}
+
+
+/* =========================================
+CLEAR
+========================================= */
+
+document
+.getElementById("clearSelection")
+.addEventListener(
+"click",
+()=>{
+
+selectedIds.clear();
+
+renderQuestions();
+
+});
+
+
+/* =========================================
+SAVE EXAM
+========================================= */
+
+document
+.getElementById("saveExam")
+.addEventListener(
+"click",
+saveExam
+);
+
+
+async function saveExam(){
+
+if(!currentUser)return;
+
+const title=
+document.getElementById("examTitle")
+.value.trim();
+
+const stage=
+document.getElementById("stage")
+.value;
+
+const grade=
+document.getElementById("grade")
+.value;
+
+const unit=
+document.getElementById("unit")
+.value.trim();
+
+const lesson=
+document.getElementById("lesson")
+.value.trim();
+
+const duration=
+Number(
+document.getElementById("duration").value
+);
+
+const points=
+Number(
+document.getElementById("points").value
+);
+
+const passPercent=
+Number(
+document.getElementById("passPercent").value
+);
+
+
+if(
+!title||
+!stage||
+!grade||
+!unit||
+!lesson
+){
+
+Swal.fire({
+
+icon:"warning",
+title:"بيانات ناقصة",
+text:"أكمل بيانات الاختبار أولاً.",
+confirmButtonColor:"#10b981"
+
+});
+
+return;
+
+}
+
+
+if(
+!duration||
+duration<1||
+!points||
+points<1
+){
+
+Swal.fire({
+
+icon:"warning",
+title:"بيانات غير صحيحة",
+text:"راجع مدة الاختبار ودرجة السؤال.",
+confirmButtonColor:"#10b981"
+
+});
+
+return;
+
+}
+
+
+if(!selectedIds.size){
+
+Swal.fire({
+
+icon:"warning",
+title:"لم تحدد أسئلة",
+text:"حدد سؤالًا واحدًا على الأقل.",
+confirmButtonColor:"#10b981"
+
+});
+
+return;
+
+}
+
+
+const button=
+document.getElementById("saveExam");
+
+button.disabled=true;
+
+button.innerHTML=`
+
+<i class="fas fa-spinner fa-spin"></i>
+
+جاري إنشاء الاختبار...
+
+`;
+
+
+try{
+
+const selectedQuestions=
+questions.filter(q=>
+selectedIds.has(q.id)
+);
+
+
+const questionRefs=
+selectedQuestions.map(q=>({
+
+id:q.id,
+
+text:q.text,
+
+options:q.options,
+
+correctAnswer:q.correctAnswer,
+
+points:points
+
+}));
+
+
+const totalPoints=
+selectedQuestions.length*points;
+
+
+await addDoc(
+
+collection(db,"exams"),
+
+{
+
+title:title,
+
+stage:stage,
+
+grade:grade,
+
+unit:unit,
+
+lesson:lesson,
+
+duration:duration,
+
+questionCount:
+selectedQuestions.length,
+
+pointsPerQuestion:
+points,
+
+totalPoints:
+totalPoints,
+
+passPercent:
+passPercent,
+
+questions:
+questionRefs,
+
+isPublished:
+false,
+
+createdBy:
+currentUser.uid,
+
+createdAt:
+serverTimestamp()
+
+}
+
+);
+
+
+await Swal.fire({
+
+icon:"success",
+
+title:"تم إنشاء الاختبار 🎉",
+
+html:
+`تم حفظ اختبار <b>${escapeHtml(title)}</b><br>
+بعدد <b>${selectedQuestions.length}</b> سؤال.`,
+
+confirmButtonText:"ممتاز",
+
+confirmButtonColor:"#10b981"
+
+});
+
+
+selectedIds.clear();
+
+document.getElementById("examTitle").value="";
+document.getElementById("unit").value="";
+document.getElementById("lesson").value="";
+
+renderQuestions();
+
+loadExams();
+
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+
+title:"حدث خطأ",
+
+text:"تعذر حفظ الاختبار في Firestore.",
+confirmButtonColor:"#10b981"
+
+});
+
+}
+
+
+button.innerHTML=`
+
+<i class="fas fa-cloud-arrow-up"></i>
+
+حفظ الاختبار
+
+`;
+
+updateSelectedUI();
+
+}
+
+
+/* =========================================
+EXAMS
+========================================= */
+
+async function loadExams(){
+
+const list=
+document.getElementById("examsList");
+
+try{
+
+const snapshot=
+await getDocs(
+collection(db,"exams")
+);
+
+exams=[];
+
+snapshot.forEach(item=>{
+
+exams.push({
+
+id:item.id,
+...item.data()
+
+});
+
+});
+
+
+document.getElementById("examCount")
+.textContent=exams.length;
+
+document.getElementById("savedCount")
+.textContent=
+`${exams.length} اختبار`;
+
+
+renderExams();
+
+}catch(error){
+
+console.error(error);
+
+list.innerHTML=`
+
+<div class="empty">
+
+<i class="fas fa-triangle-exclamation"></i>
+
+<br>
+
+تعذر تحميل الاختبارات.
+
+</div>
+
+`;
+
+}
+
+}
+
+
+/* =========================================
+RENDER EXAMS
+========================================= */
+
+function renderExams(){
+
+const list=
+document.getElementById("examsList");
+
+
+if(!exams.length){
+
+list.innerHTML=`
+
+<div class="empty">
+
+<i class="fas fa-file-circle-question"></i>
+
+<br>
+
+لا توجد اختبارات محفوظة حتى الآن.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+list.innerHTML=
+exams.map(exam=>`
+
+<article class="exam">
+
+<div class="exam-top">
+
+<div class="exam-icon">
+
+<i class="fas fa-file-pen"></i>
+
+</div>
+
+<div>
+
+<div class="exam-name">
+${escapeHtml(exam.title||"اختبار بدون اسم")}
+</div>
+
+<div class="exam-date">
+${formatDate(exam.createdAt)}
+</div>
+
+</div>
+
+</div>
+
+
+<div class="exam-meta">
+
+<span class="tag">
+${stageName(exam.stage)}
+</span>
+
+<span class="tag">
+${gradeName(exam.grade)}
+</span>
+
+<span class="tag">
+${exam.questionCount||0} سؤال
+</span>
+
+<span class="tag">
+${exam.duration||0} دقيقة
+</span>
+
+<span class="tag">
+${exam.totalPoints||0} درجة
+</span>
+
+<span class="tag">
+${exam.isPublished?"منشور":"مسودة"}
+</span>
+
+</div>
+
+
+<div class="exam-actions">
+
+<button
+class="exam-btn delete"
+data-delete="${exam.id}">
+
+<i class="fas fa-trash"></i>
+حذف
+
+</button>
+
+</div>
+
+</article>
+
+`).join("");
+
+
+document
+.querySelectorAll("[data-delete]")
+.forEach(btn=>{
+
+btn.addEventListener(
+"click",
+()=>deleteExam(btn.dataset.delete)
+);
+
+});
+
+}
+
+
+/* =========================================
+DELETE EXAM
+========================================= */
+
+async function deleteExam(id){
+
+const exam=
+exams.find(x=>x.id===id);
+
+if(!exam)return;
+
+
+const result=
+await Swal.fire({
+
+icon:"warning",
+
+title:"حذف الاختبار؟",
+
+html:
+`سيتم حذف اختبار <b>${escapeHtml(exam.title)}</b>`,
+
+showCancelButton:true,
+
+confirmButtonText:"نعم، احذف",
+
+cancelButtonText:"إلغاء",
+
+confirmButtonColor:"#e11d48",
+
+cancelButtonColor:"#64748b"
+
+});
+
+
+if(!result.isConfirmed)return;
+
+
+try{
+
+await deleteDoc(
+doc(db,"exams",id)
+);
+
+
+await Swal.fire({
+
+icon:"success",
+
+title:"تم الحذف",
+
+timer:1200,
+showConfirmButton:false
+
+});
+
+
+loadExams();
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+title:"فشل الحذف",
+text:"تعذر حذف الاختبار.",
+confirmButtonColor:"#10b981"
+
+});
+
+}
+
+}
+
+
+/* =========================================
+HELPERS
+========================================= */
+
+function gradeName(grade){
+
+const map={
+
+grade4:"الرابع الابتدائي",
+grade5:"الخامس الابتدائي",
+grade6:"السادس الابتدائي",
+
+grade7:"الأول الإعدادي",
+grade8:"الثاني الإعدادي",
+grade9:"الثالث الإعدادي"
+
+};
+
+return map[grade]||grade||"";
+
+}
+
+
+function stageName(stage){
+
+return stage==="primary"
+?"ابتدائي"
+:"إعدادي";
+
+}
+
+
+function formatDate(timestamp){
+
+if(!timestamp)return"";
+
+try{
+
+const date=
+timestamp.toDate();
+
+return date.toLocaleDateString(
+"ar-EG",
+{
+
+year:"numeric",
+month:"long",
+day:"numeric"
+
+}
+);
+
+}catch{
+
+return"";
+
+}
+
+}
+
+
+function escapeHtml(text){
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
