@@ -241,8 +241,29 @@ border-color:#10b981;
 background:white;
 }
 
+.field select:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
 .full{
 grid-column:1/-1;
+}
+
+.filter-info{
+margin-top:12px;
+padding:10px 12px;
+background:#f0fdf4;
+border:1px solid #bbf7d0;
+border-radius:14px;
+font-size:9px;
+font-weight:800;
+color:#047857;
+display:none;
+}
+
+.filter-info.show{
+display:block;
 }
 
 .question-list{
@@ -497,6 +518,12 @@ font-size:10px;
 font-weight:800;
 }
 
+.empty i{
+font-size:25px;
+margin-bottom:8px;
+color:#10b981;
+}
+
 .loading{
 padding:35px;
 text-align:center;
@@ -571,7 +598,7 @@ font-size:26px;
 </h1>
 
 <p>
-كوّن اختبارك من بنك الأسئلة، ولا تنسَ نشره حتى يظهر للطلاب.
+كوّن اختبارك من بنك الأسئلة حسب الصف والدرس، ولا تنسَ نشره حتى يظهر للطلاب.
 </p>
 
 <div class="stats">
@@ -663,9 +690,9 @@ placeholder="مثال: اختبار الوحدة الأولى"
 الصف
 </label>
 
-<select id="grade">
+<select id="grade" disabled>
 
-<option value="">اختر الصف</option>
+<option value="">اختر المرحلة أولاً</option>
 
 <option value="grade4">الرابع الابتدائي</option>
 <option value="grade5">الخامس الابتدائي</option>
@@ -699,10 +726,13 @@ placeholder="مثال: الوحدة الأولى"
 الدرس
 </label>
 
-<input
-id="lesson"
-placeholder="مثال: الدرس الأول"
->
+<select id="lesson" disabled>
+
+<option value="">
+اختر الصف أولاً
+</option>
+
+</select>
 
 </div>
 
@@ -758,6 +788,13 @@ value="50"
 </div>
 
 
+<div
+id="filterInfo"
+class="filter-info"
+>
+</div>
+
+
 <div class="selected-box">
 
 <i class="fas fa-check-circle"></i>
@@ -804,7 +841,7 @@ class="clear">
 
 <div>
 <strong>اختيار الأسئلة</strong>
-<span>حدد الأسئلة التي تريد إضافتها للاختبار</span>
+<span>الأسئلة المعروضة تتبع الصف والدرس المحددين</span>
 </div>
 
 </div>
@@ -879,13 +916,15 @@ serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-let currentUser=null;
+let currentUser = null;
 
-let questions=[];
+let questions = [];
 
-let exams=[];
+let filteredQuestions = [];
 
-let selectedIds=new Set();
+let exams = [];
+
+let selectedIds = new Set();
 
 
 /* =========================================
@@ -897,6 +936,7 @@ onAuthStateChanged(auth,async user=>{
 if(!user){
 
 location.href="index.html";
+
 return;
 
 }
@@ -914,12 +954,20 @@ LOAD DATA
 
 async function loadData(){
 
+try{
+
 await Promise.all([
 loadQuestions(),
 loadExams()
 ]);
 
 applySessionSelection();
+
+}catch(error){
+
+console.error(error);
+
+}
 
 }
 
@@ -930,7 +978,7 @@ QUESTIONS
 
 async function loadQuestions(){
 
-const snapshot=
+const snapshot =
 await getDocs(
 collection(db,"questions")
 );
@@ -948,15 +996,257 @@ id:item.id,
 
 });
 
+
 questions.sort(
 (a,b)=>
 (a.sourceNumber||0)-(b.sourceNumber||0)
 );
 
+
 document.getElementById("questionCount")
 .textContent=questions.length;
 
+
+/*
+في البداية لا نعرض أي سؤال
+حتى يختار المستخدم الصف
+*/
+
+filteredQuestions=[];
+
 renderQuestions();
+
+}
+
+
+/* =========================================
+LOAD LESSONS FOR GRADE
+========================================= */
+
+function loadLessonsForGrade(){
+
+const grade =
+document.getElementById("grade").value;
+
+const lessonSelect =
+document.getElementById("lesson");
+
+
+selectedIds.clear();
+
+
+if(!grade){
+
+lessonSelect.disabled=true;
+
+lessonSelect.innerHTML=`
+
+<option value="">
+اختر الصف أولاً
+</option>
+
+`;
+
+filteredQuestions=[];
+
+renderQuestions();
+
+return;
+
+}
+
+
+lessonSelect.disabled=false;
+
+lessonSelect.innerHTML=`
+
+<option value="">
+كل دروس الصف
+</option>
+
+`;
+
+
+/*
+استخراج الدروس من أسئلة الصف المحدد فقط
+*/
+
+const lessons = [
+...new Set(
+
+questions
+.filter(q=>q.grade===grade)
+.map(q=>String(q.lesson||"").trim())
+.filter(Boolean)
+
+)
+];
+
+
+lessons.sort((a,b)=>
+a.localeCompare(b,"ar")
+);
+
+
+lessons.forEach(lesson=>{
+
+const option =
+document.createElement("option");
+
+option.value=lesson;
+
+option.textContent=lesson;
+
+lessonSelect.appendChild(option);
+
+});
+
+
+filterQuestions();
+
+}
+
+
+/* =========================================
+FILTER QUESTIONS
+========================================= */
+
+function filterQuestions(){
+
+const grade =
+document.getElementById("grade").value;
+
+const lesson =
+document.getElementById("lesson").value;
+
+
+/*
+لا يوجد صف
+*/
+
+if(!grade){
+
+filteredQuestions=[];
+
+updateFilterInfo();
+
+renderQuestions();
+
+return;
+
+}
+
+
+/*
+فلترة حسب الصف
+*/
+
+filteredQuestions =
+questions.filter(q=>
+String(q.grade||"").trim() ===
+String(grade).trim()
+);
+
+
+/*
+فلترة حسب الدرس
+*/
+
+if(lesson){
+
+filteredQuestions =
+filteredQuestions.filter(q=>
+String(q.lesson||"").trim() ===
+String(lesson).trim()
+);
+
+}
+
+
+/*
+إزالة أي أسئلة محددة
+لا تنتمي للفيلتر الحالي
+*/
+
+const validIds =
+new Set(
+filteredQuestions.map(q=>q.id)
+);
+
+selectedIds =
+new Set(
+[...selectedIds].filter(id=>
+validIds.has(id)
+)
+);
+
+
+updateFilterInfo();
+
+renderQuestions();
+
+}
+
+
+/* =========================================
+FILTER INFO
+========================================= */
+
+function updateFilterInfo(){
+
+const info =
+document.getElementById("filterInfo");
+
+const grade =
+document.getElementById("grade").value;
+
+const lesson =
+document.getElementById("lesson").value;
+
+
+if(!grade){
+
+info.classList.remove("show");
+
+info.innerHTML="";
+
+return;
+
+}
+
+
+const gradeText =
+gradeName(grade);
+
+
+if(lesson){
+
+info.innerHTML=`
+
+<i class="fas fa-filter"></i>
+
+يتم عرض أسئلة:
+<strong>${escapeHtml(gradeText)}</strong>
+—
+<strong>${escapeHtml(lesson)}</strong>
+
+`;
+
+}else{
+
+info.innerHTML=`
+
+<i class="fas fa-filter"></i>
+
+يتم عرض جميع أسئلة:
+<strong>${escapeHtml(gradeText)}</strong>
+
+`;
+
+}
+
+
+info.classList.add("show");
 
 }
 
@@ -967,33 +1257,59 @@ RENDER QUESTIONS
 
 function renderQuestions(){
 
-const list=
+const list =
 document.getElementById("questionList");
 
 
-if(!questions.length){
+if(!filteredQuestions.length){
+
+let message =
+"اختر الصف لعرض أسئلته.";
+
+
+const grade =
+document.getElementById("grade").value;
+
+const lesson =
+document.getElementById("lesson").value;
+
+
+if(grade && lesson){
+
+message=
+"لا توجد أسئلة لهذا الصف والدرس.";
+
+}else if(grade){
+
+message=
+"لا توجد أسئلة لهذا الصف.";
+
+}
+
 
 list.innerHTML=`
 
 <div class="empty">
 
-<i class="fas fa-folder-open"></i>
+<i class="fas fa-filter"></i>
 
 <br>
 
-لا توجد أسئلة في بنك الأسئلة.
+${message}
 
 </div>
 
 `;
+
+updateSelectedUI();
 
 return;
 
 }
 
 
-list.innerHTML=
-questions.map(q=>`
+list.innerHTML =
+filteredQuestions.map(q=>`
 
 <label
 class="question-item ${selectedIds.has(q.id)?"selected":""}"
@@ -1018,12 +1334,16 @@ ${escapeHtml(q.text||"")}
 
 <div class="q-meta">
 
-${q.grade?
-`<span class="tag">${gradeName(q.grade)}</span>`
-:""}
+<span class="tag">
+${escapeHtml(gradeName(q.grade))}
+</span>
 
 ${q.lesson?
-`<span class="tag">${escapeHtml(q.lesson)}</span>`
+`
+<span class="tag">
+${escapeHtml(q.lesson)}
+</span>
+`
 :""}
 
 </div>
@@ -1039,32 +1359,39 @@ document
 .querySelectorAll(".question-item")
 .forEach(item=>{
 
-const checkbox=
-item.querySelector("input");
+const checkbox =
+item.querySelector(".question-check");
+
 
 checkbox.addEventListener(
 "change",
 ()=>{
 
-const id=item.dataset.id;
+const id =
+item.dataset.id;
+
 
 if(checkbox.checked){
 
 selectedIds.add(id);
+
 item.classList.add("selected");
 
 }else{
 
 selectedIds.delete(id);
+
 item.classList.remove("selected");
 
 }
+
 
 updateSelectedUI();
 
 });
 
 });
+
 
 updateSelectedUI();
 
@@ -1079,23 +1406,39 @@ function applySessionSelection(){
 
 try{
 
-const saved=
+const saved =
 sessionStorage.getItem(
 "selectedQuestionIds"
 );
 
 if(!saved)return;
 
-const ids=
+
+const ids =
 JSON.parse(saved);
 
+
+const availableIds =
+new Set(
+filteredQuestions.map(q=>q.id)
+);
+
+
 ids.forEach(id=>{
+
+if(availableIds.has(id)){
+
 selectedIds.add(id);
+
+}
+
 });
+
 
 sessionStorage.removeItem(
 "selectedQuestionIds"
 );
+
 
 renderQuestions();
 
@@ -1114,27 +1457,177 @@ SELECT UI
 
 function updateSelectedUI(){
 
-const count=
+const count =
 selectedIds.size;
+
 
 document.getElementById(
 "selectedCount"
 ).textContent=count;
 
+
 document.getElementById(
 "selectedNumber"
 ).textContent=count;
 
+
 document.getElementById(
 "saveExam"
-).disabled=
+).disabled =
 count===0;
 
 }
 
 
 /* =========================================
-CLEAR
+STAGE CHANGE
+========================================= */
+
+document
+.getElementById("stage")
+.addEventListener(
+"change",
+()=>{
+
+const stage =
+document.getElementById("stage").value;
+
+const grade =
+document.getElementById("grade");
+
+const lesson =
+document.getElementById("lesson");
+
+
+selectedIds.clear();
+
+
+/*
+فتح الصف حسب المرحلة
+*/
+
+if(stage==="primary"){
+
+grade.disabled=false;
+
+grade.value="";
+
+grade.innerHTML=`
+
+<option value="">
+اختر الصف
+</option>
+
+<option value="grade4">
+الرابع الابتدائي
+</option>
+
+<option value="grade5">
+الخامس الابتدائي
+</option>
+
+<option value="grade6">
+السادس الابتدائي
+</option>
+
+`;
+
+}else if(stage==="preparatory"){
+
+grade.disabled=false;
+
+grade.value="";
+
+grade.innerHTML=`
+
+<option value="">
+اختر الصف
+</option>
+
+<option value="grade7">
+الأول الإعدادي
+</option>
+
+<option value="grade8">
+الثاني الإعدادي
+</option>
+
+<option value="grade9">
+الثالث الإعدادي
+</option>
+
+`;
+
+}else{
+
+grade.disabled=true;
+
+grade.innerHTML=`
+
+<option value="">
+اختر المرحلة أولاً
+</option>
+
+`;
+
+}
+
+
+lesson.disabled=true;
+
+lesson.innerHTML=`
+
+<option value="">
+اختر الصف أولاً
+</option>
+
+`;
+
+filteredQuestions=[];
+
+updateFilterInfo();
+
+renderQuestions();
+
+});
+
+
+/* =========================================
+GRADE CHANGE
+========================================= */
+
+document
+.getElementById("grade")
+.addEventListener(
+"change",
+()=>{
+
+selectedIds.clear();
+
+loadLessonsForGrade();
+
+});
+
+
+/* =========================================
+LESSON CHANGE
+========================================= */
+
+document
+.getElementById("lesson")
+.addEventListener(
+"change",
+()=>{
+
+selectedIds.clear();
+
+filterQuestions();
+
+});
+
+
+/* =========================================
+CLEAR SELECTION
 ========================================= */
 
 document
@@ -1166,41 +1659,55 @@ async function saveExam(){
 
 if(!currentUser)return;
 
-const title=
+
+const title =
 document.getElementById("examTitle")
 .value.trim();
 
-const stage=
+
+const stage =
 document.getElementById("stage")
 .value;
 
-const grade=
+
+const grade =
 document.getElementById("grade")
 .value;
 
-const unit=
+
+const unit =
 document.getElementById("unit")
 .value.trim();
 
-const lesson=
-document.getElementById("lesson")
-.value.trim();
 
-const duration=
+const lesson =
+document.getElementById("lesson")
+.value;
+
+
+const duration =
 Number(
 document.getElementById("duration").value
 );
 
-const points=
+
+const points =
 Number(
 document.getElementById("points").value
 );
 
-const passPercent=
+
+const passPercent =
 Number(
 document.getElementById("passPercent").value
 );
 
+
+/*
+=========================================
+VALIDATION
+=========================================
+*/
 
 if(
 !title||
@@ -1213,8 +1720,12 @@ if(
 Swal.fire({
 
 icon:"warning",
+
 title:"بيانات ناقصة",
-text:"أكمل بيانات الاختبار أولاً.",
+
+text:
+"أكمل بيانات الاختبار واختر الصف والدرس أولاً.",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1234,8 +1745,35 @@ points<1
 Swal.fire({
 
 icon:"warning",
+
 title:"بيانات غير صحيحة",
-text:"راجع مدة الاختبار ودرجة السؤال.",
+
+text:
+"راجع مدة الاختبار ودرجة السؤال.",
+
+confirmButtonColor:"#10b981"
+
+});
+
+return;
+
+}
+
+
+if(
+passPercent<0||
+passPercent>100
+){
+
+Swal.fire({
+
+icon:"warning",
+
+title:"درجة النجاح غير صحيحة",
+
+text:
+"درجة النجاح يجب أن تكون بين 0 و100.",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1250,8 +1788,12 @@ if(!selectedIds.size){
 Swal.fire({
 
 icon:"warning",
+
 title:"لم تحدد أسئلة",
-text:"حدد سؤالًا واحدًا على الأقل.",
+
+text:
+"حدد سؤالًا واحدًا على الأقل.",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1261,10 +1803,63 @@ return;
 }
 
 
-const button=
+/*
+=========================================
+أمان إضافي
+التأكد أن كل الأسئلة المحددة
+تنتمي فعلاً للصف والدرس
+=========================================
+*/
+
+const selectedQuestions =
+questions.filter(q=>{
+
+return selectedIds.has(q.id) &&
+String(q.grade||"").trim() ===
+String(grade).trim() &&
+String(q.lesson||"").trim() ===
+String(lesson).trim();
+
+});
+
+
+/*
+لو حصل أي خلل
+*/
+
+if(
+selectedQuestions.length !==
+selectedIds.size
+){
+
+Swal.fire({
+
+icon:"error",
+
+title:"خطأ في الأسئلة",
+
+text:
+"يوجد سؤال محدد لا ينتمي للصف أو الدرس الحالي. تم إلغاء التحديد.",
+
+confirmButtonColor:"#10b981"
+
+});
+
+selectedIds.clear();
+
+renderQuestions();
+
+return;
+
+}
+
+
+const button =
 document.getElementById("saveExam");
 
+
 button.disabled=true;
+
 
 button.innerHTML=`
 
@@ -1277,13 +1872,14 @@ button.innerHTML=`
 
 try{
 
-const selectedQuestions=
-questions.filter(q=>
-selectedIds.has(q.id)
-);
 
+/*
+=========================================
+QUESTION REFERENCES
+=========================================
+*/
 
-const questionRefs=
+const questionRefs =
 selectedQuestions.map(q=>({
 
 id:q.id,
@@ -1299,9 +1895,15 @@ points:points
 }));
 
 
-const totalPoints=
-selectedQuestions.length*points;
+const totalPoints =
+selectedQuestions.length * points;
 
+
+/*
+=========================================
+SAVE
+=========================================
+*/
 
 await addDoc(
 
@@ -1336,8 +1938,7 @@ passPercent,
 questions:
 questionRefs,
 
-isPublished:
-false,
+isPublished:false,
 
 createdBy:
 currentUser.uid,
@@ -1357,11 +1958,35 @@ icon:"success",
 title:"تم إنشاء الاختبار 🎉",
 
 html:
-`تم حفظ اختبار <b>${escapeHtml(title)}</b> كمسودة
-بعدد <b>${selectedQuestions.length}</b> سؤال.
+
+`تم حفظ اختبار <b>
+${escapeHtml(title)}
+</b> كمسودة
+
 <br><br>
-<span style="font-size:11px;color:#c2410c">
-لن يظهر للطلاب حتى تقوم بنشره من القائمة أسفل الصفحة.
+
+الصف:
+<b>${escapeHtml(gradeName(grade))}</b>
+
+<br>
+
+الدرس:
+<b>${escapeHtml(lesson)}</b>
+
+<br><br>
+
+عدد الأسئلة:
+<b>${selectedQuestions.length}</b>
+
+<br><br>
+
+<span style="
+font-size:11px;
+color:#c2410c
+">
+
+لن يظهر للطلاب حتى تقوم بنشره.
+
 </span>`,
 
 confirmButtonText:"تمام",
@@ -1373,9 +1998,21 @@ confirmButtonColor:"#10b981"
 
 selectedIds.clear();
 
-document.getElementById("examTitle").value="";
-document.getElementById("unit").value="";
-document.getElementById("lesson").value="";
+
+document.getElementById(
+"examTitle"
+).value="";
+
+
+document.getElementById(
+"unit"
+).value="";
+
+
+/*
+إبقاء الصف والدرس
+حتى يستطيع إنشاء اختبار آخر
+*/
 
 renderQuestions();
 
@@ -1386,13 +2023,16 @@ loadExams();
 
 console.error(error);
 
+
 Swal.fire({
 
 icon:"error",
 
 title:"حدث خطأ",
 
-text:"تعذر حفظ الاختبار في Firestore.",
+text:
+"تعذر حفظ الاختبار في Firestore.",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1408,6 +2048,7 @@ button.innerHTML=`
 
 `;
 
+
 updateSelectedUI();
 
 }
@@ -1419,17 +2060,21 @@ EXAMS
 
 async function loadExams(){
 
-const list=
+const list =
 document.getElementById("examsList");
+
 
 try{
 
-const snapshot=
+
+const snapshot =
 await getDocs(
 collection(db,"exams")
 );
 
+
 exams=[];
+
 
 snapshot.forEach(item=>{
 
@@ -1443,19 +2088,25 @@ id:item.id,
 });
 
 
-document.getElementById("examCount")
-.textContent=exams.length;
+document.getElementById(
+"examCount"
+).textContent =
+exams.length;
 
-document.getElementById("savedCount")
-.textContent=
+
+document.getElementById(
+"savedCount"
+).textContent =
 `${exams.length} اختبار`;
 
 
 renderExams();
 
+
 }catch(error){
 
 console.error(error);
+
 
 list.innerHTML=`
 
@@ -1482,7 +2133,7 @@ RENDER EXAMS
 
 function renderExams(){
 
-const list=
+const list =
 document.getElementById("examsList");
 
 
@@ -1507,7 +2158,7 @@ return;
 }
 
 
-list.innerHTML=
+list.innerHTML =
 exams.map(exam=>`
 
 <article class="exam">
@@ -1523,11 +2174,17 @@ exams.map(exam=>`
 <div>
 
 <div class="exam-name">
-${escapeHtml(exam.title||"اختبار بدون اسم")}
+
+${escapeHtml(
+exam.title||"اختبار بدون اسم"
+)}
+
 </div>
 
 <div class="exam-date">
+
 ${formatDate(exam.createdAt)}
+
 </div>
 
 </div>
@@ -1546,6 +2203,10 @@ ${gradeName(exam.grade)}
 </span>
 
 <span class="tag">
+${escapeHtml(exam.lesson||"")}
+</span>
+
+<span class="tag">
 ${exam.questionCount||0} سؤال
 </span>
 
@@ -1557,8 +2218,14 @@ ${exam.duration||0} دقيقة
 ${exam.totalPoints||0} درجة
 </span>
 
-<span class="tag ${exam.isPublished ? "badge-published" : "badge-draft"}">
-${exam.isPublished?"منشور للطلاب":"مسودة (غير ظاهر)"}
+<span class="tag ${exam.isPublished ?
+"badge-published" :
+"badge-draft"}">
+
+${exam.isPublished ?
+"منشور للطلاب" :
+"مسودة (غير ظاهر)"}
+
 </span>
 
 </div>
@@ -1567,19 +2234,34 @@ ${exam.isPublished?"منشور للطلاب":"مسودة (غير ظاهر)"}
 <div class="exam-actions">
 
 <button
-class="exam-btn ${exam.isPublished ? "publish-off" : "publish-on"}"
+class="exam-btn ${
+exam.isPublished ?
+"publish-off" :
+"publish-on"
+}"
 data-toggle="${exam.id}">
 
-<i class="fas ${exam.isPublished ? "fa-eye-slash" : "fa-eye"}"></i>
-${exam.isPublished ? "إخفاء عن الطلاب" : "نشر للطلاب"}
+<i class="fas ${
+exam.isPublished ?
+"fa-eye-slash" :
+"fa-eye"
+}"></i>
+
+${
+exam.isPublished ?
+"إخفاء عن الطلاب" :
+"نشر للطلاب"
+}
 
 </button>
+
 
 <button
 class="exam-btn delete"
 data-delete="${exam.id}">
 
 <i class="fas fa-trash"></i>
+
 حذف
 
 </button>
@@ -1597,7 +2279,9 @@ document
 
 btn.addEventListener(
 "click",
-()=>deleteExam(btn.dataset.delete)
+()=>deleteExam(
+btn.dataset.delete
+)
 );
 
 });
@@ -1609,7 +2293,9 @@ document
 
 btn.addEventListener(
 "click",
-()=>togglePublish(btn.dataset.toggle)
+()=>togglePublish(
+btn.dataset.toggle
+)
 );
 
 });
@@ -1623,12 +2309,14 @@ TOGGLE PUBLISH
 
 async function togglePublish(id){
 
-const exam=
+const exam =
 exams.find(x=>x.id===id);
+
 
 if(!exam)return;
 
-const newState=
+
+const newState =
 !exam.isPublished;
 
 
@@ -1639,7 +2327,9 @@ await updateDoc(
 doc(db,"exams",id),
 
 {
+
 isPublished:newState
+
 }
 
 );
@@ -1650,14 +2340,14 @@ await Swal.fire({
 icon:"success",
 
 title:
-newState
-? "تم نشر الاختبار 🎉"
-: "تم إخفاء الاختبار",
+newState ?
+"تم نشر الاختبار 🎉" :
+"تم إخفاء الاختبار",
 
 text:
-newState
-? "سيظهر الاختبار الآن لطلاب الصف المحدد."
-: "لن يظهر الاختبار للطلاب حتى تنشره مرة أخرى.",
+newState ?
+"سيظهر الاختبار الآن لطلاب الصف المحدد." :
+"لن يظهر الاختبار للطلاب حتى تنشره مرة أخرى.",
 
 timer:1400,
 
@@ -1673,10 +2363,14 @@ loadExams();
 
 console.error(error);
 
+
 Swal.fire({
 
 icon:"error",
-title:"تعذر تحديث حالة الاختبار",
+
+title:
+"تعذر تحديث حالة الاختبار",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1692,13 +2386,14 @@ DELETE EXAM
 
 async function deleteExam(id){
 
-const exam=
+const exam =
 exams.find(x=>x.id===id);
+
 
 if(!exam)return;
 
 
-const result=
+const result =
 await Swal.fire({
 
 icon:"warning",
@@ -1706,7 +2401,9 @@ icon:"warning",
 title:"حذف الاختبار؟",
 
 html:
-`سيتم حذف اختبار <b>${escapeHtml(exam.title)}</b>`,
+`سيتم حذف اختبار <b>
+${escapeHtml(exam.title)}
+</b>`,
 
 showCancelButton:true,
 
@@ -1738,6 +2435,7 @@ icon:"success",
 title:"تم الحذف",
 
 timer:1200,
+
 showConfirmButton:false
 
 });
@@ -1745,15 +2443,21 @@ showConfirmButton:false
 
 loadExams();
 
+
 }catch(error){
 
 console.error(error);
 
+
 Swal.fire({
 
 icon:"error",
+
 title:"فشل الحذف",
-text:"تعذر حذف الاختبار.",
+
+text:
+"تعذر حذف الاختبار.",
+
 confirmButtonColor:"#10b981"
 
 });
@@ -1772,11 +2476,15 @@ function gradeName(grade){
 const map={
 
 grade4:"الرابع الابتدائي",
+
 grade5:"الخامس الابتدائي",
+
 grade6:"السادس الابتدائي",
 
 grade7:"الأول الإعدادي",
+
 grade8:"الثاني الإعدادي",
+
 grade9:"الثالث الإعدادي"
 
 };
@@ -1789,8 +2497,10 @@ return map[grade]||grade||"";
 function stageName(stage){
 
 return stage==="primary"
-?"ابتدائي"
-:"إعدادي";
+?
+"ابتدائي"
+:
+"إعدادي";
 
 }
 
@@ -1799,20 +2509,25 @@ function formatDate(timestamp){
 
 if(!timestamp)return"";
 
+
 try{
 
-const date=
+const date =
 timestamp.toDate();
+
 
 return date.toLocaleDateString(
 "ar-EG",
 {
 
 year:"numeric",
+
 month:"long",
+
 day:"numeric"
 
 }
+
 );
 
 }catch{
@@ -1827,10 +2542,15 @@ return"";
 function escapeHtml(text){
 
 return String(text)
+
 .replace(/&/g,"&amp;")
+
 .replace(/</g,"&lt;")
+
 .replace(/>/g,"&gt;")
+
 .replace(/"/g,"&quot;")
+
 .replace(/'/g,"&#039;");
 
 }
