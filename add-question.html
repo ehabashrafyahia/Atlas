@@ -1799,6 +1799,17 @@ async function saveAllQuestions() {
 }
 
 
+/* =========================================
+   EXPOSE TO WINDOW
+   (onclick في الـ HTML لا يصل للدوال
+   المعرّفة داخل type="module" إلا إذا
+   ربطناها بـ window صراحة)
+========================================= */
+
+window.parseQuestions = parseQuestions;
+window.saveAllQuestions = saveAllQuestions;
+
+
 </script>
 
 </body>
