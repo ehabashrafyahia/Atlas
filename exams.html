@@ -441,12 +441,23 @@ gap:5px;
 margin-top:12px;
 }
 
+.badge-published{
+background:#dcfce7 !important;
+color:#059669 !important;
+}
+
+.badge-draft{
+background:#fef3c7 !important;
+color:#b45309 !important;
+}
+
 .exam-actions{
 display:flex;
 gap:7px;
 margin-top:12px;
 padding-top:10px;
 border-top:1px solid #f1f5f9;
+flex-wrap:wrap;
 }
 
 .exam-btn{
@@ -456,6 +467,18 @@ padding:8px 11px;
 font-size:8px;
 font-weight:900;
 cursor:pointer;
+flex:1;
+min-width:90px;
+}
+
+.publish-on{
+background:#ecfdf5;
+color:#059669;
+}
+
+.publish-off{
+background:#fff7ed;
+color:#c2410c;
 }
 
 .delete{
@@ -548,7 +571,7 @@ font-size:26px;
 </h1>
 
 <p>
-كوّن اختبارك من بنك الأسئلة واحفظه مباشرة في Firestore.
+كوّن اختبارك من بنك الأسئلة، ولا تنسَ نشره حتى يظهر للطلاب.
 </p>
 
 <div class="stats">
@@ -753,7 +776,7 @@ disabled>
 
 <i class="fas fa-cloud-arrow-up"></i>
 
-حفظ الاختبار
+حفظ الاختبار كمسودة
 
 </button>
 
@@ -849,6 +872,7 @@ import {
 collection,
 getDocs,
 addDoc,
+updateDoc,
 deleteDoc,
 doc,
 serverTimestamp
@@ -1333,10 +1357,14 @@ icon:"success",
 title:"تم إنشاء الاختبار 🎉",
 
 html:
-`تم حفظ اختبار <b>${escapeHtml(title)}</b><br>
-بعدد <b>${selectedQuestions.length}</b> سؤال.`,
+`تم حفظ اختبار <b>${escapeHtml(title)}</b> كمسودة
+بعدد <b>${selectedQuestions.length}</b> سؤال.
+<br><br>
+<span style="font-size:11px;color:#c2410c">
+لن يظهر للطلاب حتى تقوم بنشره من القائمة أسفل الصفحة.
+</span>`,
 
-confirmButtonText:"ممتاز",
+confirmButtonText:"تمام",
 
 confirmButtonColor:"#10b981"
 
@@ -1376,7 +1404,7 @@ button.innerHTML=`
 
 <i class="fas fa-cloud-arrow-up"></i>
 
-حفظ الاختبار
+حفظ الاختبار كمسودة
 
 `;
 
@@ -1529,14 +1557,23 @@ ${exam.duration||0} دقيقة
 ${exam.totalPoints||0} درجة
 </span>
 
-<span class="tag">
-${exam.isPublished?"منشور":"مسودة"}
+<span class="tag ${exam.isPublished ? "badge-published" : "badge-draft"}">
+${exam.isPublished?"منشور للطلاب":"مسودة (غير ظاهر)"}
 </span>
 
 </div>
 
 
 <div class="exam-actions">
+
+<button
+class="exam-btn ${exam.isPublished ? "publish-off" : "publish-on"}"
+data-toggle="${exam.id}">
+
+<i class="fas ${exam.isPublished ? "fa-eye-slash" : "fa-eye"}"></i>
+${exam.isPublished ? "إخفاء عن الطلاب" : "نشر للطلاب"}
+
+</button>
 
 <button
 class="exam-btn delete"
@@ -1564,6 +1601,87 @@ btn.addEventListener(
 );
 
 });
+
+
+document
+.querySelectorAll("[data-toggle]")
+.forEach(btn=>{
+
+btn.addEventListener(
+"click",
+()=>togglePublish(btn.dataset.toggle)
+);
+
+});
+
+}
+
+
+/* =========================================
+TOGGLE PUBLISH
+========================================= */
+
+async function togglePublish(id){
+
+const exam=
+exams.find(x=>x.id===id);
+
+if(!exam)return;
+
+const newState=
+!exam.isPublished;
+
+
+try{
+
+await updateDoc(
+
+doc(db,"exams",id),
+
+{
+isPublished:newState
+}
+
+);
+
+
+await Swal.fire({
+
+icon:"success",
+
+title:
+newState
+? "تم نشر الاختبار 🎉"
+: "تم إخفاء الاختبار",
+
+text:
+newState
+? "سيظهر الاختبار الآن لطلاب الصف المحدد."
+: "لن يظهر الاختبار للطلاب حتى تنشره مرة أخرى.",
+
+timer:1400,
+
+showConfirmButton:false
+
+});
+
+
+loadExams();
+
+
+}catch(error){
+
+console.error(error);
+
+Swal.fire({
+
+icon:"error",
+title:"تعذر تحديث حالة الاختبار",
+confirmButtonColor:"#10b981"
+
+});
+
+}
 
 }
 
