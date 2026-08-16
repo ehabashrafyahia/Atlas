@@ -1147,7 +1147,7 @@ async function submitExam(autoSubmitted) {
         );
 
 
-        renderResult(score, total, percentage);
+        renderResult(score, total, percentage, detailedAnswers);
 
 
     } catch (error) {
@@ -1181,7 +1181,7 @@ async function submitExam(autoSubmitted) {
    RENDER RESULT
 ========================================= */
 
-function renderResult(score, total, percentage) {
+function renderResult(score, total, percentage, detailedAnswers) {
 
     const container =
         document.getElementById("examContainer");
@@ -1195,6 +1195,117 @@ function renderResult(score, total, percentage) {
 
     document.getElementById("timerBox")
         .style.display = "none";
+
+
+    const questions =
+        exam.questions || [];
+
+
+    const reviewHtml =
+        questions.map((q, index) => {
+
+            const answer =
+                (detailedAnswers || []).find(a => a.questionId === q.id) || {};
+
+            const isCorrect =
+                Boolean(answer.isCorrect);
+
+            const options = [
+
+                ["A", "أ", q.options?.A],
+                ["B", "ب", q.options?.B],
+                ["C", "ج", q.options?.C],
+                ["D", "د", q.options?.D]
+
+            ];
+
+            return `
+
+                <div class="question-card" style="margin-top:12px;border-right:4px solid ${isCorrect ? "#10b981" : "#e11d48"}">
+
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+
+                        <span style="
+                            width:26px;height:26px;border-radius:9px;
+                            display:flex;align-items:center;justify-content:center;
+                            background:${isCorrect ? "#dcfce7" : "#fff1f2"};
+                            color:${isCorrect ? "#059669" : "#e11d48"};
+                            font-size:10px;font-weight:900;flex:0 0 26px;">
+
+                            <i class="fas ${isCorrect ? "fa-check" : "fa-xmark"}"></i>
+
+                        </span>
+
+                        <span style="font-size:9px;font-weight:900;color:#94a3b8">
+                            السؤال ${index + 1}
+                        </span>
+
+                    </div>
+
+                    <div class="question-text" style="font-size:11px">
+                        ${escapeHtml(q.text || "")}
+                    </div>
+
+                    <div class="options" style="margin-top:12px">
+
+                        ${options.map(o => {
+
+                            const isCorrectOption = q.correctAnswer === o[0];
+                            const isStudentChoice = answer.studentAnswer === o[0];
+
+                            let style = "";
+                            let icon = "";
+
+                            if (isCorrectOption) {
+
+                                style = "background:#ecfdf5;border-color:#10b981";
+                                icon = ' <i class="fas fa-check" style="color:#059669"></i>';
+
+                            }
+
+                            if (isStudentChoice && !isCorrectOption) {
+
+                                style = "background:#fff1f2;border-color:#e11d48";
+                                icon = ' <i class="fas fa-xmark" style="color:#e11d48"></i>';
+
+                            }
+
+                            return `
+
+                                <div class="option" style="cursor:default;${style}">
+
+                                    <div class="option-letter">
+                                        ${o[1]}
+                                    </div>
+
+                                    <div class="option-text">
+                                        ${escapeHtml(o[2] || "")}
+                                        ${isStudentChoice ? ' <span style="color:#64748b;font-size:8px">(إجابتك)</span>' : ""}
+                                        ${icon}
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }).join("")}
+
+                        ${
+                            !answer.studentAnswer
+                            ? `<div style="font-size:9px;color:#c2410c;font-weight:800;margin-top:4px">
+                                 <i class="fas fa-circle-exclamation"></i>
+                                 لم تُجب على هذا السؤال
+                               </div>`
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }).join("");
 
 
     container.innerHTML = `
@@ -1236,7 +1347,16 @@ function renderResult(score, total, percentage) {
 
         </div>
 
+
+        <div style="text-align:center;margin:22px 0 6px;font-size:11px;font-weight:900;color:#1e293b">
+            <i class="fas fa-list-check"></i>
+            مراجعة إجاباتك
+        </div>
+
+        ${reviewHtml}
+
     `;
+
 
 }
 
@@ -1275,4 +1395,4 @@ function hideLoader() {
 
 </body>
 
-  </html>
+</html>
