@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#10b981">
+
+<title>مراجعة الإجابات | Atlas Platform</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+margin:0;
+font-family:'Cairo',sans-serif;
+background:
+radial-gradient(circle at top right,rgba(16,185,129,.08),transparent 35%),
+#f6f8fb;
+color:#172033;
+}
+
+button{
+font-family:inherit;
+}
+
+.topbar{
+position:sticky;
+top:0;
+z-index:100;
+background:rgba(255,255,255,.94);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border-bottom:1px solid #e8edf2;
+}
+
+.topbar-inner{
+max-width:800px;
+margin:auto;
+padding:13px 18px;
+display:flex;
+align-items:center;
+gap:11px;
+}
+
+.back{
+width:42px;
+height:42px;
+border:0;
+border-radius:14px;
+background:white;
+color:#64748b;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+box-shadow:0 5px 18px rgba(15,23,42,.06);
+}
+
+.title{
+display:flex;
+flex-direction:column;
+line-height:1.3;
+min-width:0;
+}
+
+.title strong{
+font-size:13px;
+font-weight:900;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.title span{
+font-size:8px;
+color:#94a3b8;
+font-weight:700;
+}
+
+.main{
+max-width:800px;
+margin:auto;
+padding:20px 18px 60px;
+}
+
+.summary-card{
+background:linear-gradient(135deg,#10b981,#047857);
+color:white;
+border-radius:24px;
+padding:24px;
+text-align:center;
+box-shadow:0 18px 40px rgba(16,185,129,.18);
+}
+
+.summary-percent{
+font-size:34px;
+font-weight:900;
+}
+
+.summary-sub{
+margin-top:6px;
+font-size:11px;
+font-weight:700;
+opacity:.9;
+}
+
+.question-card{
+background:white;
+border-radius:22px;
+padding:16px;
+margin-top:12px;
+box-shadow:0 8px 25px rgba(15,23,42,.05);
+}
+
+.question-text{
+font-size:11px;
+font-weight:900;
+line-height:2;
+color:#1e293b;
+}
+
+.options{
+display:grid;
+gap:9px;
+margin-top:14px;
+}
+
+.option{
+display:flex;
+align-items:center;
+gap:11px;
+padding:12px;
+border:2px solid #eef2f6;
+border-radius:15px;
+background:#f8fafc;
+}
+
+.option-letter{
+flex:0 0 28px;
+width:28px;
+height:28px;
+border-radius:9px;
+background:white;
+border:2px solid #e2e8f0;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:9px;
+font-weight:900;
+color:#64748b;
+}
+
+.option-text{
+font-size:10px;
+font-weight:700;
+color:#334155;
+}
+
+.empty{
+background:white;
+border:1px dashed #cbd5e1;
+border-radius:22px;
+padding:40px 20px;
+text-align:center;
+color:#94a3b8;
+}
+
+.empty i{
+font-size:30px;
+margin-bottom:10px;
+color:#cbd5e1;
+}
+
+.back-btn{
+width:100%;
+border:0;
+border-radius:16px;
+padding:14px;
+margin-top:18px;
+background:linear-gradient(135deg,#10b981,#059669);
+color:white;
+font-size:11px;
+font-weight:900;
+cursor:pointer;
+box-shadow:0 10px 22px rgba(16,185,129,.18);
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+
+<div class="topbar-inner">
+
+<button class="back" onclick="location.href='student-dashboard.html'">
+<i class="fas fa-arrow-right"></i>
+</button>
+
+<div class="title">
+
+<strong id="examTitleText">مراجعة الإجابات</strong>
+
+<span>Atlas Platform</span>
+
+</div>
+
+</div>
+
+</header>
+
+
+<main class="main" id="reviewContainer">
+
+<div class="empty">
+<i class="fas fa-spinner fa-spin"></i>
+<strong>جاري تحميل المراجعة...</strong>
+</div>
+
+</main>
+
+
+<script type="module">
+
+import {
+auth,
+db
+} from "./firebase.js";
+
+import {
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+doc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const params = new URLSearchParams(window.location.search);
+const attemptId = params.get("attemptId");
+
+
+onAuthStateChanged(auth, async user => {
+
+if (!user) {
+window.location.href = "index.html";
+return;
+}
+
+try {
+
+const userSnap = await getDoc(doc(db,"users",user.uid));
+
+if (!userSnap.exists() || userSnap.data().role !== "student") {
+
+await signOut(auth);
+window.location.href = "index.html";
+return;
+
+}
+
+if (!attemptId) {
+
+document.getElementById("reviewContainer").innerHTML = `
+<div class="empty">
+<i class="fas fa-triangle-exclamation"></i>
+<strong>لم يتم تحديد محاولة للمراجعة</strong>
+</div>
+`;
+
+return;
+
+}
+
+await loadReview(user.uid);
+
+} catch (error) {
+
+console.error(error);
+
+document.getElementById("reviewContainer").innerHTML = `
+<div class="empty">
+<i class="fas fa-triangle-exclamation"></i>
+<strong>حدث خطأ أثناء التحميل</strong>
+</div>
+`;
+
+}
+
+});
+
+
+async function loadReview(uid) {
+
+const container = document.getElementById("reviewContainer");
+
+try {
+
+const attemptSnap =
+await getDoc(doc(db,"attempts",attemptId));
+
+if (!attemptSnap.exists()) {
+
+container.innerHTML = `
+<div class="empty">
+<i class="fas fa-circle-exclamation"></i>
+<strong>المحاولة غير موجودة</strong>
+</div>
+`;
+
+return;
+
+}
+
+const attempt = attemptSnap.data();
+
+/*
+   حماية إضافية على مستوى الواجهة:
+   الطالب يراجع محاولاته هو فقط
+   (الحماية الفعلية أصلاً في Firestore Rules).
+*/
+
+if (attempt.studentId !== uid) {
+
+container.innerHTML = `
+<div class="empty">
+<i class="fas fa-lock"></i>
+<strong>لا يمكنك مراجعة هذه المحاولة</strong>
+</div>
+`;
+
+return;
+
+}
+
+const examSnap =
+await getDoc(doc(db,"exams",attempt.examId));
+
+const examQuestions =
+examSnap.exists() ? (examSnap.data().questions || []) : [];
+
+document.getElementById("examTitleText").textContent =
+attempt.examTitle || "مراجعة الإجابات";
+
+renderReview(attempt, examQuestions);
+
+} catch (error) {
+
+console.error(error);
+
+container.innerHTML = `
+<div class="empty">
+<i class="fas fa-triangle-exclamation"></i>
+<strong>تعذر تحميل المراجعة</strong>
+</div>
+`;
+
+}
+
+}
+
+
+function renderReview(attempt, examQuestions) {
+
+const container = document.getElementById("reviewContainer");
+
+const percentage =
+typeof attempt.percentage === "number"
+? attempt.percentage
+: (attempt.total ? (attempt.score / attempt.total) * 100 : 0);
+
+const rounded = Math.round(percentage);
+
+const answers = attempt.answers || [];
+
+const reviewHtml =
+examQuestions.map((q, index) => {
+
+const answer =
+answers.find(a => a.questionId === q.id) || {};
+
+const isCorrect = Boolean(answer.isCorrect);
+
+const options = [
+["A","أ",q.options?.A],
+["B","ب",q.options?.B],
+["C","ج",q.options?.C],
+["D","د",q.options?.D]
+];
+
+return `
+
+<div class="question-card" style="border-right:4px solid ${isCorrect ? "#10b981" : "#e11d48"}">
+
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+
+<span style="
+width:26px;height:26px;border-radius:9px;
+display:flex;align-items:center;justify-content:center;
+background:${isCorrect ? "#dcfce7" : "#fff1f2"};
+color:${isCorrect ? "#059669" : "#e11d48"};
+font-size:10px;font-weight:900;flex:0 0 26px;">
+
+<i class="fas ${isCorrect ? "fa-check" : "fa-xmark"}"></i>
+
+</span>
+
+<span style="font-size:9px;font-weight:900;color:#94a3b8">
+السؤال ${index + 1}
+</span>
+
+</div>
+
+<div class="question-text">
+${escapeHtml(q.text || "")}
+</div>
+
+<div class="options">
+
+${options.map(o => {
+
+const isCorrectOption = q.correctAnswer === o[0];
+const isStudentChoice = answer.studentAnswer === o[0];
+
+let style = "";
+let icon = "";
+
+if (isCorrectOption) {
+style = "background:#ecfdf5;border-color:#10b981";
+icon = ' <i class="fas fa-check" style="color:#059669"></i>';
+}
+
+if (isStudentChoice && !isCorrectOption) {
+style = "background:#fff1f2;border-color:#e11d48";
+icon = ' <i class="fas fa-xmark" style="color:#e11d48"></i>';
+}
+
+return `
+<div class="option" style="${style}">
+<div class="option-letter">${o[1]}</div>
+<div class="option-text">
+${escapeHtml(o[2] || "")}
+${isStudentChoice ? ' <span style="color:#64748b;font-size:8px">(إجابتك)</span>' : ""}
+${icon}
+</div>
+</div>
+`;
+
+}).join("")}
+
+${
+!answer.studentAnswer
+? `<div style="font-size:9px;color:#c2410c;font-weight:800;margin-top:4px">
+<i class="fas fa-circle-exclamation"></i>
+لم تُجب على هذا السؤال
+</div>`
+: ""
+}
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+container.innerHTML = `
+
+<div class="summary-card">
+
+<div class="summary-percent">${rounded}%</div>
+
+<div class="summary-sub">
+${attempt.score || 0} من ${attempt.total || 0} درجة
+</div>
+
+</div>
+
+${reviewHtml || `<div class="empty"><i class="fas fa-folder-open"></i><strong>لا تفاصيل متاحة لهذه المحاولة</strong></div>`}
+
+<button class="back-btn" onclick="location.href='student-dashboard.html'">
+الرجوع للوحة الطالب
+</button>
+
+`;
+
+}
+
+
+function escapeHtml(text) {
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+</script>
+
+</body>
+</html>
