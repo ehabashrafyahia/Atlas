@@ -391,6 +391,73 @@
             cursor: default;
         }
 
+        .session-card {
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 22px;
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            box-shadow: 0 7px 25px rgba(15,23,42,.045);
+        }
+
+        .session-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 44px;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .session-icon.attended {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .session-icon.absent {
+            background: #fff1f2;
+            color: #e11d48;
+        }
+
+        .session-date {
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .session-note {
+            margin-top: 4px;
+            font-size: 9px;
+            color: #64748b;
+            font-weight: 700;
+            line-height: 1.8;
+        }
+
+        .session-status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 9px;
+            border-radius: 8px;
+            font-size: 7px;
+            font-weight: 900;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .session-status.attended {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .session-status.absent {
+            background: #fff1f2;
+            color: #e11d48;
+        }
+
         .empty {
             background: white;
             border: 1px dashed #cbd5e1;
@@ -611,6 +678,43 @@
 </section>
 
 
+<section class="section">
+
+    <div class="section-head">
+
+        <div class="section-icon">
+            <i class="fas fa-calendar-days"></i>
+        </div>
+
+        <div>
+
+            <strong>
+                حصصي
+            </strong>
+
+            <span>
+                جدول حصصك وحضورك وغيابك
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="sessionList"
+        class="exam-list">
+
+        <div class="empty">
+            <i class="fas fa-spinner fa-spin"></i>
+            <strong>جاري تحميل الحصص...</strong>
+        </div>
+
+    </div>
+
+</section>
+
+
 </main>
 
 
@@ -667,6 +771,8 @@ let studentData = null;
 let exams = [];
 
 let attempts = [];
+
+let sessions = [];
 
 
 /* =========================================
@@ -815,9 +921,46 @@ async function loadDashboard() {
             }));
 
 
+        /*
+           حصص الطالب نفسه فقط
+        */
+
+        const sessionsQuery =
+            query(
+
+                collection(db, "sessions"),
+
+                where("studentId", "==", currentUser.uid)
+
+            );
+
+
+        const sessionsSnap =
+            await getDocs(sessionsQuery);
+
+
+        sessions =
+            sessionsSnap.docs.map(d => ({
+                id: d.id,
+                ...d.data()
+            }));
+
+
+        sessions.sort((a, b) => {
+
+            const dateA = a.date ? new Date(a.date).getTime() : 0;
+            const dateB = b.date ? new Date(b.date).getTime() : 0;
+
+            return dateA - dateB;
+
+        });
+
+
         renderStats();
 
         renderExams();
+
+        renderSessions();
 
 
     } catch (error) {
@@ -1013,9 +1156,12 @@ function renderExams() {
 
                         ${
                             done
-                            ? `<button class="start-btn done" disabled>
-                                 <i class="fas fa-check"></i>
-                                 تم الحل مسبقًا
+                            ? `<button
+                                 class="start-btn done"
+                                 onclick="reviewExam('${attempt.id}')"
+                                 style="cursor:pointer">
+                                 <i class="fas fa-list-check"></i>
+                                 مراجعة الإجابات
                                </button>`
                             : `<button
                                  class="start-btn"
@@ -1039,6 +1185,119 @@ function renderExams() {
 
 
 /* =========================================
+   RENDER SESSIONS
+========================================= */
+
+function renderSessions() {
+
+    const list =
+        document.getElementById("sessionList");
+
+
+    if (!sessions.length) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <i class="fas fa-calendar-xmark"></i>
+
+                <strong>
+                    لا توجد حصص مضافة لك بعد
+                </strong>
+
+                <span>
+                    هتظهر هنا أول ما المدرّس يضيف حصة ليك.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        sessions.map(s => {
+
+            const statusClass =
+                s.status === "attended" ? "attended" :
+                s.status === "absent" ? "absent" : "";
+
+            const statusLabel =
+                s.status === "attended" ? "حضرت" :
+                s.status === "absent" ? "غياب" : "لم يحن موعدها بعد";
+
+            const icon =
+                s.status === "attended" ? "fa-circle-check" :
+                s.status === "absent" ? "fa-circle-xmark" : "fa-clock";
+
+            return `
+
+                <article class="session-card">
+
+                    <div class="session-icon ${statusClass}">
+                        <i class="fas ${icon}"></i>
+                    </div>
+
+                    <div>
+
+                        <div class="session-date">
+                            ${formatDateTime(s.date)}
+                        </div>
+
+                        ${s.note ? `<div class="session-note">${escapeHtml(s.note)}</div>` : ""}
+
+                        <span class="session-status ${statusClass}">
+                            ${statusLabel}
+                        </span>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =========================================
+   FORMAT DATE
+========================================= */
+
+function formatDateTime(dateStr) {
+
+    if (!dateStr) return "بدون تاريخ";
+
+    try {
+
+        const date = new Date(dateStr);
+
+        return new Intl.DateTimeFormat("ar-EG", {
+
+            weekday: "long",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+
+        }).format(date);
+
+    } catch {
+
+        return dateStr;
+
+    }
+
+}
+
+
+/* =========================================
    START EXAM
 ========================================= */
 
@@ -1046,6 +1305,14 @@ window.startExam = function(examId) {
 
     window.location.href =
         `take-exam.html?examId=${encodeURIComponent(examId)}`;
+
+};
+
+
+window.reviewExam = function(attemptId) {
+
+    window.location.href =
+        `exam-review.html?attemptId=${encodeURIComponent(attemptId)}`;
 
 };
 
@@ -1145,4 +1412,4 @@ function hideLoader() {
 
 </body>
 
-          </html>
+</html>
