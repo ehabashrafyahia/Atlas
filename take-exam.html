@@ -116,31 +116,6 @@
             font-weight: 700;
         }
 
-        .timer {
-            flex: 0 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 9px 13px;
-            border-radius: 13px;
-            background: #ecfdf5;
-            color: #047857;
-            font-size: 12px;
-            font-weight: 900;
-            direction: ltr;
-        }
-
-        .timer.warning {
-            background: #fff1f2;
-            color: #e11d48;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%,100% { opacity: 1; }
-            50% { opacity: .55; }
-        }
-
         .progress-bar {
             height: 5px;
             background: #f1f5f9;
@@ -268,6 +243,13 @@
             box-shadow: 0 10px 22px rgba(16,185,129,.18);
         }
 
+        .nav-next:disabled {
+            background: #cbd5e1;
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
         .nav-submit {
             background: linear-gradient(135deg,#f59e0b,#d97706);
             color: white;
@@ -302,6 +284,12 @@
         .dot.current {
             background: #10b981;
             color: white;
+        }
+
+        .dot.locked {
+            background: #f1f5f9;
+            color: #cbd5e1;
+            cursor: not-allowed;
         }
 
         .empty {
@@ -347,16 +335,6 @@
 
             <span id="examSubText">
                 Atlas Platform
-            </span>
-
-        </div>
-
-        <div class="timer" id="timerBox">
-
-            <i class="fas fa-clock"></i>
-
-            <span id="timerText">
-                --:--
             </span>
 
         </div>
@@ -418,10 +396,6 @@ let examId = null;
 let answers = {};
 
 let currentIndex = 0;
-
-let timeLeft = 0;
-
-let timerInterval = null;
 
 let submitted = false;
 
@@ -656,12 +630,6 @@ async function loadExam() {
                 `${exam.questionCount || (exam.questions || []).length} سؤال`;
 
 
-        timeLeft =
-            (Number(exam.duration) || 30) * 60;
-
-
-        startTimer();
-
         renderQuestion();
 
 
@@ -699,78 +667,6 @@ function beforeUnloadHandler(event) {
     event.preventDefault();
 
     event.returnValue = "";
-
-}
-
-
-/* =========================================
-   TIMER
-========================================= */
-
-function startTimer() {
-
-    updateTimerDisplay();
-
-    timerInterval = setInterval(() => {
-
-        timeLeft--;
-
-        updateTimerDisplay();
-
-
-        if (timeLeft <= 0) {
-
-            clearInterval(timerInterval);
-
-            Swal.fire({
-
-                icon: "info",
-
-                title: "انتهى الوقت ⏰",
-
-                text: "سيتم تسليم إجاباتك تلقائيًا.",
-
-                confirmButtonColor: "#10b981",
-
-                confirmButtonText: "تسليم"
-
-            }).then(() => {
-
-                submitExam(true);
-
-            });
-
-        }
-
-    }, 1000);
-
-}
-
-
-function updateTimerDisplay() {
-
-    const minutes =
-        Math.floor(Math.max(timeLeft,0) / 60);
-
-    const seconds =
-        Math.max(timeLeft,0) % 60;
-
-    document.getElementById("timerText")
-        .textContent =
-            `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
-
-    const timerBox =
-        document.getElementById("timerBox");
-
-    if (timeLeft <= 60) {
-
-        timerBox.classList.add("warning");
-
-    } else {
-
-        timerBox.classList.remove("warning");
-
-    }
 
 }
 
@@ -815,6 +711,9 @@ function renderQuestion() {
 
     const selectedAnswer =
         answers[q.id];
+
+    const isAnswered =
+        Boolean(selectedAnswer);
 
 
     container.innerHTML = `
@@ -883,6 +782,7 @@ function renderQuestion() {
                     :
                     `<button
                         class="nav-btn nav-next"
+                        ${isAnswered ? "" : "disabled"}
                         onclick="goNext()">
 
                         التالي
@@ -894,6 +794,15 @@ function renderQuestion() {
 
             </div>
 
+            ${
+                !isAnswered
+                ? `<div style="text-align:center;font-size:9px;font-weight:800;color:#c2410c;margin-top:10px">
+                     <i class="fas fa-circle-exclamation"></i>
+                     جاوب على السؤال الحالي عشان تقدر تكمل
+                   </div>`
+                : ""
+            }
+
 
             <div class="dots" id="dotsBox">
 
@@ -902,10 +811,14 @@ function renderQuestion() {
                     <button
                         class="dot
                             ${answers[question.id] ? "answered" : ""}
-                            ${i === currentIndex ? "current" : ""}"
+                            ${i === currentIndex ? "current" : ""}
+                            ${i > currentIndex ? "locked" : ""}"
+                        ${i > currentIndex ? "disabled" : ""}
                         onclick="goTo(${i})">
 
-                        ${i + 1}
+                        ${i > currentIndex
+                            ? '<i class="fas fa-lock" style="font-size:8px"></i>'
+                            : i + 1}
 
                     </button>
 
@@ -941,6 +854,26 @@ window.goNext = function() {
 
     const questions = exam.questions || [];
 
+    const currentQuestion = questions[currentIndex];
+
+    if (!currentQuestion || !answers[currentQuestion.id]) {
+
+        Swal.fire({
+
+            icon: "warning",
+
+            title: "جاوب على السؤال أولاً",
+
+            text: "لازم تختار إجابة قبل ما تنتقل للسؤال التالي.",
+
+            confirmButtonColor: "#10b981"
+
+        });
+
+        return;
+
+    }
+
     if (currentIndex < questions.length - 1) {
 
         currentIndex++;
@@ -970,6 +903,8 @@ window.goPrev = function() {
 
 
 window.goTo = function(index) {
+
+    if (index > currentIndex) return;
 
     currentIndex = index;
 
@@ -1039,8 +974,6 @@ async function submitExam(autoSubmitted) {
 
     submitted = true;
 
-
-    clearInterval(timerInterval);
 
     window.removeEventListener(
         "beforeunload",
@@ -1191,10 +1124,6 @@ function renderResult(score, total, percentage, detailedAnswers) {
 
     const passed =
         rounded >= (exam.passPercent || 50);
-
-
-    document.getElementById("timerBox")
-        .style.display = "none";
 
 
     const questions =
