@@ -3,32 +3,82 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-    <meta name="theme-color" content="#10b981">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+    <meta name="theme-color" content="#059669">
+    <meta name="description" content="منصة أطلس - تسجيل الدخول لطلاب ومعلمي الدراسات الاجتماعية">
 
     <title>Atlas | تسجيل الدخول</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        reem: ['Reem Kufi', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50:  '#ecfdf5',
+                            100: '#d1fae5',
+                            200: '#a7f3d0',
+                            300: '#6ee7b7',
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
+                        'card': '0 25px 50px -12px rgba(15, 23, 42, 0.12)',
+                        'glow': '0 0 40px -8px rgba(16, 185, 129, 0.35)',
+                        'btn':  '0 12px 28px -6px rgba(5, 150, 105, 0.35)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        morph: {
+                            '0%, 100%': { borderRadius: '40% 60% 60% 40% / 40% 40% 60% 60%' },
+                            '50%': { borderRadius: '60% 40% 40% 60% / 50% 60% 40% 50%' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: 0.5 },
+                            '50%': { opacity: 0.85 },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '200% 0' },
+                            '100%': { backgroundPosition: '-200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-          rel="stylesheet">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
 
-        html,
-        body {
+        html, body {
             width: 100%;
             min-height: 100%;
             margin: 0;
@@ -36,1061 +86,754 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background:
-                radial-gradient(
-                    circle at 20% 10%,
-                    rgba(16,185,129,.12),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 90% 90%,
-                    rgba(5,150,105,.08),
-                    transparent 30%
-                ),
-                #f8fafc;
-
-            overflow: hidden;
+            background: #f8fafc;
+            overflow-x: hidden;
         }
 
-        /* =========================
-           SPLASH — SCI-FI BOOT SEQUENCE
-        ========================= */
-
+        /* ========== SPLASH ========== */
         #splash {
             position: fixed;
             inset: 0;
-
             z-index: 9999;
-
             display: flex;
             flex-direction: column;
-
             align-items: center;
             justify-content: center;
-
-            overflow: hidden;
-
-            background:
-                radial-gradient(circle at 50% 40%, rgba(16,185,129,.18), transparent 45%),
-                radial-gradient(circle at 12% 88%, rgba(34,211,238,.10), transparent 42%),
-                radial-gradient(circle at 90% 12%, rgba(52,211,153,.08), transparent 38%),
-                linear-gradient(180deg, #02050c 0%, #061020 55%, #02050c 100%);
-
-            transition:
-                opacity .8s ease,
-                visibility .8s ease;
+            background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 100%);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
         }
 
-        #splash::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-
-            background-image:
-                linear-gradient(rgba(52,211,153,.07) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(52,211,153,.07) 1px, transparent 1px);
-
-            background-size: 46px 46px;
-
-            mask-image:
-                radial-gradient(circle at 50% 42%, black, transparent 68%);
-            -webkit-mask-image:
-                radial-gradient(circle at 50% 42%, black, transparent 68%);
-        }
-
-        .starfield {
-            position: absolute;
-            inset: 0;
+        #splash.hide {
+            opacity: 0;
+            visibility: hidden;
             pointer-events: none;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-            background: #cffbe8;
-            animation: twinkle 3.4s ease-in-out infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: .12; }
-            50% { opacity: .9; }
-        }
-
-        .scan-sweep {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 160px;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    transparent,
-                    rgba(52,211,153,.09),
-                    transparent
-                );
-
-            animation: sweep 4.2s linear infinite;
-            pointer-events: none;
-        }
-
-        @keyframes sweep {
-            0% { top: -160px; }
-            100% { top: 100%; }
-        }
-
-        .orbit-system {
+        .splash-logo-wrap {
             position: relative;
-            width: 216px;
-            height: 216px;
-
+            width: 160px;
+            height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: float 3s ease-in-out infinite;
         }
 
-        .orbit-ring {
+        .splash-shape {
             position: absolute;
-            border-radius: 50%;
-            border: 1px solid rgba(52,211,153,.22);
-        }
-
-        .ring-outer {
             inset: 0;
-            border-top-color: rgba(110,231,183,.85);
-            border-right-color: rgba(110,231,183,.5);
-            animation: spin 13s linear infinite;
+            background: linear-gradient(135deg, #34d399 0%, #10b981 45%, #047857 100%);
+            border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+            box-shadow: 0 30px 60px -15px rgba(16, 185, 129, 0.4);
+            animation: morph 8s ease-in-out infinite;
         }
 
-        .ring-mid {
-            inset: 32px;
-            border-style: dashed;
-            border-color: rgba(52,211,153,.28);
-            animation: spin-reverse 8.5s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes spin-reverse {
-            to { transform: rotate(-360deg); }
-        }
-
-        .satellite {
-            position: absolute;
-            top: -3px;
-            left: 50%;
-            width: 6px;
-            height: 6px;
-            margin-left: -3px;
-
-            border-radius: 50%;
-            background: #6ee7b7;
-
-            box-shadow:
-                0 0 10px 2px rgba(110,231,183,.85);
-        }
-
-        .satellite-cyan {
-            background: #22d3ee;
-            box-shadow:
-                0 0 9px 2px rgba(34,211,238,.85);
-        }
-
-        .atlas-core {
-            position: relative;
-            width: 104px;
-            height: 104px;
-
-            border-radius: 50%;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background:
-                radial-gradient(
-                    circle at 35% 30%,
-                    #34d399,
-                    #10b981 55%,
-                    #047857
-                );
-
-            box-shadow:
-                0 0 42px 6px rgba(16,185,129,.45),
-                inset 0 0 22px rgba(255,255,255,.15);
-
-            animation: pulse-core 2.4s ease-in-out infinite;
-        }
-
-        @keyframes pulse-core {
-            0%, 100% {
-                box-shadow:
-                    0 0 42px 6px rgba(16,185,129,.45),
-                    inset 0 0 22px rgba(255,255,255,.15);
-            }
-            50% {
-                box-shadow:
-                    0 0 62px 14px rgba(16,185,129,.65),
-                    inset 0 0 28px rgba(255,255,255,.25);
-            }
-        }
-
-        .core-glyph {
+        .splash-text {
             position: relative;
             z-index: 2;
-
             color: white;
-
             font-family: 'Reem Kufi', sans-serif;
-            font-size: 32px;
+            font-size: 48px;
             font-weight: 700;
-
-            text-shadow:
-                0 4px 14px rgba(0,0,0,.25);
+            text-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            letter-spacing: -1px;
         }
 
-        .atlas-logo {
-            position: relative;
-
-            width: 145px;
-            height: 115px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            animation:
-                logoFloat 2.5s ease-in-out infinite;
-        }
-
-        .logo-shape {
-            position: absolute;
-
-            inset: 0;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #34d399,
-                    #10b981 45%,
-                    #047857
-                );
-
-            border-radius:
-                35% 65% 65% 35%
-                /
-                35% 35% 65% 65%;
-
-            box-shadow:
-                0 25px 55px rgba(16,185,129,.28);
-
-            animation:
-                morph 7s ease-in-out infinite;
-        }
-
-        .logo-text {
-            position: relative;
-
-            z-index: 2;
-
-            color: white;
-
-            font-family: 'Reem Kufi', sans-serif;
-
-            font-size: 42px;
-
-            font-weight: 700;
-
-            text-shadow:
-                0 4px 12px rgba(0,0,0,.12);
-        }
-
-        .splash-title {
-            margin-top: 34px;
-
-            font-size: 20px;
-
-            font-weight: 900;
-
-            color: #ecfdf5;
-
-            letter-spacing: .2px;
-        }
-
-        .splash-subtitle {
-            margin-top: 5px;
-
-            font-size: 11px;
-
-            color: #6ee7b7;
-
-            font-weight: 700;
-
-            opacity: .85;
-        }
-
-        .boot-sequence {
-            margin-top: 24px;
-
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            min-height: 14px;
-
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: #5eead4;
-
-            direction: ltr;
-        }
-
-        .boot-caret {
-            color: #34d399;
-            animation: blink-caret 1s step-end infinite;
-        }
-
-        @keyframes blink-caret {
-            50% { opacity: 0; }
-        }
-
-        .loader {
-            margin-top: 16px;
-
-            width: 168px;
+        .splash-progress {
+            margin-top: 36px;
+            width: 120px;
             height: 3px;
-
-            border-radius: 10px;
-
-            background: rgba(148,163,184,.15);
-
+            background: #e2e8f0;
+            border-radius: 99px;
             overflow: hidden;
         }
 
-        .loader::after {
-            content: "";
-
-            display: block;
-
-            width: 35%;
-
+        .splash-progress-bar {
             height: 100%;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #10b981,
-                    #6ee7b7,
-                    #22d3ee
-                );
-
+            width: 0%;
+            background: linear-gradient(90deg, #10b981, #34d399);
             border-radius: inherit;
-
-            animation:
-                loading 1.2s infinite ease-in-out;
+            transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* =========================
-           LOGIN
-        ========================= */
-
+        /* ========== MAIN LAYOUT ========== */
         #app {
             min-height: 100vh;
-
             display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-
             opacity: 0;
-
-            transform: translateY(20px);
-
-            transition:
-                opacity .7s ease,
-                transform .7s ease;
+            transform: translateY(16px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .login-card {
+        #app.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
+        /* Brand Panel (Desktop) */
+        .brand-panel {
+            display: none;
+            position: relative;
+            width: 46%;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #064e3b 0%, #047857 40%, #059669 100%);
+            overflow: hidden;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 52px;
+            color: white;
+        }
+
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12) 0%, transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(52,211,153,0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .brand-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .brand-orb-1 {
+            width: 280px;
+            height: 280px;
+            background: #34d399;
+            top: -80px;
+            right: -60px;
+            animation: float-slow 10s ease-in-out infinite;
+        }
+
+        .brand-orb-2 {
+            width: 200px;
+            height: 200px;
+            background: #6ee7b7;
+            bottom: 10%;
+            left: -40px;
+            animation: float 7s ease-in-out infinite reverse;
+        }
+
+        .brand-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+            pointer-events: none;
+        }
+
+        /* Form Panel */
+        .form-panel {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 24px;
+            background: 
+                radial-gradient(circle at 90% 10%, rgba(16,185,129,0.06), transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(5,150,105,0.05), transparent 35%),
+                #f8fafc;
+            position: relative;
+        }
+
+        /* Login Card */
+        .login-card {
             width: 100%;
             max-width: 420px;
-
-            padding: 30px 28px 25px;
-
-            background:
-                rgba(255,255,255,.90);
-
-            border:
-                1px solid rgba(226,232,240,.9);
-
-            border-radius: 34px;
-
-            box-shadow:
-                0 25px 70px rgba(15,23,42,.08);
-
-            backdrop-filter:
-                blur(20px);
-
-            -webkit-backdrop-filter:
-                blur(20px);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 36px 32px 28px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-logo {
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+            opacity: 0.9;
+        }
 
-            width: 92px;
-            height: 74px;
-
-            margin: 0 auto 18px;
-
+        /* Logo in card */
+        .card-logo {
+            width: 78px;
+            height: 64px;
+            margin: 0 auto 20px;
             position: relative;
-
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .login-logo .logo-shape {
-            box-shadow:
-                0 15px 35px rgba(16,185,129,.20);
+        .card-logo .shape {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #34d399, #10b981 50%, #047857);
+            border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
+            box-shadow: 0 12px 28px -6px rgba(16, 185, 129, 0.35);
+            animation: morph 8s ease-in-out infinite;
         }
 
-        .login-logo .logo-text {
-
-            font-size: 28px;
-        }
-
-        .welcome {
-
-            text-align: center;
-
-            font-size: 21px;
-
-            font-weight: 900;
-
-            color: #0f172a;
-
-            margin: 0;
-        }
-
-        .description {
-
-            text-align: center;
-
-            color: #94a3b8;
-
-            font-size: 10px;
-
+        .card-logo .text {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 26px;
             font-weight: 700;
-
-            margin:
-                5px 0 22px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* =========================
-           TABS
-        ========================= */
-
+        /* Tabs */
         .tabs {
-
             display: grid;
-
             grid-template-columns: 1fr 1fr;
-
             gap: 6px;
-
             background: #f1f5f9;
-
-            border-radius: 16px;
-
+            border-radius: 14px;
             padding: 5px;
-
-            margin-bottom: 22px;
+            margin-bottom: 28px;
+            position: relative;
         }
 
         .tab {
-
             border: 0;
-
-            border-radius: 12px;
-
-            padding: 11px 8px;
-
+            border-radius: 11px;
+            padding: 12px 10px;
             background: transparent;
-
             color: #64748b;
-
             font-family: inherit;
-
-            font-size: 11px;
-
-            font-weight: 900;
-
+            font-size: 13px;
+            font-weight: 800;
             cursor: pointer;
-
             display: flex;
-
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
 
-            gap: 6px;
-
-            transition: .2s;
+        .tab:hover:not(.active) {
+            color: #334155;
         }
 
         .tab.active {
-
             background: white;
-
             color: #059669;
-
-            box-shadow:
-                0 6px 16px rgba(15,23,42,.08);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
         }
 
+        .tab i {
+            font-size: 14px;
+        }
+
+        /* Panels */
         .panel {
             display: none;
+            animation: panelIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .panel.active {
             display: block;
         }
 
-        /* =========================
-           STUDENT PANEL
-        ========================= */
-
-        .code-field {
-
-            position: relative;
-
-            margin-bottom: 15px;
+        @keyframes panelIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .code-field input {
+        /* ========== OTP INPUT ========== */
+        .otp-wrapper {
+            margin-bottom: 8px;
+        }
 
-            width: 100%;
-
-            height: 72px;
-
-            border: 2px solid #eef2f7;
-
-            border-radius: 20px;
-
-            outline: none;
-
-            background: #f8fafc;
-
-            padding: 0 16px;
-
-            font-family: inherit;
-
-            font-size: 26px;
-
-            font-weight: 900;
-
-            letter-spacing: 10px;
-
+        .otp-label {
+            display: block;
             text-align: center;
-
-            direction: ltr;
-
-            transition: .25s;
-        }
-
-        .code-field input:focus {
-
-            background: white;
-
-            border-color: #10b981;
-
-            box-shadow:
-                0 10px 25px rgba(16,185,129,.08);
-        }
-
-        .code-field input::placeholder {
-
-            letter-spacing: normal;
-
             font-size: 12px;
-
             font-weight: 700;
-
+            color: #64748b;
+            margin-bottom: 14px;
         }
 
-        /* =========================
-           TEACHER PANEL
-        ========================= */
+        .otp-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            direction: ltr;
+        }
+
+        .otp-input {
+            width: 48px;
+            height: 56px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            background: #f8fafc;
+            text-align: center;
+            font-family: inherit;
+            font-size: 22px;
+            font-weight: 900;
+            color: #0f172a;
+            outline: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            caret-color: #10b981;
+        }
+
+        .otp-input:focus {
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+            transform: scale(1.04);
+        }
+
+        .otp-input.filled {
+            border-color: #34d399;
+            background: #ecfdf5;
+        }
+
+        .otp-input.error {
+            border-color: #f87171;
+            background: #fef2f2;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+
+        /* ========== TEACHER FIELDS ========== */
+        .field-group {
+            margin-bottom: 16px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 7px;
+            padding-right: 2px;
+        }
 
         .field {
-
             position: relative;
-
-            margin-bottom: 13px;
         }
 
         .field input {
-
             width: 100%;
-
-            height: 58px;
-
-            border: 2px solid #eef2f7;
-
-            border-radius: 17px;
-
+            height: 54px;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
             outline: none;
-
             background: #f8fafc;
-
-            padding:
-                0 48px
-                0 16px;
-
+            padding: 0 48px 0 16px;
             font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-            font-size: 12px;
-
-            font-weight: 700;
-
-            transition: .25s;
+        .field input::placeholder {
+            color: #94a3b8;
+            font-weight: 500;
         }
 
         .field input:focus {
-
             background: white;
-
             border-color: #10b981;
-
-            box-shadow:
-                0 10px 25px rgba(16,185,129,.08);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
         }
 
-        .field i {
-
+        .field > i {
             position: absolute;
-
-            right: 18px;
-
+            right: 16px;
             top: 50%;
-
-            transform:
-                translateY(-50%);
-
+            transform: translateY(-50%);
             color: #94a3b8;
+            font-size: 15px;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
 
-            font-size: 14px;
+        .field input:focus + i,
+        .field:focus-within > i {
+            color: #10b981;
         }
 
         .password-toggle {
-
             position: absolute;
-
-            left: 17px;
-
+            left: 14px;
             top: 50%;
-
-            transform:
-                translateY(-50%);
-
+            transform: translateY(-50%);
             border: 0;
-
             background: transparent;
-
             color: #94a3b8;
-
             cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transition: all 0.2s;
         }
 
-        /* =========================
-           SHARED
-        ========================= */
+        .password-toggle:hover {
+            color: #64748b;
+            background: #f1f5f9;
+        }
 
-        .login-button {
-
+        /* ========== BUTTON ========== */
+        .login-btn {
             width: 100%;
-
-            height: 58px;
-
-            margin-top: 6px;
-
+            height: 54px;
+            margin-top: 8px;
             border: 0;
-
-            border-radius: 17px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #10b981,
-                    #059669
-                );
-
+            border-radius: 14px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-
             font-family: inherit;
-
-            font-size: 12px;
-
-            font-weight: 900;
-
+            font-size: 14px;
+            font-weight: 800;
             cursor: pointer;
-
-            box-shadow:
-                0 15px 30px rgba(16,185,129,.20);
-
-            transition: .2s;
+            box-shadow: 0 12px 28px -6px rgba(5, 150, 105, 0.35);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-button:hover {
-
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 18px 35px rgba(16,185,129,.27);
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+            background-size: 200% 100%;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .login-button:active {
-
-            transform:
-                scale(.98);
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px -6px rgba(5, 150, 105, 0.42);
         }
 
-        .login-button:disabled {
+        .login-btn:hover:not(:disabled)::after {
+            opacity: 1;
+            animation: shimmer 1.8s linear infinite;
+        }
 
-            opacity: .65;
+        .login-btn:active:not(:disabled) {
+            transform: scale(0.985);
+        }
 
+        .login-btn:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
-
             transform: none;
         }
 
-        .footer {
-
-            margin-top: 22px;
-
-            padding-top: 18px;
-
-            border-top:
-                1px dashed #e2e8f0;
-
+        /* Footer */
+        .card-footer {
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px dashed #e2e8f0;
             text-align: center;
         }
 
-        .footer p {
-
+        .card-footer p {
             margin: 0;
-
-            font-size: 9px;
-
+            font-size: 11px;
             color: #94a3b8;
+            font-weight: 600;
+        }
 
+        .card-footer strong {
+            color: #059669;
+            font-weight: 800;
+        }
+
+        /* Brand content helpers */
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 99px;
+            padding: 8px 16px;
+            font-size: 12px;
             font-weight: 700;
         }
 
-        .footer strong {
-
-            color: #059669;
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
         }
 
-        /* =========================
-           ANIMATIONS
-        ========================= */
-
-        @keyframes morph {
-
-            0%,
-            100% {
-
-                border-radius:
-                    35% 65% 65% 35%
-                    /
-                    35% 35% 65% 65%;
-            }
-
-            50% {
-
-                border-radius:
-                    60% 40% 35% 65%
-                    /
-                    45% 60% 40% 55%;
-            }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
         }
 
-        @keyframes logoFloat {
-
-            0%,
-            100% {
-                transform:
-                    translateY(0);
+        /* Responsive */
+        @media (min-width: 960px) {
+            .brand-panel {
+                display: flex;
             }
 
-            50% {
-                transform:
-                    translateY(-7px);
-            }
-        }
-
-        @keyframes loading {
-
-            0% {
-                transform:
-                    translateX(300%);
+            .form-panel {
+                padding: 40px;
             }
 
-            100% {
-                transform:
-                    translateX(-300%);
+            .login-card {
+                max-width: 400px;
+                padding: 40px 36px 32px;
             }
         }
 
         @media (max-width: 420px) {
-
             .login-card {
-                padding:
-                    26px 20px 22px;
+                padding: 28px 20px 24px;
+                border-radius: 24px;
             }
 
-            .welcome {
-                font-size: 19px;
+            .otp-input {
+                width: 42px;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 12px;
             }
 
-            .code-field input {
+            .otp-container {
+                gap: 6px;
+            }
+
+            .card-logo {
+                width: 70px;
+                height: 58px;
+            }
+
+            .card-logo .text {
                 font-size: 22px;
-                letter-spacing: 7px;
             }
-
         }
 
+        /* Loading spinner override */
+        .fa-spinner {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body>
 
-<!-- =========================
-     SPLASH
-========================= -->
-
+<!-- ===================== SPLASH ===================== -->
 <div id="splash">
-
-    <div class="starfield" id="starfield"></div>
-
-    <div class="scan-sweep"></div>
-
-    <div class="orbit-system">
-
-        <div class="orbit-ring ring-outer">
-            <span class="satellite"></span>
-        </div>
-
-        <div class="orbit-ring ring-mid">
-            <span class="satellite satellite-cyan"></span>
-        </div>
-
-        <div class="atlas-core">
-            <div class="core-glyph">
-                أطلس
-            </div>
-        </div>
-
+    <div class="splash-logo-wrap">
+        <div class="splash-shape"></div>
+        <div class="splash-text">أطلس</div>
     </div>
 
-    <div class="splash-title">
-        أهلاً بك في منصة أطلس
+    <h1 class="mt-8 text-2xl font-black text-slate-900 tracking-tight">أهلاً بك في منصة أطلس</h1>
+    <p class="mt-2 text-xs font-bold text-slate-400">منصة مستر إيهاب أشرف للدراسات الاجتماعية</p>
+
+    <div class="splash-progress">
+        <div class="splash-progress-bar" id="splashBar"></div>
     </div>
-
-    <div class="splash-subtitle">
-        منصة مستر إيهاب أشرف للدراسات الاجتماعية
-    </div>
-
-    <div class="boot-sequence">
-        <span class="boot-caret">&gt;</span>
-        <span id="bootText">INITIALIZING</span>
-    </div>
-
-    <div class="loader"></div>
-
 </div>
 
-
-<!-- =========================
-     LOGIN APP
-========================= -->
-
+<!-- ===================== APP ===================== -->
 <main id="app">
 
-    <div class="login-card">
+    <!-- Brand Side (Desktop only) -->
+    <aside class="brand-panel">
+        <div class="brand-orb brand-orb-1"></div>
+        <div class="brand-orb brand-orb-2"></div>
+        <div class="brand-grid"></div>
 
-        <div class="login-logo">
-
-            <div class="logo-shape"></div>
-
-            <div class="logo-text">
-                أطلس
+        <div class="relative z-10">
+            <div class="brand-badge">
+                <i class="fas fa-graduation-cap"></i>
+                منصة تعليمية متكاملة
             </div>
-
         </div>
 
-        <h1 class="welcome">
-            أهلاً بك 👋
-        </h1>
-
-        <p class="description">
-            اختر نوع حسابك وسجّل دخولك لمنصة Atlas
-        </p>
-
-
-        <!-- TABS -->
-
-        <div class="tabs">
-
-            <button
-                type="button"
-                class="tab active"
-                id="studentTabBtn"
-                onclick="switchTab('student')">
-
-                <i class="fas fa-user-graduate"></i>
-                طالب
-
-            </button>
-
-            <button
-                type="button"
-                class="tab"
-                id="teacherTabBtn"
-                onclick="switchTab('teacher')">
-
-                <i class="fas fa-user-tie"></i>
-                معلم
-
-            </button>
-
-        </div>
-
-
-        <!-- =========================
-             STUDENT PANEL
-        ========================= -->
-
-        <div
-            id="studentPanel"
-            class="panel active">
-
-            <div class="code-field">
-
-                <input
-                    type="text"
-                    id="loginCode"
-                    inputmode="numeric"
-                    maxlength="6"
-                    placeholder="000000"
-                    autocomplete="off"
-                >
-
+        <div class="relative z-10 flex-1 flex flex-col justify-center py-12">
+            <div class="mb-10">
+                <div class="w-20 h-16 relative mb-6">
+                    <div class="absolute inset-0 bg-white/20 rounded-[40%_60%_60%_40%/40%_40%_60%_60%] animate-morph"></div>
+                    <div class="absolute inset-0 flex items-center justify-center font-reem text-3xl font-bold text-white">أطلس</div>
+                </div>
+                <h2 class="text-4xl font-black leading-tight mb-4">
+                    رحلتك نحو<br>
+                    <span class="text-brand-300">التميز</span> تبدأ هنا
+                </h2>
+                <p class="text-white/70 text-sm font-medium leading-relaxed max-w-xs">
+                    منصة أطلس توفر بيئة تعليمية حديثة لطلاب الدراسات الاجتماعية مع أدوات تفاعلية ومتابعة مستمرة.
+                </p>
             </div>
 
-
-            <button
-                id="studentLoginButton"
-                class="login-button"
-                onclick="studentLogin()">
-
-                <i class="fas fa-right-to-bracket"></i>
-
-                دخول
-
-            </button>
-
+            <div class="space-y-5">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+                    <div>
+                        <p class="font-bold text-sm">محتوى تعليمي منظم</p>
+                        <p class="text-white/55 text-xs mt-0.5">دروس واختبارات وملخصات جاهزة</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <div>
+                        <p class="font-bold text-sm">متابعة التقدم</p>
+                        <p class="text-white/55 text-xs mt-0.5">تقارير أداء واضحة للطالب والمعلم</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                    <div>
+                        <p class="font-bold text-sm">دخول آمن وسريع</p>
+                        <p class="text-white/55 text-xs mt-0.5">كود خاص لكل طالب أو حساب معلم</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-
-        <!-- =========================
-             TEACHER PANEL
-        ========================= -->
-
-        <div
-            id="teacherPanel"
-            class="panel">
-
-            <div class="field">
-
-                <i class="fas fa-envelope"></i>
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="البريد الإلكتروني"
-                    autocomplete="email"
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <i class="fas fa-lock"></i>
-
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="كلمة المرور"
-                    autocomplete="current-password"
-                >
-
-                <button
-                    type="button"
-                    class="password-toggle"
-                    onclick="togglePassword()">
-
-                    <i
-                        id="passwordIcon"
-                        class="fas fa-eye">
-                    </i>
-
-                </button>
-
-            </div>
-
-
-            <button
-                id="teacherLoginButton"
-                class="login-button"
-                onclick="teacherLogin()">
-
-                <i class="fas fa-right-to-bracket"></i>
-
-                دخول المنصة
-
-            </button>
-
+        <div class="relative z-10">
+            <p class="text-white/40 text-xs font-medium">
+                © 2025 أطلس · إعداد أ. إيهاب أشرف
+            </p>
         </div>
+    </aside>
 
+    <!-- Form Side -->
+    <section class="form-panel">
+        <div class="login-card">
 
-        <div class="footer">
+            <!-- Logo -->
+            <div class="card-logo">
+                <div class="shape"></div>
+                <div class="text">أطلس</div>
+            </div>
 
-            <p>
-                إعداد وتصميم
-                <strong>
-                    أ. إيهاب أشرف
-                </strong>
+            <h1 class="text-center text-[22px] font-black text-slate-900 m-0">أهلاً بك 👋</h1>
+            <p class="text-center text-[11px] font-bold text-slate-400 mt-1.5 mb-7">
+                اختر نوع حسابك وسجّل دخولك لمنصة Atlas
             </p>
 
+            <!-- Tabs -->
+            <div class="tabs">
+                <button type="button" class="tab active" id="studentTabBtn" onclick="switchTab('student')">
+                    <i class="fas fa-user-graduate"></i>
+                    طالب
+                </button>
+                <button type="button" class="tab" id="teacherTabBtn" onclick="switchTab('teacher')">
+                    <i class="fas fa-user-tie"></i>
+                    معلم
+                </button>
+            </div>
+
+            <!-- ========== STUDENT PANEL ========== -->
+            <div id="studentPanel" class="panel active">
+                <div class="otp-wrapper">
+                    <label class="otp-label">أدخل كود الدخول المكوّن من 6 أرقام</label>
+                    <div class="otp-container" id="otpContainer">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="0" autocomplete="one-time-code">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data co-index="1" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="2" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="3" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="4" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="5" autocomplete="off">
+                    </div>
+                </div>
+
+                <button id="studentLoginButton" class="login-btn" onclick="studentLogin()">
+                    <i class="fas fa-right-to-bracket"></i>
+                    دخول
+                </button>
+            </div>
+
+            <!-- ========== TEACHER PANEL ========== -->
+            <div id="teacherPanel" class="panel">
+                <div class="field-group">
+                    <label class="field-label" for="email">البريد الإلكتروني</label>
+                    <div class="field">
+                        <input type="email" id="email" placeholder="name@example.com" autocomplete="email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="password">كلمة المرور</label>
+                    <div class="field">
+                        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+                        <i class="fas fa-lock"></i>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="إظهار كلمة المرور">
+                            <i id="passwordIcon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="teacherLoginButton" class="login-btn" onclick="teacherLogin()">
+                    <i class="fas fa-right-to-bracket"></i>
+                    دخول المنصة
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="card-footer">
+                <p>
+                    إعداد وتصميم
+                    <strong>أ. إيهاب أشرف</strong>
+                </p>
+            </div>
+
         </div>
-
-    </div>
-
+    </section>
 </main>
 
 
 <script type="module">
-
     import { auth, db } from "./firebase.js";
 
     import {
@@ -1104,621 +847,334 @@
         getDoc
     } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-
     const STUDENT_EMAIL_DOMAIN = "atlas-students.app";
-
 
     /* =========================
        SPLASH
     ========================= */
-
-    (function initSplashFX() {
-
-        const starfield =
-            document.getElementById("starfield");
-
-        const starCount = 46;
-
-        for (let i = 0; i < starCount; i++) {
-
-            const star =
-                document.createElement("span");
-
-            star.className = "star";
-
-            star.style.top =
-                `${Math.random() * 100}%`;
-
-            star.style.left =
-                `${Math.random() * 100}%`;
-
-            star.style.animationDelay =
-                `${(Math.random() * 3.4).toFixed(2)}s`;
-
-            const size =
-                Math.random() < .15 ? 3 : 2;
-
-            star.style.width = `${size}px`;
-            star.style.height = `${size}px`;
-
-            starfield.appendChild(star);
-
-        }
-
-
-        const bootMessages = [
-
-            "INITIALIZING",
-            "تهيئة النظام...",
-            "الاتصال بالخادم...",
-            "تحميل بيانات المنصة...",
-            "READY"
-
-        ];
-
-        const bootText =
-            document.getElementById("bootText");
-
-        let bootIndex = 0;
-
-        bootText.textContent =
-            bootMessages[0];
-
-        setInterval(() => {
-
-            bootIndex =
-                (bootIndex + 1) % bootMessages.length;
-
-            bootText.textContent =
-                bootMessages[bootIndex];
-
-        }, 480);
-
-    })();
-
-
     window.addEventListener("load", () => {
+        const bar = document.getElementById("splashBar");
+        // animate progress
+        requestAnimationFrame(() => {
+            bar.style.width = "100%";
+        });
 
         setTimeout(() => {
+            document.getElementById("splash").classList.add("hide");
+            document.getElementById("app").classList.add("show");
 
-            const splash =
-                document.getElementById("splash");
-
-            const app =
-                document.getElementById("app");
-
-            splash.style.opacity = "0";
-
-            splash.style.visibility =
-                "hidden";
-
-            app.style.opacity = "1";
-
-            app.style.transform =
-                "translateY(0)";
-
-            document
-                .getElementById("loginCode")
-                .focus();
-
-        }, 2400);
-
+            // focus first OTP input
+            const firstOtp = document.querySelector(".otp-input");
+            if (firstOtp) firstOtp.focus();
+        }, 1900);
     });
-
 
     /* =========================
        TABS
     ========================= */
-
     window.switchTab = function (tab) {
-
-        const studentTabBtn =
-            document.getElementById("studentTabBtn");
-
-        const teacherTabBtn =
-            document.getElementById("teacherTabBtn");
-
-        const studentPanel =
-            document.getElementById("studentPanel");
-
-        const teacherPanel =
-            document.getElementById("teacherPanel");
-
+        const studentTabBtn = document.getElementById("studentTabBtn");
+        const teacherTabBtn = document.getElementById("teacherTabBtn");
+        const studentPanel  = document.getElementById("studentPanel");
+        const teacherPanel  = document.getElementById("teacherPanel");
 
         if (tab === "student") {
-
             studentTabBtn.classList.add("active");
             teacherTabBtn.classList.remove("active");
-
             studentPanel.classList.add("active");
             teacherPanel.classList.remove("active");
-
-            document
-                .getElementById("loginCode")
-                .focus();
-
+            document.querySelector(".otp-input")?.focus();
         } else {
-
             teacherTabBtn.classList.add("active");
             studentTabBtn.classList.remove("active");
-
             teacherPanel.classList.add("active");
             studentPanel.classList.remove("active");
-
-            document
-                .getElementById("email")
-                .focus();
-
+            document.getElementById("email")?.focus();
         }
-
     };
 
-
     /* =========================
-       STUDENT CODE INPUT
+       OTP LOGIC
     ========================= */
+    const otpInputs = document.querySelectorAll(".otp-input");
 
-    document
-        .getElementById("loginCode")
-        .addEventListener("input", event => {
+    // Fix the data-index attribute that had a typo in HTML
+    otpInputs.forEach((input, i) => {
+        input.setAttribute("data-index", i);
+    });
 
-            event.target.value =
-                event.target.value
-                    .replace(/[^0-9]/g, "")
-                    .slice(0, 6);
+    function getOtpCode() {
+        return Array.from(otpInputs).map(inp => inp.value).join("");
+    }
 
+    function clearOtpError() {
+        otpInputs.forEach(inp => inp.classList.remove("error"));
+    }
+
+    function setOtpError() {
+        otpInputs.forEach(inp => {
+            inp.classList.add("error");
+            setTimeout(() => inp.classList.remove("error"), 500);
+        });
+    }
+
+    otpInputs.forEach((input, index) => {
+        input.addEventListener("input", (e) => {
+            const value = e.target.value.replace(/[^0-9]/g, "");
+            e.target.value = value.slice(-1);
+
+            if (value) {
+                e.target.classList.add("filled");
+                if (index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                } else {
+                    // auto submit when last digit filled
+                    if (getOtpCode().length === 6) {
+                        studentLogin();
+                    }
+                }
+            } else {
+                e.target.classList.remove("filled");
+            }
         });
 
-
-    document
-        .getElementById("loginCode")
-        .addEventListener(
-            "keydown",
-            event => {
-
-                if (event.key === "Enter") {
-
-                    studentLogin();
-
-                }
-
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Backspace" && !e.target.value && index > 0) {
+                otpInputs[index - 1].focus();
+                otpInputs[index - 1].value = "";
+                otpInputs[index - 1].classList.remove("filled");
             }
-        );
 
+            if (e.key === "Enter") {
+                studentLogin();
+            }
+
+            // allow left/right arrow navigation
+            if (e.key === "ArrowLeft" && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+            if (e.key === "ArrowRight" && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        // paste support
+        input.addEventListener("paste", (e) => {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData("text").replace(/[^0-9]/g, "").slice(0, 6);
+            if (!paste) return;
+
+            paste.split("").forEach((char, i) => {
+                if (otpInputs[i]) {
+                    otpInputs[i].value = char;
+                    otpInputs[i].classList.add("filled");
+                }
+            });
+
+            const nextIndex = Math.min(paste.length, otpInputs.length - 1);
+            otpInputs[nextIndex].focus();
+
+            if (paste.length === 6) {
+                studentLogin();
+            }
+        });
+    });
 
     /* =========================
        STUDENT LOGIN
     ========================= */
-
     window.studentLogin = async function () {
+        const code = getOtpCode();
+        const button = document.getElementById("studentLoginButton");
 
-        const code =
-            document
-                .getElementById("loginCode")
-                .value
-                .trim();
-
-        const button =
-            document
-                .getElementById("studentLoginButton");
-
+        clearOtpError();
 
         if (!code || code.length !== 6) {
-
+            setOtpError();
             Swal.fire({
-
                 icon: "warning",
-
-                title: "كود غير صحيح",
-
-                text:
-                    "اكتب كود الدخول المكوّن من 6 أرقام.",
-
-                confirmButtonColor:
-                    "#10b981"
-
+                title: "كود غير مكتمل",
+                text: "من فضلك أدخل كود الدخول المكوّن من 6 أرقام.",
+                confirmButtonColor: "#10b981",
+                customClass: { popup: "rounded-2xl" }
             });
-
             return;
         }
 
-
         button.disabled = true;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...`;
 
-        button.innerHTML = `
-            <i class="fas fa-spinner fa-spin"></i>
-            جاري تسجيل الدخول...
-        `;
-
-
-        const fakeEmail =
-            `${code}@${STUDENT_EMAIL_DOMAIN}`;
-
+        const fakeEmail = `${code}@${STUDENT_EMAIL_DOMAIN}`;
 
         try {
+            const result = await signInWithEmailAndPassword(auth, fakeEmail, code);
+            const userSnap = await getDoc(doc(db, "users", result.user.uid));
 
-            const result =
-                await signInWithEmailAndPassword(
-                    auth,
-                    fakeEmail,
-                    code
-                );
-
-
-            const userSnap =
-                await getDoc(
-                    doc(db, "users", result.user.uid)
-                );
-
-
-            if (
-                !userSnap.exists() ||
-                userSnap.data().role !== "student"
-            ) {
-
+            if (!userSnap.exists() || userSnap.data().role !== "student") {
                 await signOut(auth);
-
+                setOtpError();
                 Swal.fire({
-
                     icon: "error",
-
                     title: "كود غير صالح",
-
-                    text:
-                        "هذا الكود غير مرتبط بحساب طالب.",
-
-                    confirmButtonColor:
-                        "#10b981"
-
+                    text: "هذا الكود غير مرتبط بحساب طالب.",
+                    confirmButtonColor: "#10b981",
+                    customClass: { popup: "rounded-2xl" }
                 });
-
                 resetStudentButton();
-
                 return;
-
             }
-
 
             if (userSnap.data().active === false) {
-
                 await signOut(auth);
-
                 Swal.fire({
-
                     icon: "error",
-
                     title: "الحساب غير مفعّل",
-
-                    text:
-                        "تواصل مع المدرّس لتفعيل حسابك.",
-
-                    confirmButtonColor:
-                        "#10b981"
-
+                    text: "تواصل مع المدرّس لتفعيل حسابك.",
+                    confirmButtonColor: "#10b981",
+                    customClass: { popup: "rounded-2xl" }
                 });
-
                 resetStudentButton();
-
                 return;
-
             }
-
 
             await Swal.fire({
-
                 icon: "success",
-
                 title: "تم الدخول بنجاح 🎉",
-
-                text:
-                    `أهلاً بك ${userSnap.data().name || ""}`,
-
+                text: `أهلاً بك ${userSnap.data().name || ""}`,
                 showConfirmButton: false,
-
-                timer: 1200
-
+                timer: 1300,
+                customClass: { popup: "rounded-2xl" }
             });
 
-
-            window.location.href =
-                "student-dashboard.html";
-
+            window.location.href = "student-dashboard.html";
 
         } catch (error) {
-
             console.error(error);
+            setOtpError();
 
-
-            let message =
-                "الكود غير صحيح أو غير مسجل.";
-
-
-            if (
-                error.code ===
-                "auth/too-many-requests"
-            ) {
-
-                message =
-                    "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
-
+            let message = "الكود غير صحيح أو غير مسجل.";
+            if (error.code === "auth/too-many-requests") {
+                message = "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
             }
 
-
             Swal.fire({
-
                 icon: "error",
-
                 title: "تعذر تسجيل الدخول",
-
                 text: message,
-
-                confirmButtonColor:
-                    "#10b981"
-
+                confirmButtonColor: "#10b981",
+                customClass: { popup: "rounded-2xl" }
             });
 
-
             resetStudentButton();
-
         }
-
 
         function resetStudentButton() {
-
             button.disabled = false;
-
-            button.innerHTML = `
-                <i class="fas fa-right-to-bracket"></i>
-                دخول
-            `;
-
+            button.innerHTML = `<i class="fas fa-right-to-bracket"></i> دخول`;
         }
-
     };
-
 
     /* =========================
        PASSWORD TOGGLE
     ========================= */
-
     window.togglePassword = function () {
-
-        const password =
-            document.getElementById("password");
-
-        const icon =
-            document.getElementById("passwordIcon");
+        const password = document.getElementById("password");
+        const icon = document.getElementById("passwordIcon");
 
         if (password.type === "password") {
-
             password.type = "text";
-
-            icon.className =
-                "fas fa-eye-slash";
-
+            icon.className = "fas fa-eye-slash";
         } else {
-
             password.type = "password";
-
-            icon.className =
-                "fas fa-eye";
-
+            icon.className = "fas fa-eye";
         }
-
     };
-
 
     /* =========================
        TEACHER LOGIN
     ========================= */
-
     window.teacherLogin = async function () {
-
-        const email =
-            document
-                .getElementById("email")
-                .value
-                .trim();
-
-        const password =
-            document
-                .getElementById("password")
-                .value;
-
-        const button =
-            document
-                .getElementById("teacherLoginButton");
-
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const button = document.getElementById("teacherLoginButton");
 
         if (!email || !password) {
-
             Swal.fire({
-
                 icon: "warning",
-
                 title: "بيانات ناقصة",
-
-                text:
-                    "اكتب البريد الإلكتروني وكلمة المرور.",
-
-                confirmButtonColor:
-                    "#10b981"
-
+                text: "اكتب البريد الإلكتروني وكلمة المرور.",
+                confirmButtonColor: "#10b981",
+                customClass: { popup: "rounded-2xl" }
             });
-
             return;
         }
 
-
         button.disabled = true;
-
-        button.innerHTML = `
-            <i class="fas fa-spinner fa-spin"></i>
-            جاري تسجيل الدخول...
-        `;
-
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...`;
 
         try {
-
-            const result =
-                await signInWithEmailAndPassword(
-                    auth,
-                    email,
-                    password
-                );
-
+            await signInWithEmailAndPassword(auth, email, password);
 
             await Swal.fire({
-
                 icon: "success",
-
                 title: "تم الدخول بنجاح 🎉",
-
-                text:
-                    "مرحباً بك في Atlas Platform",
-
+                text: "مرحباً بك في Atlas Platform",
                 showConfirmButton: false,
-
-                timer: 1200
-
+                timer: 1300,
+                customClass: { popup: "rounded-2xl" }
             });
 
-
-            window.location.href =
-                "dashboard.html";
-
+            window.location.href = "dashboard.html";
 
         } catch (error) {
-
             console.error(error);
 
-
-            let message =
-                "حدث خطأ أثناء تسجيل الدخول.";
-
-
-            if (
-                error.code ===
-                "auth/invalid-credential"
-            ) {
-
-                message =
-                    "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
+            let message = "حدث خطأ أثناء تسجيل الدخول.";
+            if (error.code === "auth/invalid-credential") {
+                message = "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+            } else if (error.code === "auth/user-not-found") {
+                message = "لا يوجد حساب بهذا البريد الإلكتروني.";
+            } else if (error.code === "auth/wrong-password") {
+                message = "كلمة المرور غير صحيحة.";
+            } else if (error.code === "auth/invalid-email") {
+                message = "البريد الإلكتروني غير صحيح.";
+            } else if (error.code === "auth/too-many-requests") {
+                message = "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
             }
-
-            else if (
-                error.code ===
-                "auth/user-not-found"
-            ) {
-
-                message =
-                    "لا يوجد حساب بهذا البريد الإلكتروني.";
-
-            }
-
-            else if (
-                error.code ===
-                "auth/wrong-password"
-            ) {
-
-                message =
-                    "كلمة المرور غير صحيحة.";
-
-            }
-
-            else if (
-                error.code ===
-                "auth/invalid-email"
-            ) {
-
-                message =
-                    "البريد الإلكتروني غير صحيح.";
-
-            }
-
-            else if (
-                error.code ===
-                "auth/too-many-requests"
-            ) {
-
-                message =
-                    "تم إجراء محاولات كثيرة. حاول مرة أخرى لاحقاً.";
-
-            }
-
 
             Swal.fire({
-
                 icon: "error",
-
                 title: "تعذر تسجيل الدخول",
-
                 text: message,
-
-                confirmButtonColor:
-                    "#10b981"
-
+                confirmButtonColor: "#10b981",
+                customClass: { popup: "rounded-2xl" }
             });
 
-
             button.disabled = false;
-
-            button.innerHTML = `
-                <i class="fas fa-right-to-bracket"></i>
-                دخول المنصة
-            `;
-
+            button.innerHTML = `<i class="fas fa-right-to-bracket"></i> دخول المنصة`;
         }
-
     };
 
+    document.getElementById("password").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") teacherLogin();
+    });
 
-    document
-        .getElementById("password")
-        .addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter"
-                ) {
-
-                    teacherLogin();
-
-                }
-
-            }
-        );
-
+    document.getElementById("email").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            document.getElementById("password").focus();
+        }
+    });
 
     /* =========================
        AUTH STATE
     ========================= */
-
-    onAuthStateChanged(
-        auth,
-        user => {
-
-            if (user) {
-
-                // لا نحول تلقائياً هنا
-                // حتى لا يحدث Loop أثناء فتح الصفحة.
-                // كل من dashboard.html و student-dashboard.html
-                // يتحقق بنفسه من صلاحية المستخدم (admin / student).
-
-                console.log(
-                    "Atlas user:",
-                    user.email
-                );
-
-            }
-
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log("Atlas user:", user.email);
+            // لا نحول تلقائياً هنا لتجنب Loop
         }
-    );
-
+    });
 </script>
 
 </body>
-
 </html>
