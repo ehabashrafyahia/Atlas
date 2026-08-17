@@ -12,7 +12,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
           rel="stylesheet">
 
     <link rel="stylesheet"
@@ -53,7 +53,7 @@
         }
 
         /* =========================
-           SPLASH
+           SPLASH — SCI-FI BOOT SEQUENCE
         ========================= */
 
         #splash {
@@ -68,11 +68,189 @@
             align-items: center;
             justify-content: center;
 
-            background: #ffffff;
+            overflow: hidden;
+
+            background:
+                radial-gradient(circle at 50% 40%, rgba(16,185,129,.18), transparent 45%),
+                radial-gradient(circle at 12% 88%, rgba(34,211,238,.10), transparent 42%),
+                radial-gradient(circle at 90% 12%, rgba(52,211,153,.08), transparent 38%),
+                linear-gradient(180deg, #02050c 0%, #061020 55%, #02050c 100%);
 
             transition:
-                opacity .7s ease,
-                visibility .7s ease;
+                opacity .8s ease,
+                visibility .8s ease;
+        }
+
+        #splash::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image:
+                linear-gradient(rgba(52,211,153,.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(52,211,153,.07) 1px, transparent 1px);
+
+            background-size: 46px 46px;
+
+            mask-image:
+                radial-gradient(circle at 50% 42%, black, transparent 68%);
+            -webkit-mask-image:
+                radial-gradient(circle at 50% 42%, black, transparent 68%);
+        }
+
+        .starfield {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: #cffbe8;
+            animation: twinkle 3.4s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: .12; }
+            50% { opacity: .9; }
+        }
+
+        .scan-sweep {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 160px;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    transparent,
+                    rgba(52,211,153,.09),
+                    transparent
+                );
+
+            animation: sweep 4.2s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sweep {
+            0% { top: -160px; }
+            100% { top: 100%; }
+        }
+
+        .orbit-system {
+            position: relative;
+            width: 216px;
+            height: 216px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(52,211,153,.22);
+        }
+
+        .ring-outer {
+            inset: 0;
+            border-top-color: rgba(110,231,183,.85);
+            border-right-color: rgba(110,231,183,.5);
+            animation: spin 13s linear infinite;
+        }
+
+        .ring-mid {
+            inset: 32px;
+            border-style: dashed;
+            border-color: rgba(52,211,153,.28);
+            animation: spin-reverse 8.5s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-reverse {
+            to { transform: rotate(-360deg); }
+        }
+
+        .satellite {
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            margin-left: -3px;
+
+            border-radius: 50%;
+            background: #6ee7b7;
+
+            box-shadow:
+                0 0 10px 2px rgba(110,231,183,.85);
+        }
+
+        .satellite-cyan {
+            background: #22d3ee;
+            box-shadow:
+                0 0 9px 2px rgba(34,211,238,.85);
+        }
+
+        .atlas-core {
+            position: relative;
+            width: 104px;
+            height: 104px;
+
+            border-radius: 50%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at 35% 30%,
+                    #34d399,
+                    #10b981 55%,
+                    #047857
+                );
+
+            box-shadow:
+                0 0 42px 6px rgba(16,185,129,.45),
+                inset 0 0 22px rgba(255,255,255,.15);
+
+            animation: pulse-core 2.4s ease-in-out infinite;
+        }
+
+        @keyframes pulse-core {
+            0%, 100% {
+                box-shadow:
+                    0 0 42px 6px rgba(16,185,129,.45),
+                    inset 0 0 22px rgba(255,255,255,.15);
+            }
+            50% {
+                box-shadow:
+                    0 0 62px 14px rgba(16,185,129,.65),
+                    inset 0 0 28px rgba(255,255,255,.25);
+            }
+        }
+
+        .core-glyph {
+            position: relative;
+            z-index: 2;
+
+            color: white;
+
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+
+            text-shadow:
+                0 4px 14px rgba(0,0,0,.25);
         }
 
         .atlas-logo {
@@ -132,34 +310,63 @@
         }
 
         .splash-title {
-            margin-top: 30px;
+            margin-top: 34px;
 
-            font-size: 22px;
+            font-size: 20px;
 
             font-weight: 900;
 
-            color: #0f172a;
+            color: #ecfdf5;
+
+            letter-spacing: .2px;
         }
 
         .splash-subtitle {
-            margin-top: 4px;
+            margin-top: 5px;
 
             font-size: 11px;
 
-            color: #94a3b8;
+            color: #6ee7b7;
 
             font-weight: 700;
+
+            opacity: .85;
+        }
+
+        .boot-sequence {
+            margin-top: 24px;
+
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            min-height: 14px;
+
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #5eead4;
+
+            direction: ltr;
+        }
+
+        .boot-caret {
+            color: #34d399;
+            animation: blink-caret 1s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+            50% { opacity: 0; }
         }
 
         .loader {
-            margin-top: 25px;
+            margin-top: 16px;
 
-            width: 80px;
-            height: 4px;
+            width: 168px;
+            height: 3px;
 
             border-radius: 10px;
 
-            background: #e2e8f0;
+            background: rgba(148,163,184,.15);
 
             overflow: hidden;
         }
@@ -177,7 +384,8 @@
                 linear-gradient(
                     90deg,
                     #10b981,
-                    #34d399
+                    #6ee7b7,
+                    #22d3ee
                 );
 
             border-radius: inherit;
@@ -671,12 +879,24 @@
 
 <div id="splash">
 
-    <div class="atlas-logo">
+    <div class="starfield" id="starfield"></div>
 
-        <div class="logo-shape"></div>
+    <div class="scan-sweep"></div>
 
-        <div class="logo-text">
-            أطلس
+    <div class="orbit-system">
+
+        <div class="orbit-ring ring-outer">
+            <span class="satellite"></span>
+        </div>
+
+        <div class="orbit-ring ring-mid">
+            <span class="satellite satellite-cyan"></span>
+        </div>
+
+        <div class="atlas-core">
+            <div class="core-glyph">
+                أطلس
+            </div>
         </div>
 
     </div>
@@ -687,6 +907,11 @@
 
     <div class="splash-subtitle">
         منصة مستر إيهاب أشرف للدراسات الاجتماعية
+    </div>
+
+    <div class="boot-sequence">
+        <span class="boot-caret">&gt;</span>
+        <span id="bootText">INITIALIZING</span>
     </div>
 
     <div class="loader"></div>
@@ -887,6 +1112,71 @@
        SPLASH
     ========================= */
 
+    (function initSplashFX() {
+
+        const starfield =
+            document.getElementById("starfield");
+
+        const starCount = 46;
+
+        for (let i = 0; i < starCount; i++) {
+
+            const star =
+                document.createElement("span");
+
+            star.className = "star";
+
+            star.style.top =
+                `${Math.random() * 100}%`;
+
+            star.style.left =
+                `${Math.random() * 100}%`;
+
+            star.style.animationDelay =
+                `${(Math.random() * 3.4).toFixed(2)}s`;
+
+            const size =
+                Math.random() < .15 ? 3 : 2;
+
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+
+            starfield.appendChild(star);
+
+        }
+
+
+        const bootMessages = [
+
+            "INITIALIZING",
+            "تهيئة النظام...",
+            "الاتصال بالخادم...",
+            "تحميل بيانات المنصة...",
+            "READY"
+
+        ];
+
+        const bootText =
+            document.getElementById("bootText");
+
+        let bootIndex = 0;
+
+        bootText.textContent =
+            bootMessages[0];
+
+        setInterval(() => {
+
+            bootIndex =
+                (bootIndex + 1) % bootMessages.length;
+
+            bootText.textContent =
+                bootMessages[bootIndex];
+
+        }, 480);
+
+    })();
+
+
     window.addEventListener("load", () => {
 
         setTimeout(() => {
@@ -911,7 +1201,7 @@
                 .getElementById("loginCode")
                 .focus();
 
-        }, 1800);
+        }, 2400);
 
     });
 
