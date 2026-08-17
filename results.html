@@ -534,7 +534,7 @@
 
             .filters {
                 grid-template-columns:
-                    2fr 1fr 1fr;
+                    2fr 1fr 1fr 1fr;
             }
 
             .hero {
@@ -783,6 +783,15 @@
 
                 <option value="grade9">
                     الثالث الإعدادي
+                </option>
+
+            </select>
+
+
+            <select id="lessonFilter">
+
+                <option value="">
+                    كل الدروس
                 </option>
 
             </select>
@@ -1040,6 +1049,8 @@ async function loadResults() {
 
         updateStatistics();
 
+        populateLessonFilter();
+
         renderResults();
 
 
@@ -1185,6 +1196,12 @@ function renderResults() {
         ).value;
 
 
+    const lesson =
+        document.getElementById(
+            "lessonFilter"
+        ).value;
+
+
 
     const filtered =
         results.filter(
@@ -1219,6 +1236,11 @@ function renderResults() {
                 const matchesGrade =
                     !grade ||
                     result.grade === grade;
+
+
+                const matchesLesson =
+                    !lesson ||
+                    getLesson(result) === lesson;
 
 
                 const percentage =
@@ -1266,6 +1288,7 @@ function renderResults() {
                 return (
                     matchesSearch &&
                     matchesGrade &&
+                    matchesLesson &&
                     matchesResult
                 );
 
@@ -1444,6 +1467,64 @@ function renderResults() {
             }
         )
         .join("");
+
+}
+
+
+
+/* =========================================
+   LESSON
+========================================= */
+
+function getLesson(result) {
+
+    return (
+        result.examTitle ||
+        result.examName ||
+        result.title ||
+        ""
+    );
+
+}
+
+
+
+function populateLessonFilter() {
+
+    const select =
+        document.getElementById(
+            "lessonFilter"
+        );
+
+    const current =
+        select.value;
+
+    const lessons =
+        Array.from(
+            new Set(
+                results
+                    .map(getLesson)
+                    .filter(Boolean)
+            )
+        ).sort(
+            (a, b) =>
+                a.localeCompare(b, "ar")
+        );
+
+    select.innerHTML =
+        `<option value="">كل الدروس</option>` +
+        lessons
+            .map(
+                lesson =>
+                    `<option value="${escapeHtml(lesson)}">${escapeHtml(lesson)}</option>`
+            )
+            .join("");
+
+    if (lessons.includes(current)) {
+
+        select.value = current;
+
+    }
 
 }
 
@@ -1642,6 +1723,16 @@ document
 document
     .getElementById(
         "gradeFilter"
+    )
+    .addEventListener(
+        "change",
+        renderResults
+    );
+
+
+document
+    .getElementById(
+        "lessonFilter"
     )
     .addEventListener(
         "change",
