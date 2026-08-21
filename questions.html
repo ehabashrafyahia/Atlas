@@ -651,7 +651,8 @@ getDocs,
 query,
 orderBy,
 deleteDoc,
-doc
+doc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
@@ -677,26 +678,13 @@ currentUser=user;
 
 try{
 
-const snapshot=await getDocs(
-query(
-collection(db,"users")
-)
+const adminSnap=await getDoc(
+doc(db,"users",user.uid)
 );
 
-let allowed=false;
-
-snapshot.forEach(d=>{
-
-if(
-d.id===user.uid &&
-d.data().role==="admin"
-){
-
-allowed=true;
-
-}
-
-});
+const allowed =
+adminSnap.exists() &&
+adminSnap.data().role==="admin";
 
 if(!allowed){
 
