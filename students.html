@@ -771,6 +771,7 @@ import {
     updateDoc,
     deleteDoc,
     doc,
+    getDoc,
     serverTimestamp,
     query
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
@@ -811,21 +812,14 @@ onAuthStateChanged(auth, async user => {
 
     try {
 
-        const usersSnap =
-            await getDocs(
-                query(
-                    collection(db,"users")
-                )
-            );
-
-        const admin =
-            usersSnap.docs.find(
-                d => d.id === user.uid
+        const adminSnap =
+            await getDoc(
+                doc(db,"users",user.uid)
             );
 
         if (
-            !admin ||
-            admin.data().role !== "admin"
+            !adminSnap.exists() ||
+            adminSnap.data().role !== "admin"
         ) {
 
             await Swal.fire({
