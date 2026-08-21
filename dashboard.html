@@ -1490,6 +1490,7 @@ import {
     getCountFromServer,
     getDocs,
     query,
+    where,
     orderBy,
     limit,
     doc,
@@ -1675,30 +1676,17 @@ async function loadStatistics() {
 
         /*
          * users collection
-         * نحسب الطلاب فقط
+         * نحسب الطلاب فقط (count من السيرفر
+         * بدل تنزيل كل المستخدمين)
          */
 
-        const usersSnapshot =
-            await getDocs(
-                collection(db, "users")
+        const students =
+            await getCountFromServer(
+                query(
+                    collection(db, "users"),
+                    where("role", "==", "student")
+                )
             );
-
-
-        let students = 0;
-
-
-        usersSnapshot.forEach(item => {
-
-            const data =
-                item.data();
-
-            if (data.role === "student") {
-
-                students++;
-
-            }
-
-        });
 
 
         document.getElementById(
@@ -1710,7 +1698,7 @@ async function loadStatistics() {
         document.getElementById(
             "studentsCount"
         ).textContent =
-            students;
+            students.data().count;
 
 
         document.getElementById(
