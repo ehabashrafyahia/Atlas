@@ -438,6 +438,74 @@
 
         }
 
+        .honor-board {
+            margin: 14px 0 0;
+            background: linear-gradient(90deg,#059669,#10b981);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 6px 16px rgba(5,150,105,.25);
+        }
+
+        .honor-board-label {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,.15);
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 10px 14px;
+            white-space: nowrap;
+        }
+
+        .honor-board-track {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .honor-board-content {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            white-space: nowrap;
+            padding-inline-end: 28px;
+            animation: honor-scroll 22s linear infinite;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .honor-board-track:hover .honor-board-content {
+            animation-play-state: paused;
+        }
+
+        .honor-board-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .honor-board-item .rank {
+            font-size: 11px;
+            font-weight: 900;
+            background: rgba(255,255,255,.25);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes honor-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
     </style>
 
 </head>
@@ -525,6 +593,24 @@
             من هنا تقدر تشوف الاختبارات المتاحة ليك وتبدأ حلها.
         </p>
 
+    </div>
+
+</section>
+
+
+<section
+    class="honor-board"
+    id="honorBoardSection"
+    style="display:none">
+
+    <div class="honor-board-label">
+        <i class="fas fa-trophy"></i>
+        لوحة الشرف
+    </div>
+
+    <div class="honor-board-track">
+        <div class="honor-board-content" id="honorBoardContent">
+        </div>
     </div>
 
 </section>
@@ -725,6 +811,7 @@ onAuthStateChanged(auth, async user => {
 
 
         await loadDashboard();
+        loadHonorBoard();
 
 
         hideLoader();
@@ -753,6 +840,60 @@ onAuthStateChanged(auth, async user => {
     }
 
 });
+
+
+/* =========================================
+   HONOR BOARD (لوحة الشرف)
+   بيجيب مستند واحد بس فيه أوائل كل الصفوف،
+   وبيعرض بس اللي يخصوا صف الطالب الحالي.
+========================================= */
+
+async function loadHonorBoard() {
+
+    try {
+
+        const snap =
+            await getDoc(doc(db, "honor_board", "current"));
+
+        if (!snap.exists()) return;
+
+        const data = snap.data();
+        const list =
+            (data.grades &&
+                data.grades[studentData.grade]) || [];
+
+        if (!list.length) return;
+
+        const medals = ["🥇", "🥈", "🥉"];
+
+        const itemsHTML = list
+            .map((s, i) => `
+                <div class="honor-board-item">
+                    <span class="rank">
+                        ${medals[i] || (i + 1)}
+                    </span>
+                    ${s.name}
+                </div>
+            `)
+            .join("");
+
+        /*
+           التكرار مرتين متتاليين ضروري
+           عشان يعمل حلقة سكرول متصلة بدون فراغ
+        */
+        document.getElementById("honorBoardContent")
+            .innerHTML = itemsHTML + itemsHTML;
+
+        document.getElementById("honorBoardSection")
+            .style.display = "flex";
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
 
 
 /* =========================================
