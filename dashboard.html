@@ -607,7 +607,7 @@
                     #10b981,
                     #047857
                 );
-            transition: width .8s ease;
+            transition: width .35s ease;
         }
 
         /* =========================================
@@ -1694,12 +1694,6 @@ async function loadStatistics() {
             );
 
 
-        /*
-         * users collection
-         * نحسب الطلاب فقط (count من السيرفر
-         * بدل تنزيل كل المستخدمين)
-         */
-
         const students =
             await getCountFromServer(
                 query(
@@ -1985,12 +1979,6 @@ async function loadRecentQuestions() {
 
         console.error(error);
 
-
-        /*
-         * لو createdAt غير موجود
-         * لا نوقف Dashboard كلها.
-         */
-
         container.innerHTML = `
 
             <div class="empty">
@@ -2025,10 +2013,6 @@ function escapeHtml(text) {
 
 /* =========================================
    HONOR BOARD (لوحة الشرف)
-   يحسب مجموع نقاط كل طالب في اختبارات
-   الشهر الحالي، ويرتب أوائل كل صف لوحده،
-   وينشر النتيجة (اسم + مجموع نقاط بس)
-   في مستند واحد يقدر الطلاب يقروه.
 ========================================= */
 
 window.publishHonorBoard = async function() {
@@ -2054,10 +2038,6 @@ window.publishHonorBoard = async function() {
 
         const snap = await getDocs(attemptsQuery);
 
-        /*
-           تجميع مجموع النقاط لكل طالب،
-           مقسّم حسب الصف
-        */
         const byGrade = {};
 
         snap.forEach(docSnap => {
@@ -2099,8 +2079,7 @@ window.publishHonorBoard = async function() {
             doc(db, "honor_board", "current"),
             {
                 grades,
-                month:
-                    `\( {now.getFullYear()}- \){now.getMonth() + 1}`,
+                month: `\( {now.getFullYear()}- \){now.getMonth() + 1}`,
                 updatedAt: serverTimestamp()
             }
         );
