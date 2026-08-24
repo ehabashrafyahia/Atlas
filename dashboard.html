@@ -2031,15 +2031,6 @@ function escapeHtml(text) {
    في مستند واحد يقدر الطلاب يقروه.
 ========================================= */
 
-const gradeNames = {
-    grade4: "الرابع الابتدائي",
-    grade5: "الخامس الابتدائي",
-    grade6: "السادس الابتدائي",
-    grade7: "الأول الإعدادي",
-    grade8: "الثاني الإعدادي",
-    grade9: "الثالث الإعدادي"
-};
-
 window.publishHonorBoard = async function() {
 
     const btn = document.getElementById("honorBoardBtn");
@@ -2109,7 +2100,7 @@ window.publishHonorBoard = async function() {
             {
                 grades,
                 month:
-                    `${now.getFullYear()}-${now.getMonth() + 1}`,
+                    `\( {now.getFullYear()}- \){now.getMonth() + 1}`,
                 updatedAt: serverTimestamp()
             }
         );
