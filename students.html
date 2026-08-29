@@ -432,6 +432,170 @@
             direction: ltr;
         }
 
+        /* ================================
+           مودال الدرجات الشهرية
+        ================================ */
+
+        .grades-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(15,23,42,.55);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 24px 14px;
+            overflow-y: auto;
+        }
+
+        .grades-overlay.open {
+            display: flex;
+        }
+
+        .grades-modal {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 26px;
+            padding: 20px;
+            box-shadow: 0 25px 60px rgba(15,23,42,.35);
+            margin-top: 10px;
+        }
+
+        .grades-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .grades-modal-head strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .grades-modal-head span {
+            display: block;
+            margin-top: 3px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .grades-close {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 12px;
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: pointer;
+            flex: 0 0 36px;
+        }
+
+        .grades-close:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .grade-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grade-form-grid .full {
+            grid-column: 1 / -1;
+        }
+
+        .grades-history {
+            margin-top: 18px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .grades-history-title {
+            font-size: 10px;
+            font-weight: 900;
+            color: #475569;
+            margin-bottom: 4px;
+        }
+
+        .grade-entry {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #e8edf2;
+            border-radius: 15px;
+            padding: 10px 12px;
+            background: #fbfdfe;
+        }
+
+        .grade-entry-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .grade-entry-info strong {
+            display: block;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .grade-entry-info span {
+            display: block;
+            margin-top: 2px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .grade-pct {
+            font-size: 11px;
+            font-weight: 900;
+            padding: 5px 9px;
+            border-radius: 10px;
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .grade-pct.low {
+            background: #fff1f2;
+            color: #e11d48;
+        }
+
+        .grade-entry-delete {
+            width: 30px;
+            height: 30px;
+            border: 0;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: pointer;
+            flex: 0 0 30px;
+        }
+
+        .grade-entry-delete:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .grades-empty {
+            text-align: center;
+            padding: 16px;
+            color: #94a3b8;
+            font-size: 9px;
+            font-weight: 800;
+        }
+
+        .small-btn.grades:hover {
+            color: #7c3aed;
+            background: #f3e8ff;
+        }
+
         @media (min-width:700px) {
 
             .cards {
@@ -747,6 +911,89 @@
     </section>
 
 </main>
+
+
+<!-- مودال درجات امتحان الشهر -->
+
+<div class="grades-overlay" id="gradesOverlay">
+
+    <div class="grades-modal">
+
+        <div class="grades-modal-head">
+
+            <div>
+                <strong id="gradesStudentName">درجات الطالب</strong>
+                <span>سجل درجات امتحانات الشهر</span>
+            </div>
+
+            <button class="grades-close" id="gradesCloseBtn">
+                <i class="fas fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="grade-form-grid">
+
+            <div>
+                <label>الشهر</label>
+                <select id="gradeMonth">
+                    <option value="01">يناير</option>
+                    <option value="02">فبراير</option>
+                    <option value="03">مارس</option>
+                    <option value="04">أبريل</option>
+                    <option value="05">مايو</option>
+                    <option value="06">يونيو</option>
+                    <option value="07">يوليو</option>
+                    <option value="08">أغسطس</option>
+                    <option value="09">سبتمبر</option>
+                    <option value="10">أكتوبر</option>
+                    <option value="11">نوفمبر</option>
+                    <option value="12">ديسمبر</option>
+                </select>
+            </div>
+
+            <div>
+                <label>السنة</label>
+                <input id="gradeYear" type="number" placeholder="2026">
+            </div>
+
+            <div>
+                <label>الدرجة</label>
+                <input id="gradeScore" type="number" placeholder="مثال: 85">
+            </div>
+
+            <div>
+                <label>الدرجة النهائية</label>
+                <input id="gradeMax" type="number" placeholder="100" value="100">
+            </div>
+
+            <div class="full">
+                <label>ملاحظة (اختياري)</label>
+                <input id="gradeNote" placeholder="مثال: امتحان الوحدة الأولى">
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <button class="btn btn-primary" id="saveGradeButton" style="flex:1">
+                <i class="fas fa-save"></i>
+                حفظ الدرجة
+            </button>
+
+        </div>
+
+        <div class="grades-history">
+
+            <div class="grades-history-title">سجل الدرجات السابقة</div>
+
+            <div id="gradesHistoryList"></div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 <script type="module">
@@ -1084,6 +1331,15 @@ function renderStudents() {
                         }
 
                         <button
+                            class="small-btn grades"
+                            title="درجات امتحان الشهر"
+                            onclick="openGrades('${student.id}')">
+
+                            <i class="fas fa-chart-line"></i>
+
+                        </button>
+
+                        <button
                             class="small-btn edit"
                             title="تعديل"
                             onclick="editStudent('${student.id}')">
@@ -1131,6 +1387,266 @@ function gradeName(grade) {
     return map[grade] || "غير محدد";
 
 }
+
+
+/* ================================
+   درجات امتحان الشهر
+================================ */
+
+const arabicMonths = {
+    "01":"يناير","02":"فبراير","03":"مارس","04":"أبريل",
+    "05":"مايو","06":"يونيو","07":"يوليو","08":"أغسطس",
+    "09":"سبتمبر","10":"أكتوبر","11":"نوفمبر","12":"ديسمبر"
+};
+
+let currentGradesStudentId = null;
+
+function monthLabel(monthKey) {
+    const [year, month] = String(monthKey).split("-");
+    return `${arabicMonths[month] || month} ${year}`;
+}
+
+window.openGrades = function(id) {
+
+    const student = students.find(s => s.id === id);
+    if (!student) return;
+
+    currentGradesStudentId = id;
+
+    document.getElementById("gradesStudentName").textContent =
+        `درجات ${student.name || "الطالب"}`;
+
+    const now = new Date();
+
+    document.getElementById("gradeMonth").value =
+        String(now.getMonth() + 1).padStart(2, "0");
+
+    document.getElementById("gradeYear").value = now.getFullYear();
+    document.getElementById("gradeScore").value = "";
+    document.getElementById("gradeMax").value = "100";
+    document.getElementById("gradeNote").value = "";
+
+    renderGradesHistory();
+
+    document.getElementById("gradesOverlay").classList.add("open");
+
+};
+
+function closeGradesModal() {
+
+    document.getElementById("gradesOverlay").classList.remove("open");
+    currentGradesStudentId = null;
+
+}
+
+document
+    .getElementById("gradesCloseBtn")
+    .addEventListener("click", closeGradesModal);
+
+document
+    .getElementById("gradesOverlay")
+    .addEventListener("click", (e) => {
+
+        if (e.target.id === "gradesOverlay") closeGradesModal();
+
+    });
+
+function renderGradesHistory() {
+
+    const list = document.getElementById("gradesHistoryList");
+    const student = students.find(s => s.id === currentGradesStudentId);
+
+    if (!student) return;
+
+    const entries =
+        Object.entries(student.monthlyGrades || {})
+        .sort((a, b) => b[0].localeCompare(a[0]));
+
+    if (!entries.length) {
+
+        list.innerHTML = `
+            <div class="grades-empty">
+                لا توجد درجات مسجلة بعد.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    list.innerHTML = entries.map(([monthKey, entry]) => {
+
+        const score = Number(entry.score || 0);
+        const max = Number(entry.max || 100);
+        const pct = max ? Math.round((score / max) * 100) : 0;
+
+        return `
+            <div class="grade-entry">
+
+                <div class="grade-entry-info">
+
+                    <strong>${escapeHtml(monthLabel(monthKey))}</strong>
+
+                    <span>
+                        ${score} / ${max}
+                        ${entry.note ? " • " + escapeHtml(entry.note) : ""}
+                    </span>
+
+                </div>
+
+                <div class="grade-pct ${pct < 50 ? "low" : ""}">
+                    ${pct}%
+                </div>
+
+                <button
+                    class="grade-entry-delete"
+                    title="حذف"
+                    onclick="deleteGrade('${monthKey}')">
+
+                    <i class="fas fa-trash"></i>
+
+                </button>
+
+            </div>
+        `;
+
+    }).join("");
+
+}
+
+document
+    .getElementById("saveGradeButton")
+    .addEventListener("click", async () => {
+
+        const student =
+            students.find(s => s.id === currentGradesStudentId);
+
+        if (!student) return;
+
+        const month = document.getElementById("gradeMonth").value;
+        const year = document.getElementById("gradeYear").value;
+        const score = document.getElementById("gradeScore").value;
+        const max = document.getElementById("gradeMax").value || "100";
+        const note = document.getElementById("gradeNote").value.trim();
+
+        if (!year || score === "") {
+
+            Swal.fire({
+                icon:"warning",
+                title:"بيانات ناقصة",
+                text:"من فضلك اكتب السنة والدرجة.",
+                confirmButtonColor:"#10b981"
+            });
+
+            return;
+
+        }
+
+        const monthKey = `${year}-${month}`;
+
+        const button = document.getElementById("saveGradeButton");
+        button.disabled = true;
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...`;
+
+        try {
+
+            const updatedGrades = {
+                ...(student.monthlyGrades || {}),
+                [monthKey]: {
+                    score: Number(score),
+                    max: Number(max),
+                    note,
+                    updatedAt: new Date().toISOString()
+                }
+            };
+
+            await updateDoc(
+                doc(db,"users",student.id),
+                { monthlyGrades: updatedGrades }
+            );
+
+            student.monthlyGrades = updatedGrades;
+
+            document.getElementById("gradeScore").value = "";
+            document.getElementById("gradeNote").value = "";
+
+            renderGradesHistory();
+
+            Swal.fire({
+                icon:"success",
+                title:"تم الحفظ",
+                text:"تم حفظ درجة الشهر بنجاح.",
+                confirmButtonColor:"#10b981",
+                timer:1400,
+                showConfirmButton:false
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            Swal.fire({
+                icon:"error",
+                title:"تعذر الحفظ",
+                text:"حدث خطأ أثناء حفظ الدرجة.",
+                confirmButtonColor:"#10b981"
+            });
+
+        }
+
+        button.disabled = false;
+        button.innerHTML = `<i class="fas fa-save"></i> حفظ الدرجة`;
+
+    });
+
+window.deleteGrade = async function(monthKey) {
+
+    const student =
+        students.find(s => s.id === currentGradesStudentId);
+
+    if (!student) return;
+
+    const result = await Swal.fire({
+        icon:"warning",
+        title:"حذف الدرجة؟",
+        text:`سيتم حذف درجة ${monthLabel(monthKey)}.`,
+        showCancelButton:true,
+        confirmButtonText:"حذف",
+        cancelButtonText:"إلغاء",
+        confirmButtonColor:"#ef4444",
+        cancelButtonColor:"#64748b"
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+
+        const updatedGrades = { ...(student.monthlyGrades || {}) };
+        delete updatedGrades[monthKey];
+
+        await updateDoc(
+            doc(db,"users",student.id),
+            { monthlyGrades: updatedGrades }
+        );
+
+        student.monthlyGrades = updatedGrades;
+
+        renderGradesHistory();
+
+    } catch (error) {
+
+        console.error(error);
+
+        Swal.fire({
+            icon:"error",
+            title:"تعذر الحذف",
+            text:"حدث خطأ أثناء حذف الدرجة.",
+            confirmButtonColor:"#10b981"
+        });
+
+    }
+
+};
 
 
 /* ================================
