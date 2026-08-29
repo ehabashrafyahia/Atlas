@@ -303,6 +303,67 @@
             gap: 12px;
         }
 
+        .grades-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .grade-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 20px;
+            padding: 14px 16px;
+            box-shadow: 0 6px 22px rgba(15,23,42,.04);
+        }
+
+        .grade-item-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 42px;
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .grade-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .grade-item-info strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .grade-item-info span {
+            display: block;
+            margin-top: 3px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .grade-item-pct {
+            font-size: 13px;
+            font-weight: 900;
+            padding: 7px 12px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .grade-item-pct.low {
+            background: #fff1f2;
+            color: #e11d48;
+        }
+
         .exam-card {
             background: white;
             border: 1px solid #e8edf2;
@@ -660,6 +721,37 @@
 
 
 
+<section class="section" id="monthlyGradesSection" style="display:none">
+
+    <div class="section-head">
+
+        <div class="section-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+
+        <div>
+
+            <strong>
+                درجات امتحان الشهر
+            </strong>
+
+            <span>
+                درجاتك في امتحانات المدرّس الشهرية
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="monthlyGradesList"
+        class="grades-list">
+    </div>
+
+</section>
+
+
 <section class="section">
 
     <div class="section-head">
@@ -746,6 +838,13 @@ const gradeNames = {
 };
 
 
+const arabicMonths = {
+    "01":"يناير","02":"فبراير","03":"مارس","04":"أبريل",
+    "05":"مايو","06":"يونيو","07":"يوليو","08":"أغسطس",
+    "09":"سبتمبر","10":"أكتوبر","11":"نوفمبر","12":"ديسمبر"
+};
+
+
 let currentUser = null;
 
 let studentData = null;
@@ -809,6 +908,8 @@ onAuthStateChanged(auth, async user => {
             gradeNames[studentData.grade] ||
             "لوحة الطالب";
 
+
+        renderMonthlyGrades();
 
         await loadDashboard();
         loadHonorBoard();
@@ -1045,6 +1146,72 @@ function getPercentage(attempt) {
     if (!total) return 0;
 
     return (score / total) * 100;
+
+}
+
+
+/* =========================================
+   درجات امتحان الشهر
+========================================= */
+
+function renderMonthlyGrades() {
+
+    const section = document.getElementById("monthlyGradesSection");
+    const list = document.getElementById("monthlyGradesList");
+
+    const grades = (studentData && studentData.monthlyGrades) || {};
+
+    const entries =
+        Object.entries(grades)
+        .sort((a, b) => b[0].localeCompare(a[0]));
+
+    if (!entries.length) {
+
+        section.style.display = "none";
+        return;
+
+    }
+
+    section.style.display = "block";
+
+    list.innerHTML = entries.map(([monthKey, entry]) => {
+
+        const [year, month] = monthKey.split("-");
+
+        const score = Number(entry.score || 0);
+        const max = Number(entry.max || 100);
+        const pct = max ? Math.round((score / max) * 100) : 0;
+
+        return `
+
+            <div class="grade-item">
+
+                <div class="grade-item-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+
+                <div class="grade-item-info">
+
+                    <strong>
+                        ${escapeHtml(arabicMonths[month] || month)} ${escapeHtml(year)}
+                    </strong>
+
+                    <span>
+                        ${score} / ${max}
+                        ${entry.note ? " • " + escapeHtml(entry.note) : ""}
+                    </span>
+
+                </div>
+
+                <div class="grade-item-pct ${pct < 50 ? "low" : ""}">
+                    ${pct}%
+                </div>
+
+            </div>
+
+        `;
+
+    }).join("");
 
 }
 
