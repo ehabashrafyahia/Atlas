@@ -262,6 +262,77 @@
             font-weight: 800;
         }
 
+        .flashcards-banner {
+            position: relative;
+            overflow: hidden;
+            margin-top: 22px;
+            padding: 20px;
+            border-radius: 26px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            color: #451a03;
+            background: linear-gradient(135deg,#fde68a 0%,#f59e0b 55%,#b45309 100%);
+            box-shadow: 0 18px 40px rgba(217,119,6,.28);
+            transition: .2s;
+        }
+
+        .flashcards-banner:hover {
+            transform: translateY(-2px);
+        }
+
+        .flashcards-banner::after {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.18);
+            left: -50px;
+            bottom: -80px;
+        }
+
+        .flashcards-banner-icon {
+            position: relative;
+            z-index: 2;
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+            border-radius: 17px;
+            background: rgba(255,255,255,.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .flashcards-banner-info {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .flashcards-banner-info strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .flashcards-banner-info span {
+            display: block;
+            margin-top: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            opacity: .85;
+        }
+
+        .flashcards-banner-arrow {
+            position: relative;
+            z-index: 2;
+            font-size: 14px;
+        }
+
         .section {
             margin-top: 28px;
         }
@@ -718,6 +789,22 @@
     </div>
 
 </section>
+
+
+<div class="flashcards-banner" onclick="location.href='flashcards.html'">
+
+    <div class="flashcards-banner-icon">
+        <i class="fas fa-layer-group"></i>
+    </div>
+
+    <div class="flashcards-banner-info">
+        <strong>بطاقات المراجعة الذهبية ✨</strong>
+        <span>راجع أهم المعلومات في كل وحدة بطريقة سريعة وممتعة</span>
+    </div>
+
+    <i class="fas fa-chevron-left flashcards-banner-arrow"></i>
+
+</div>
 
 
 
