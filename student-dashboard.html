@@ -262,77 +262,6 @@
             font-weight: 800;
         }
 
-        .flashcards-banner {
-            position: relative;
-            overflow: hidden;
-            margin-top: 22px;
-            padding: 20px;
-            border-radius: 26px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            color: #451a03;
-            background: linear-gradient(135deg,#fde68a 0%,#f59e0b 55%,#b45309 100%);
-            box-shadow: 0 18px 40px rgba(217,119,6,.28);
-            transition: .2s;
-        }
-
-        .flashcards-banner:hover {
-            transform: translateY(-2px);
-        }
-
-        .flashcards-banner::after {
-            content: "";
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.18);
-            left: -50px;
-            bottom: -80px;
-        }
-
-        .flashcards-banner-icon {
-            position: relative;
-            z-index: 2;
-            width: 52px;
-            height: 52px;
-            flex: 0 0 52px;
-            border-radius: 17px;
-            background: rgba(255,255,255,.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .flashcards-banner-info {
-            position: relative;
-            z-index: 2;
-            flex: 1;
-        }
-
-        .flashcards-banner-info strong {
-            display: block;
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .flashcards-banner-info span {
-            display: block;
-            margin-top: 4px;
-            font-size: 9px;
-            font-weight: 700;
-            opacity: .85;
-        }
-
-        .flashcards-banner-arrow {
-            position: relative;
-            z-index: 2;
-            font-size: 14px;
-        }
-
         .section {
             margin-top: 28px;
         }
@@ -372,67 +301,6 @@
         .exam-list {
             display: grid;
             gap: 12px;
-        }
-
-        .grades-list {
-            display: grid;
-            gap: 10px;
-        }
-
-        .grade-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: white;
-            border: 1px solid #e8edf2;
-            border-radius: 20px;
-            padding: 14px 16px;
-            box-shadow: 0 6px 22px rgba(15,23,42,.04);
-        }
-
-        .grade-item-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 42px;
-            background: #ecfdf5;
-            color: #059669;
-        }
-
-        .grade-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .grade-item-info strong {
-            display: block;
-            font-size: 11px;
-            font-weight: 900;
-        }
-
-        .grade-item-info span {
-            display: block;
-            margin-top: 3px;
-            font-size: 8px;
-            color: #94a3b8;
-            font-weight: 700;
-        }
-
-        .grade-item-pct {
-            font-size: 13px;
-            font-weight: 900;
-            padding: 7px 12px;
-            border-radius: 12px;
-            background: #ecfdf5;
-            color: #047857;
-        }
-
-        .grade-item-pct.low {
-            background: #fff1f2;
-            color: #e11d48;
         }
 
         .exam-card {
@@ -791,53 +659,6 @@
 </section>
 
 
-<div class="flashcards-banner" onclick="location.href='flashcards.html'">
-
-    <div class="flashcards-banner-icon">
-        <i class="fas fa-layer-group"></i>
-    </div>
-
-    <div class="flashcards-banner-info">
-        <strong>بطاقات المراجعة الذهبية ✨</strong>
-        <span>راجع أهم المعلومات في كل وحدة بطريقة سريعة وممتعة</span>
-    </div>
-
-    <i class="fas fa-chevron-left flashcards-banner-arrow"></i>
-
-</div>
-
-
-
-<section class="section" id="monthlyGradesSection" style="display:none">
-
-    <div class="section-head">
-
-        <div class="section-icon">
-            <i class="fas fa-chart-line"></i>
-        </div>
-
-        <div>
-
-            <strong>
-                درجات امتحان الشهر
-            </strong>
-
-            <span>
-                درجاتك في امتحانات المدرّس الشهرية
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div
-        id="monthlyGradesList"
-        class="grades-list">
-    </div>
-
-</section>
-
 
 <section class="section">
 
@@ -925,13 +746,6 @@ const gradeNames = {
 };
 
 
-const arabicMonths = {
-    "01":"يناير","02":"فبراير","03":"مارس","04":"أبريل",
-    "05":"مايو","06":"يونيو","07":"يوليو","08":"أغسطس",
-    "09":"سبتمبر","10":"أكتوبر","11":"نوفمبر","12":"ديسمبر"
-};
-
-
 let currentUser = null;
 
 let studentData = null;
@@ -995,8 +809,6 @@ onAuthStateChanged(auth, async user => {
             gradeNames[studentData.grade] ||
             "لوحة الطالب";
 
-
-        renderMonthlyGrades();
 
         await loadDashboard();
         loadHonorBoard();
@@ -1233,72 +1045,6 @@ function getPercentage(attempt) {
     if (!total) return 0;
 
     return (score / total) * 100;
-
-}
-
-
-/* =========================================
-   درجات امتحان الشهر
-========================================= */
-
-function renderMonthlyGrades() {
-
-    const section = document.getElementById("monthlyGradesSection");
-    const list = document.getElementById("monthlyGradesList");
-
-    const grades = (studentData && studentData.monthlyGrades) || {};
-
-    const entries =
-        Object.entries(grades)
-        .sort((a, b) => b[0].localeCompare(a[0]));
-
-    if (!entries.length) {
-
-        section.style.display = "none";
-        return;
-
-    }
-
-    section.style.display = "block";
-
-    list.innerHTML = entries.map(([monthKey, entry]) => {
-
-        const [year, month] = monthKey.split("-");
-
-        const score = Number(entry.score || 0);
-        const max = Number(entry.max || 100);
-        const pct = max ? Math.round((score / max) * 100) : 0;
-
-        return `
-
-            <div class="grade-item">
-
-                <div class="grade-item-icon">
-                    <i class="fas fa-star"></i>
-                </div>
-
-                <div class="grade-item-info">
-
-                    <strong>
-                        ${escapeHtml(arabicMonths[month] || month)} ${escapeHtml(year)}
-                    </strong>
-
-                    <span>
-                        ${score} / ${max}
-                        ${entry.note ? " • " + escapeHtml(entry.note) : ""}
-                    </span>
-
-                </div>
-
-                <div class="grade-item-pct ${pct < 50 ? "low" : ""}">
-                    ${pct}%
-                </div>
-
-            </div>
-
-        `;
-
-    }).join("");
 
 }
 
