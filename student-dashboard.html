@@ -308,6 +308,219 @@
             gap: 10px;
         }
 
+        /* ============ درجة امتحان الشهر - سبوتلايت ============ */
+
+        .grade-spotlight {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px;
+            border-radius: 26px;
+            color: white;
+            background: linear-gradient(135deg,#10b981 0%,#059669 55%,#047857 100%);
+            box-shadow: 0 20px 42px rgba(16,185,129,.28);
+        }
+
+        .grade-spotlight::before {
+            content: "";
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.08);
+            left: -60px;
+            bottom: -90px;
+        }
+
+        .grade-spotlight.low {
+            background: linear-gradient(135deg,#f43f5e 0%,#e11d48 55%,#be123c 100%);
+            box-shadow: 0 20px 42px rgba(225,29,72,.28);
+        }
+
+        .spotlight-ring {
+            position: relative;
+            z-index: 2;
+            flex: 0 0 96px;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ffffff calc(var(--pct) * 1%),
+                rgba(255,255,255,.25) 0
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px;
+        }
+
+        .spotlight-ring-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0,0,0,.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .spotlight-ring-inner strong {
+            font-size: 19px;
+            font-weight: 900;
+        }
+
+        .spotlight-ring-inner span {
+            font-size: 7px;
+            font-weight: 800;
+            opacity: .85;
+            margin-top: 1px;
+        }
+
+        .spotlight-info {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .spotlight-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 9px;
+            font-weight: 800;
+            opacity: .85;
+        }
+
+        .spotlight-month {
+            margin-top: 5px;
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .spotlight-score {
+            margin-top: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            opacity: .92;
+        }
+
+        .spotlight-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 6px 11px;
+            border-radius: 10px;
+            background: rgba(255,255,255,.22);
+            font-size: 9px;
+            font-weight: 900;
+        }
+
+        .grades-strip-wrap {
+            margin-top: 14px;
+        }
+
+        .grades-strip-title {
+            font-size: 9px;
+            font-weight: 800;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .grades-strip {
+            display: flex;
+            gap: 9px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .grades-strip::-webkit-scrollbar {
+            display: none;
+        }
+
+        .strip-chip {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 16px;
+            padding: 10px 13px;
+            box-shadow: 0 5px 16px rgba(15,23,42,.04);
+        }
+
+        .strip-chip-pct {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: 900;
+            background: #ecfdf5;
+            color: #047857;
+            flex: 0 0 32px;
+        }
+
+        .strip-chip-pct.low {
+            background: #fff1f2;
+            color: #e11d48;
+        }
+
+        .strip-chip-info strong {
+            display: block;
+            font-size: 9px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .strip-chip-info span {
+            display: block;
+            margin-top: 2px;
+            font-size: 7px;
+            color: #94a3b8;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .grades-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            margin-top: 12px;
+            padding: 11px;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
+            background: transparent;
+            color: #64748b;
+            font-size: 9px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .grades-toggle:hover {
+            background: #f8fafc;
+        }
+
+        .grades-full-list {
+            display: none;
+            margin-top: 12px;
+            gap: 10px;
+        }
+
+        .grades-full-list.open {
+            display: grid;
+        }
+
         .grade-item {
             display: flex;
             align-items: center;
@@ -658,10 +871,31 @@
     </div>
 
 
-    <div
-        id="monthlyGradesList"
-        class="grades-list">
+    <div id="gradeSpotlight"></div>
+
+    <div class="grades-strip-wrap" id="gradesStripWrap" style="display:none">
+
+        <div class="grades-strip-title">
+            الشهور السابقة
+        </div>
+
+        <div id="gradesStrip" class="grades-strip"></div>
+
     </div>
+
+
+    <button
+        class="grades-toggle"
+        id="gradesToggleBtn"
+        style="display:none"
+        onclick="toggleGradesFullList()">
+
+        <i class="fas fa-list" id="gradesToggleIcon"></i>
+        <span id="gradesToggleText">عرض سجل كل الدرجات</span>
+
+    </button>
+
+    <div id="gradesFullList" class="grades-full-list"></div>
 
 </section>
 
@@ -864,7 +1098,6 @@ onAuthStateChanged(auth, async user => {
 function renderMonthlyGrades() {
 
     const section = document.getElementById("monthlyGradesSection");
-    const list = document.getElementById("monthlyGradesList");
 
     const grades = (studentData && studentData.monthlyGrades) || {};
 
@@ -881,7 +1114,169 @@ function renderMonthlyGrades() {
 
     section.style.display = "block";
 
-    list.innerHTML = entries.map(([monthKey, entry]) => {
+    const [latestKey, latestEntry] = entries[0];
+    const previousEntries = entries.slice(1);
+
+    renderSpotlight(latestKey, latestEntry);
+    renderGradesStrip(previousEntries);
+    renderGradesFullList(entries);
+
+}
+
+
+function gradeMeta(pct) {
+
+    if (pct >= 85) {
+
+        return {
+            badge: "ممتاز 🌟",
+            icon: "fa-trophy",
+            low: false
+        };
+
+    }
+
+    if (pct >= 70) {
+
+        return {
+            badge: "جيد جدًا 👏",
+            icon: "fa-thumbs-up",
+            low: false
+        };
+
+    }
+
+    if (pct >= 50) {
+
+        return {
+            badge: "يحتاج مراجعة 📘",
+            icon: "fa-book",
+            low: true
+        };
+
+    }
+
+    return {
+        badge: "يحتاج اهتمام أكبر 💪",
+        icon: "fa-triangle-exclamation",
+        low: true
+    };
+
+}
+
+
+function renderSpotlight(monthKey, entry) {
+
+    const spotlight = document.getElementById("gradeSpotlight");
+
+    const [year, month] = monthKey.split("-");
+
+    const score = Number(entry.score || 0);
+    const max = Number(entry.max || 100);
+    const pct = max ? Math.round((score / max) * 100) : 0;
+
+    const meta = gradeMeta(pct);
+
+    spotlight.innerHTML = `
+
+        <div class="grade-spotlight ${meta.low ? "low" : ""}" style="--pct:${pct}">
+
+            <div class="spotlight-ring">
+                <div class="spotlight-ring-inner">
+                    <strong>${pct}%</strong>
+                    <span>النسبة</span>
+                </div>
+            </div>
+
+            <div class="spotlight-info">
+
+                <div class="spotlight-label">
+                    <i class="fas fa-star"></i>
+                    أحدث نتيجة مسجلة
+                </div>
+
+                <div class="spotlight-month">
+                    ${escapeHtml(arabicMonths[month] || month)} ${escapeHtml(year)}
+                </div>
+
+                <div class="spotlight-score">
+                    درجتك: ${score} من ${max}
+                    ${entry.note ? " • " + escapeHtml(entry.note) : ""}
+                </div>
+
+                <div class="spotlight-badge">
+                    <i class="fas ${meta.icon}"></i>
+                    ${meta.badge}
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+function renderGradesStrip(entries) {
+
+    const wrap = document.getElementById("gradesStripWrap");
+    const strip = document.getElementById("gradesStrip");
+
+    if (!entries.length) {
+
+        wrap.style.display = "none";
+        return;
+
+    }
+
+    wrap.style.display = "block";
+
+    strip.innerHTML = entries.map(([monthKey, entry]) => {
+
+        const [year, month] = monthKey.split("-");
+
+        const score = Number(entry.score || 0);
+        const max = Number(entry.max || 100);
+        const pct = max ? Math.round((score / max) * 100) : 0;
+
+        return `
+
+            <div class="strip-chip">
+
+                <div class="strip-chip-pct ${pct < 50 ? "low" : ""}">
+                    ${pct}%
+                </div>
+
+                <div class="strip-chip-info">
+                    <strong>${escapeHtml(arabicMonths[month] || month)}</strong>
+                    <span>${score}/${max}</span>
+                </div>
+
+            </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+function renderGradesFullList(entries) {
+
+    const toggleBtn = document.getElementById("gradesToggleBtn");
+    const fullList = document.getElementById("gradesFullList");
+
+    if (entries.length < 2) {
+
+        toggleBtn.style.display = "none";
+        return;
+
+    }
+
+    toggleBtn.style.display = "flex";
+
+    fullList.innerHTML = entries.map(([monthKey, entry]) => {
 
         const [year, month] = monthKey.split("-");
 
@@ -921,6 +1316,20 @@ function renderMonthlyGrades() {
     }).join("");
 
 }
+
+
+window.toggleGradesFullList = function () {
+
+    const fullList = document.getElementById("gradesFullList");
+    const icon = document.getElementById("gradesToggleIcon");
+    const text = document.getElementById("gradesToggleText");
+
+    const isOpen = fullList.classList.toggle("open");
+
+    icon.className = isOpen ? "fas fa-chevron-up" : "fas fa-list";
+    text.textContent = isOpen ? "إخفاء السجل الكامل" : "عرض سجل كل الدرجات";
+
+};
 
 
 /* =========================================
