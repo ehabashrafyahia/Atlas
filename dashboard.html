@@ -1136,24 +1136,6 @@
 
         <button
             class="quick-card"
-            id="honorBoardBtn"
-            onclick="publishHonorBoard()">
-
-            <i class="fas fa-trophy"></i>
-
-            <strong>
-                تحديث لوحة الشرف
-            </strong>
-
-            <span>
-                حساب أوائل كل صف عن الشهر الحالي
-            </span>
-
-        </button>
-
-
-        <button
-            class="quick-card"
             onclick="goTo('exams.html')">
 
             <i class="fas fa-file-circle-plus"></i>
@@ -2009,107 +1991,6 @@ function escapeHtml(text) {
         .replace(/'/g, "&#039;");
 
 }
-
-
-/* =========================================
-   HONOR BOARD (لوحة الشرف)
-========================================= */
-
-window.publishHonorBoard = async function() {
-
-    const btn = document.getElementById("honorBoardBtn");
-    const originalHTML = btn.innerHTML;
-
-    btn.disabled = true;
-    btn.innerHTML =
-        `<i class="fas fa-spinner fa-spin"></i><strong>جارٍ الحساب...</strong>`;
-
-    try {
-
-        const now = new Date();
-        const startOfMonth =
-            new Date(now.getFullYear(), now.getMonth(), 1);
-
-        const attemptsQuery =
-            query(
-                collection(db, "attempts"),
-                where("createdAt", ">=", startOfMonth)
-            );
-
-        const snap = await getDocs(attemptsQuery);
-
-        const byGrade = {};
-
-        snap.forEach(docSnap => {
-
-            const a = docSnap.data();
-            const grade = a.grade || "unknown";
-            const studentId = a.studentId;
-
-            if (!studentId) return;
-
-            if (!byGrade[grade]) byGrade[grade] = {};
-
-            if (!byGrade[grade][studentId]) {
-                byGrade[grade][studentId] = {
-                    name: a.studentName || "طالب",
-                    totalScore: 0
-                };
-            }
-
-            byGrade[grade][studentId].totalScore +=
-                Number(a.score) || 0;
-
-        });
-
-        const grades = {};
-
-        Object.keys(byGrade).forEach(grade => {
-
-            const list =
-                Object.values(byGrade[grade])
-                    .sort((x, y) => y.totalScore - x.totalScore)
-                    .slice(0, 10);
-
-            grades[grade] = list;
-
-        });
-
-        await setDoc(
-            doc(db, "honor_board", "current"),
-            {
-                grades,
-                month: `\( {now.getFullYear()}- \){now.getMonth() + 1}`,
-                updatedAt: serverTimestamp()
-            }
-        );
-
-        Swal.fire({
-            icon: "success",
-            title: "تم التحديث",
-            text: "لوحة الشرف اتحدثت وهتظهر عند الطلاب.",
-            confirmButtonColor: "#10b981"
-        });
-
-    } catch (error) {
-
-        console.error(error);
-
-        Swal.fire({
-            icon: "error",
-            title: "خطأ",
-            text: "تعذر تحديث لوحة الشرف.",
-            confirmButtonColor: "#10b981"
-        });
-
-    } finally {
-
-        btn.disabled = false;
-        btn.innerHTML = originalHTML;
-
-    }
-
-};
 
 
 /* =========================================
