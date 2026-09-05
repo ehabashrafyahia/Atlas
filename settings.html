@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <meta name="theme-color" content="#059669">
+
+    <title>الإعدادات | Atlas Platform</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            color: #172033;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(16,185,129,.08),
+                    transparent 35%
+                ),
+                #f6f8fb;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font-family: inherit;
+        }
+
+        /* =========================================
+           LOADER
+        ========================================= */
+
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .4s;
+        }
+
+        .loader-box {
+            text-align: center;
+        }
+
+        .loader-logo {
+            width: 72px;
+            height: 72px;
+            margin: auto;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,#10b981,#047857);
+            color: white;
+            font-family: 'Reem Kufi';
+            font-size: 22px;
+            box-shadow: 0 18px 40px rgba(16,185,129,.25);
+            animation: pulse 1.4s infinite;
+        }
+
+        .loader-box p {
+            margin-top: 15px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #64748b;
+        }
+
+        @keyframes pulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        /* =========================================
+           TOPBAR
+        ========================================= */
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid #e8edf2;
+        }
+
+        .topbar-inner {
+            max-width: 1200px;
+            margin: auto;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back {
+            width: 42px;
+            height: 42px;
+            border: 0;
+            border-radius: 14px;
+            background: white;
+            color: #64748b;
+            cursor: pointer;
+            box-shadow: 0 5px 18px rgba(15,23,42,.06);
+            transition: .2s;
+        }
+
+        .back:hover {
+            color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,#10b981,#059669);
+            color: white;
+            font-family: 'Reem Kufi',sans-serif;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(16,185,129,.2);
+        }
+
+        .title {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .title strong {
+            font-size: 14px;
+            font-weight: 900;
+        }
+
+        .title span {
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 25px 18px 50px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg,#10b981,#047857);
+            color: white;
+            border-radius: 27px;
+            padding: 25px;
+            box-shadow: 0 18px 40px rgba(16,185,129,.18);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.07);
+            left: -70px;
+            bottom: -100px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 23px;
+            font-weight: 900;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero p {
+            margin: 7px 0 0;
+            max-width: 560px;
+            font-size: 10px;
+            font-weight: 600;
+            opacity: .88;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================================
+           TABS
+        ========================================= */
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-top: 18px;
+            overflow-x: auto;
+            padding-bottom: 2px;
+        }
+
+        .tab-btn {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 11px 16px;
+            border: 1px solid #e8edf2;
+            border-radius: 15px;
+            background: white;
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 900;
+            cursor: pointer;
+            white-space: nowrap;
+            box-shadow: 0 5px 18px rgba(15,23,42,.045);
+            transition: .2s;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg,#10b981,#059669);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 9px 20px rgba(16,185,129,.22);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* =========================================
+           CARDS
+        ========================================= */
+
+        .card {
+            margin-top: 18px;
+            background: white;
+            border: 1px solid #e8edf2;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 8px 28px rgba(15,23,42,.045);
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 17px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            background: #dcfce7;
+            color: #059669;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 40px;
+        }
+
+        .card-icon.blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .card-icon.orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .card-icon.red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .card-title strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .card-title span {
+            display: block;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 11px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 10px;
+            font-weight: 900;
+            color: #475569;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 2px solid #eef2f6;
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 13px;
+            outline: none;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.7;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #10b981;
+            background: white;
+        }
+
+        input:disabled {
+            opacity: .65;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            margin-top: 5px;
+            font-size: 8px;
+            color: #94a3b8;
+            font-weight: 700;
+        }
+
+        .divider {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 15px;
+            padding: 13px 18px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: .2s;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg,#10b981,#059669);
+            color: white;
+            box-shadow: 0 9px 20px rgba(16,185,129,.18);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* =========================================
+           ADMIN LIST
+        ========================================= */
+
+        .admins {
+            display: grid;
+            gap: 10px;
+        }
+
+        .admin-row {
+            border: 1px solid #e8edf2;
+            border-radius: 18px;
+            padding: 14px;
+            background: #fbfdfe;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            flex: 0 0 45px;
+            width: 45px;
+            height: 45px;
+            border-radius: 15px;
+            background: linear-gradient(135deg,#10b981,#059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 13px;
+        }
+
+        .admin-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-info strong {
+            display: block;
+            font-size: 11px;
+            font-weight: 900;
+        }
+
+        .admin-info span {
+            display: block;
+            font-size: 8px;
+            color: #94a3b8;
+            margin-top: 3px;
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-top: 6px;
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 7px;
+            font-weight: 900;
+        }
+
+        .badge.you {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .small-btn {
+            width: 35px;
+            height: 35px;
+            flex: 0 0 35px;
+            border: 0;
+            border-radius: 11px;
+            cursor: pointer;
+            background: #f1f5f9;
+            color: #64748b;
+            transition: .2s;
+        }
+
+        .small-btn.delete:hover {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px 15px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 25px;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        footer {
+            padding: 25px 0 10px;
+            text-align: center;
+            color: #cbd5e1;
+            font-size: 8px;
+            font-weight: 800;
+        }
+
+        @media (min-width:700px) {
+
+            .form-grid.two {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .form-grid.two .full {
+                grid-column: 1 / -1;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+<!-- LOADER -->
+
+<div id="pageLoader">
+
+    <div class="loader-box">
+
+        <div class="loader-logo">أطلس</div>
+
+        <p>جاري تجهيز الإعدادات...</p>
+
+    </div>
+
+</div>
+
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <button class="back"
+                onclick="location.href='dashboard.html'">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+
+        <div class="logo">أطلس</div>
+
+        <div class="title">
+            <strong>الإعدادات</strong>
+            <span>Atlas Platform</span>
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="main">
+
+    <section class="hero">
+
+        <h1>الإعدادات ⚙️</h1>
+
+        <p>
+            إدارة بياناتك الشخصية، حسابات المديرين، والإعدادات
+            العامة لمنصة Atlas من مكان واحد.
+        </p>
+
+    </section>
+
+
+    <!-- TABS -->
+
+    <div class="tabs">
+
+        <button class="tab-btn active" data-tab="profile">
+            <i class="fas fa-user-gear"></i>
+            بروفايلي
+        </button>
+
+        <button class="tab-btn" data-tab="admins">
+            <i class="fas fa-user-shield"></i>
+            حسابات المديرين
+        </button>
+
+        <button class="tab-btn" data-tab="general">
+            <i class="fas fa-sliders"></i>
+            إعدادات عامة
+        </button>
+
+    </div>
+
+
+    <!-- =========================================
+         PROFILE TAB
+    ========================================= -->
+
+    <div class="tab-panel active" id="tab-profile">
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="card-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+
+                <div>
+                    <strong>البيانات الشخصية</strong>
+                    <span>اسمك وبريدك الإلكتروني في Atlas</span>
+                </div>
+
+            </div>
+
+            <form id="profileForm" class="form-grid">
+
+                <div>
+                    <label>الاسم</label>
+                    <input type="text" id="profileName" required
+                           placeholder="اسمك الكامل">
+                </div>
+
+                <div>
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="profileEmail" disabled>
+                    <div class="hint">
+                        <i class="fas fa-circle-info"></i>
+                        لا يمكن تغيير البريد الإلكتروني من هنا حاليًا.
+                    </div>
+                </div>
+
+                <div class="actions">
+
+                    <button type="submit" class="btn btn-primary" id="saveProfileBtn">
+                        <i class="fas fa-save"></i>
+                        حفظ البيانات
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="card-icon orange">
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <div>
+                    <strong>تغيير كلمة المرور</strong>
+                    <span>يفضّل استخدام كلمة مرور قوية</span>
+                </div>
+
+            </div>
+
+            <form id="passwordForm" class="form-grid two">
+
+                <div class="full">
+                    <label>كلمة المرور الحالية</label>
+                    <input type="password" id="currentPassword" required
+                           autocomplete="current-password">
+                </div>
+
+                <div>
+                    <label>كلمة المرور الجديدة</label>
+                    <input type="password" id="newPassword" required
+                           minlength="6" autocomplete="new-password">
+                </div>
+
+                <div>
+                    <label>تأكيد كلمة المرور الجديدة</label>
+                    <input type="password" id="confirmPassword" required
+                           minlength="6" autocomplete="new-password">
+                </div>
+
+                <div class="hint full">
+                    <i class="fas fa-circle-info"></i>
+                    لا تقل كلمة المرور الجديدة عن 6 خانات.
+                </div>
+
+                <div class="actions full">
+
+                    <button type="submit" class="btn btn-primary" id="savePasswordBtn">
+                        <i class="fas fa-key"></i>
+                        تحديث كلمة المرور
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         ADMINS TAB
+    ========================================= -->
+
+    <div class="tab-panel" id="tab-admins">
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="card-icon blue">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+
+                <div>
+                    <strong>إضافة مدير جديد</strong>
+                    <span>سيتمكن من الدخول بنفس صلاحيات الإدارة</span>
+                </div>
+
+            </div>
+
+            <form id="adminForm" class="form-grid two">
+
+                <div>
+                    <label>الاسم</label>
+                    <input type="text" id="adminName" required
+                           placeholder="اسم المدير الجديد">
+                </div>
+
+                <div>
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="adminEmail" required
+                           placeholder="name@example.com">
+                </div>
+
+                <div class="full">
+                    <label>كلمة المرور المبدئية</label>
+                    <input type="password" id="adminPassword" required
+                           minlength="6" placeholder="6 خانات على الأقل">
+                </div>
+
+                <div class="hint full">
+                    <i class="fas fa-circle-info"></i>
+                    ينصح بإبلاغ المدير الجديد بكلمة المرور وتغييرها من صفحته الشخصية بعد أول دخول.
+                </div>
+
+                <div class="actions full">
+
+                    <button type="submit" class="btn btn-primary" id="saveAdminBtn">
+                        <i class="fas fa-user-plus"></i>
+                        إضافة المدير
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="card-icon">
+                    <i class="fas fa-users-gear"></i>
+                </div>
+
+                <div>
+                    <strong>المديرون الحاليون</strong>
+                    <span id="adminsCountLabel">جاري التحميل...</span>
+                </div>
+
+            </div>
+
+            <div class="admins" id="adminsList">
+
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    جاري تحميل المديرين...
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         GENERAL TAB
+    ========================================= -->
+
+    <div class="tab-panel" id="tab-general">
+
+        <div class="card">
+
+            <div class="card-title">
+
+                <div class="card-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+
+                <div>
+                    <strong>إعدادات المنصة العامة</strong>
+                    <span>تظهر هذه البيانات في أماكن مختلفة داخل Atlas</span>
+                </div>
+
+            </div>
+
+            <form id="generalForm" class="form-grid">
+
+                <div>
+                    <label>اسم المنصة</label>
+                    <input type="text" id="platformName"
+                           placeholder="Atlas">
+                </div>
+
+                <div>
+                    <label>وصف مختصر للمنصة</label>
+                    <textarea id="platformDescription"
+                              placeholder="منصة تعليمية عربية لمادة الدراسات الاجتماعية"></textarea>
+                </div>
+
+                <div>
+                    <label>البريد الإلكتروني للتواصل (اختياري)</label>
+                    <input type="email" id="contactEmail"
+                           placeholder="support@example.com">
+                </div>
+
+                <div class="actions">
+
+                    <button type="submit" class="btn btn-primary" id="saveGeneralBtn">
+                        <i class="fas fa-save"></i>
+                        حفظ الإعدادات
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+        Atlas Platform 2.0 &bull; إعداد وتصميم أ. إيهاب أشرف
+    </footer>
+
+</main>
+
+
+<script type="module">
+
+/* =========================================
+   FIREBASE
+========================================= */
+
+import {
+    auth,
+    db,
+    secondaryAuth
+} from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    createUserWithEmailAndPassword,
+    signOut,
+    updateEmail,
+    updatePassword,
+    reauthenticateWithCredential,
+    EmailAuthProvider
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    collection,
+    getDocs,
+    query,
+    where,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+let currentUser = null;
+let currentUserData = null;
+let admins = [];
+
+
+/* =========================================
+   AUTH GUARD
+========================================= */
+
+onAuthStateChanged(auth, async user => {
+
+    if (!user) {
+        location.href = "index.html";
+        return;
+    }
+
+    currentUser = user;
+
+    try {
+
+        const userSnap =
+            await getDoc(doc(db, "users", user.uid));
+
+        if (!userSnap.exists() || userSnap.data().role !== "admin") {
+
+            await Swal.fire({
+                icon: "error",
+                title: "غير مسموح",
+                text: "هذه الصفحة مخصصة للإدارة فقط.",
+                confirmButtonColor: "#10b981"
+            });
+
+            location.href = "index.html";
+            return;
+
+        }
+
+        currentUserData = userSnap.data();
+
+        document.getElementById("profileName").value =
+            currentUserData.name || "";
+
+        document.getElementById("profileEmail").value =
+            currentUserData.email || user.email || "";
+
+        await Promise.all([
+            loadAdmins(),
+            loadGeneralSettings()
+        ]);
+
+        hideLoader();
+
+    } catch (error) {
+
+        console.error(error);
+        hideLoader();
+
+        Swal.fire({
+            icon: "error",
+            title: "حدث خطأ",
+            text: "تعذر تحميل بيانات الإعدادات.",
+            confirmButtonColor: "#10b981"
+        });
+
+    }
+
+});
+
+
+/* =========================================
+   TABS
+========================================= */
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+        document.querySelectorAll(".tab-btn")
+            .forEach(b => b.classList.remove("active"));
+
+        document.querySelectorAll(".tab-panel")
+            .forEach(p => p.classList.remove("active"));
+
+        btn.classList.add("active");
+
+        document.getElementById(
+            `tab-${btn.dataset.tab}`
+        ).classList.add("active");
+
+    });
+
+});
+
+
+/* =========================================
+   PROFILE — UPDATE NAME
+========================================= */
+
+document.getElementById("profileForm")
+    .addEventListener("submit", async e => {
+
+        e.preventDefault();
+
+        const btn = document.getElementById("saveProfileBtn");
+        const name = document.getElementById("profileName").value.trim();
+
+        if (!name) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...`;
+
+        try {
+
+            await updateDoc(doc(db, "users", currentUser.uid), {
+                name
+            });
+
+            currentUserData.name = name;
+
+            Swal.fire({
+                icon: "success",
+                title: "تم الحفظ",
+                text: "تم تحديث بياناتك الشخصية.",
+                confirmButtonColor: "#10b981"
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "حدث خطأ",
+                text: "تعذر حفظ البيانات.",
+                confirmButtonColor: "#10b981"
+            });
+
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-save"></i> حفظ البيانات`;
+
+    });
+
+
+/* =========================================
+   PROFILE — CHANGE PASSWORD
+========================================= */
+
+document.getElementById("passwordForm")
+    .addEventListener("submit", async e => {
+
+        e.preventDefault();
+
+        const btn = document.getElementById("savePasswordBtn");
+
+        const currentPassword =
+            document.getElementById("currentPassword").value;
+
+        const newPassword =
+            document.getElementById("newPassword").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        if (newPassword !== confirmPassword) {
+
+            Swal.fire({
+                icon: "warning",
+                title: "كلمة المرور غير متطابقة",
+                text: "تأكد من تطابق كلمة المرور الجديدة مع التأكيد.",
+                confirmButtonColor: "#10b981"
+            });
+
+            return;
+
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري التحديث...`;
+
+        try {
+
+            const credential =
+                EmailAuthProvider.credential(
+                    currentUser.email,
+                    currentPassword
+                );
+
+            await reauthenticateWithCredential(
+                currentUser,
+                credential
+            );
+
+            await updatePassword(currentUser, newPassword);
+
+            document.getElementById("passwordForm").reset();
+
+            Swal.fire({
+                icon: "success",
+                title: "تم التحديث",
+                text: "تم تغيير كلمة المرور بنجاح.",
+                confirmButtonColor: "#10b981"
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            let message = "تعذر تحديث كلمة المرور.";
+
+            if (error.code === "auth/wrong-password" ||
+                error.code === "auth/invalid-credential") {
+                message = "كلمة المرور الحالية غير صحيحة.";
+            } else if (error.code === "auth/weak-password") {
+                message = "كلمة المرور الجديدة ضعيفة جدًا.";
+            } else if (error.code === "auth/requires-recent-login") {
+                message = "يرجى تسجيل الخروج والدخول مرة أخرى قبل تغيير كلمة المرور.";
+            }
+
+            Swal.fire({
+                icon: "error",
+                title: "حدث خطأ",
+                text: message,
+                confirmButtonColor: "#10b981"
+            });
+
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-key"></i> تحديث كلمة المرور`;
+
+    });
+
+
+/* =========================================
+   ADMINS — LOAD LIST
+========================================= */
+
+async function loadAdmins() {
+
+    const list = document.getElementById("adminsList");
+    const label = document.getElementById("adminsCountLabel");
+
+    list.innerHTML = `
+        <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            جاري تحميل المديرين...
+        </div>
+    `;
+
+    try {
+
+        const snap = await getDocs(
+            query(
+                collection(db, "users"),
+                where("role", "==", "admin")
+            )
+        );
+
+        admins = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data()
+        }));
+
+        label.textContent = `${admins.length} مدير`;
+
+        renderAdmins();
+
+    } catch (error) {
+
+        console.error(error);
+
+        list.innerHTML = `
+            <div class="empty">تعذر تحميل قائمة المديرين.</div>
+        `;
+
+    }
+
+}
+
+
+function renderAdmins() {
+
+    const list = document.getElementById("adminsList");
+
+    if (admins.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty">لا يوجد مديرون مسجلون بعد.</div>
+        `;
+
+        return;
+
+    }
+
+    list.innerHTML = "";
+
+    admins.forEach(admin => {
+
+        const isYou = admin.id === currentUser.uid;
+
+        const initial =
+            (admin.name || "?").trim().charAt(0) || "؟";
+
+        list.innerHTML += `
+
+            <div class="admin-row">
+
+                <div class="avatar">${escapeHtml(initial)}</div>
+
+                <div class="admin-info">
+
+                    <strong>${escapeHtml(admin.name || "بدون اسم")}</strong>
+                    <span>${escapeHtml(admin.email || "—")}</span>
+
+                    <span class="badge ${isYou ? "you" : ""}">
+                        ${isYou ? "أنت" : "مدير"}
+                    </span>
+
+                </div>
+
+                ${isYou ? "" : `
+                    <button class="small-btn delete"
+                            title="حذف"
+                            onclick="removeAdmin('${admin.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `}
+
+            </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =========================================
+   ADMINS — ADD NEW
+========================================= */
+
+document.getElementById("adminForm")
+    .addEventListener("submit", async e => {
+
+        e.preventDefault();
+
+        const btn = document.getElementById("saveAdminBtn");
+
+        const name = document.getElementById("adminName").value.trim();
+        const email = document.getElementById("adminEmail").value.trim();
+        const password = document.getElementById("adminPassword").value;
+
+        if (!name || !email || !password) return;
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري الإضافة...`;
+
+        try {
+
+            /*
+               إنشاء حساب المدير الجديد عبر secondaryAuth حتى لا
+               يتم تسجيل الدخول بحسابه الجديد بدلًا من حساب الأدمن
+               الحالي، ثم تسجيل الخروج منه فورًا.
+            */
+
+            const credential =
+                await createUserWithEmailAndPassword(
+                    secondaryAuth,
+                    email,
+                    password
+                );
+
+            const newUid = credential.user.uid;
+
+            await signOut(secondaryAuth);
+
+            await setDoc(doc(db, "users", newUid), {
+                name,
+                email,
+                role: "admin",
+                createdBy: currentUser.uid,
+                createdAt: serverTimestamp()
+            });
+
+            document.getElementById("adminForm").reset();
+
+            await loadAdmins();
+
+            Swal.fire({
+                icon: "success",
+                title: "تمت الإضافة",
+                text: `تم إضافة ${name} كمدير جديد في Atlas.`,
+                confirmButtonColor: "#10b981"
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            let message = "تعذر إضافة المدير الجديد.";
+
+            if (error.code === "auth/email-already-in-use") {
+                message = "هذا البريد الإلكتروني مستخدم بالفعل.";
+            } else if (error.code === "auth/invalid-email") {
+                message = "البريد الإلكتروني غير صالح.";
+            } else if (error.code === "auth/weak-password") {
+                message = "كلمة المرور ضعيفة جدًا.";
+            }
+
+            Swal.fire({
+                icon: "error",
+                title: "حدث خطأ",
+                text: message,
+                confirmButtonColor: "#10b981"
+            });
+
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-user-plus"></i> إضافة المدير`;
+
+    });
+
+
+/* =========================================
+   ADMINS — DELETE
+========================================= */
+
+window.removeAdmin = async function (id) {
+
+    const admin = admins.find(a => a.id === id);
+    if (!admin) return;
+
+    if (id === currentUser.uid) {
+
+        Swal.fire({
+            icon: "warning",
+            title: "غير مسموح",
+            text: "لا يمكنك حذف حسابك الخاص من هنا.",
+            confirmButtonColor: "#10b981"
+        });
+
+        return;
+
+    }
+
+    const result = await Swal.fire({
+
+        icon: "warning",
+        title: "حذف المدير؟",
+        html: `سيتم حذف بيانات <b>${escapeHtml(admin.name || "المدير")}</b> من Firestore.
+               <br><br>
+               <span style="font-size:10px;color:#e11d48">
+               ملحوظة: حساب الدخول (Auth) الخاص به لن يُحذف تلقائيًا من هذه الصفحة،
+               ويحتاج حذفًا يدويًا من Firebase Console.
+               </span>`,
+        showCancelButton: true,
+        confirmButtonText: "حذف",
+        cancelButtonText: "إلغاء",
+        confirmButtonColor: "#ef4444",
+        cancelButtonColor: "#64748b"
+
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+
+        await deleteDoc(doc(db, "users", id));
+
+        await Swal.fire({
+            icon: "success",
+            title: "تم الحذف",
+            text: "تم حذف بيانات المدير من Firestore.",
+            confirmButtonColor: "#10b981"
+        });
+
+        await loadAdmins();
+
+    } catch (error) {
+
+        console.error(error);
+
+        Swal.fire({
+            icon: "error",
+            title: "تعذر الحذف",
+            text: "حدث خطأ أثناء حذف المدير.",
+            confirmButtonColor: "#10b981"
+        });
+
+    }
+
+};
+
+
+/* =========================================
+   GENERAL SETTINGS
+========================================= */
+
+async function loadGeneralSettings() {
+
+    try {
+
+        const snap = await getDoc(doc(db, "settings", "general"));
+
+        if (snap.exists()) {
+
+            const data = snap.data();
+
+            document.getElementById("platformName").value =
+                data.platformName || "Atlas";
+
+            document.getElementById("platformDescription").value =
+                data.platformDescription || "";
+
+            document.getElementById("contactEmail").value =
+                data.contactEmail || "";
+
+        } else {
+
+            document.getElementById("platformName").value = "Atlas";
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+document.getElementById("generalForm")
+    .addEventListener("submit", async e => {
+
+        e.preventDefault();
+
+        const btn = document.getElementById("saveGeneralBtn");
+
+        const platformName =
+            document.getElementById("platformName").value.trim();
+
+        const platformDescription =
+            document.getElementById("platformDescription").value.trim();
+
+        const contactEmail =
+            document.getElementById("contactEmail").value.trim();
+
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...`;
+
+        try {
+
+            await setDoc(doc(db, "settings", "general"), {
+                platformName,
+                platformDescription,
+                contactEmail,
+                updatedBy: currentUser.uid,
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+
+            Swal.fire({
+                icon: "success",
+                title: "تم الحفظ",
+                text: "تم تحديث الإعدادات العامة للمنصة.",
+                confirmButtonColor: "#10b981"
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+            Swal.fire({
+                icon: "error",
+                title: "حدث خطأ",
+                text: "تعذر حفظ الإعدادات العامة.",
+                confirmButtonColor: "#10b981"
+            });
+
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fas fa-save"></i> حفظ الإعدادات`;
+
+    });
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================
+   HIDE LOADER
+========================================= */
+
+function hideLoader() {
+
+    const loader = document.getElementById("pageLoader");
+
+    loader.style.opacity = "0";
+
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 400);
+
+}
+
+</script>
+
+</body>
+</html>
