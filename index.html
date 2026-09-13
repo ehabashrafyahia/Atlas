@@ -101,7 +101,6 @@
             justify-content: center;
             background: linear-gradient(160deg, #ffffff 0%, #f0fdf4 100%);
             transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
-            overflow: hidden;
         }
 
         #splash.hide {
@@ -140,15 +139,8 @@
             letter-spacing: -1px;
         }
 
-        .splash-mascot {
-            position: absolute;
-            font-size: 20px;
-            filter: drop-shadow(0 4px 8px rgba(15,23,42,0.15));
-            animation: float 3.2s ease-in-out infinite;
-        }
-
         .splash-progress {
-            margin-top: 30px;
+            margin-top: 36px;
             width: 120px;
             height: 3px;
             background: #e2e8f0;
@@ -162,38 +154,6 @@
             background: linear-gradient(90deg, #10b981, #34d399);
             border-radius: inherit;
             transition: width 1.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* ========== SEASON RIBBON (back-to-school badge) ========== */
-        .season-ribbon {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            background: linear-gradient(135deg, #fbbf24, #fb923c);
-            color: white;
-            font-size: 11px;
-            font-weight: 800;
-            padding: 8px 16px;
-            border-radius: 99px;
-            box-shadow: 0 10px 20px -6px rgba(251, 146, 60, 0.5);
-            white-space: nowrap;
-        }
-
-        .season-ribbon i {
-            font-size: 12px;
-        }
-
-        /* ========== DECORATIVE SCHOOL ICONS ========== */
-        .decor-icon {
-            position: absolute;
-            pointer-events: none;
-            animation: driftIcon 8s ease-in-out infinite;
-            z-index: 0;
-        }
-
-        @keyframes driftIcon {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-16px) rotate(7deg); }
         }
 
         /* ========== MAIN LAYOUT ========== */
@@ -283,7 +243,6 @@
                 radial-gradient(circle at 10% 90%, rgba(5,150,105,0.05), transparent 35%),
                 #f8fafc;
             position: relative;
-            overflow: hidden;
         }
 
         /* Login Card */
@@ -296,10 +255,9 @@
             box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 30px 32px 28px;
+            padding: 36px 32px 28px;
             position: relative;
             overflow: hidden;
-            z-index: 1;
         }
 
         .login-card::before {
@@ -311,12 +269,6 @@
             height: 3px;
             background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
             opacity: 0.9;
-        }
-
-        .card-ribbon-row {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 18px;
         }
 
         /* Logo in card */
@@ -672,13 +624,13 @@
 
             .login-card {
                 max-width: 400px;
-                padding: 36px 36px 32px;
+                padding: 40px 36px 32px;
             }
         }
 
         @media (max-width: 420px) {
             .login-card {
-                padding: 26px 20px 24px;
+                padding: 28px 20px 24px;
                 border-radius: 24px;
             }
 
@@ -701,20 +653,6 @@
             .card-logo .text {
                 font-size: 22px;
             }
-
-            .season-ribbon {
-                font-size: 10px;
-                padding: 7px 13px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .decor-icon,
-            .splash-mascot,
-            .splash-logo-wrap,
-            .card-logo .shape {
-                animation: none !important;
-            }
         }
 
         /* Loading spinner override */
@@ -735,17 +673,9 @@
     <div class="splash-logo-wrap">
         <div class="splash-shape"></div>
         <div class="splash-text">أطلس</div>
-        <i class="fas fa-pencil splash-mascot" style="top:-6px; right:-18px; color:#fb923c; animation-delay:0.3s;"></i>
-        <i class="fas fa-book-open splash-mascot" style="bottom:-4px; left:-22px; color:#f59e0b; animation-delay:0.8s;"></i>
-        <i class="fas fa-apple-whole splash-mascot" style="top:50%; right:-30px; font-size:16px; color:#f87171; animation-delay:1.2s;"></i>
     </div>
 
-    <div class="season-ribbon" style="margin-top:26px;">
-        <i class="fas fa-graduation-cap"></i>
-        أهلاً بعودة المدارس
-    </div>
-
-    <h1 class="mt-5 text-2xl font-black text-slate-900 tracking-tight">أهلاً بك في منصة أطلس</h1>
+    <h1 class="mt-8 text-2xl font-black text-slate-900 tracking-tight">أهلاً بك في منصة أطلس</h1>
     <p class="mt-2 text-xs font-bold text-slate-400">منصة مستر إيهاب أشرف للدراسات الاجتماعية</p>
 
     <div class="splash-progress">
@@ -762,17 +692,9 @@
         <div class="brand-orb brand-orb-2"></div>
         <div class="brand-grid"></div>
 
-        <i class="fas fa-pencil decor-icon" style="top:14%; left:14%; font-size:32px; color:rgba(253,230,138,0.55); animation-delay:0.2s;"></i>
-        <i class="fas fa-book decor-icon" style="bottom:22%; right:9%; font-size:40px; color:rgba(253,186,116,0.5); animation-delay:1s;"></i>
-        <i class="fas fa-apple-whole decor-icon" style="top:58%; left:6%; font-size:24px; color:rgba(252,165,165,0.5); animation-delay:1.8s;"></i>
-
         <div class="relative z-10">
-            <div class="brand-badge" style="background: linear-gradient(135deg, rgba(251,191,36,0.28), rgba(251,146,60,0.22)); border-color: rgba(251,191,36,0.35); margin-bottom:12px; width:fit-content;">
-                <i class="fas fa-graduation-cap"></i>
-                استقبال العام الدراسي الجديد
-            </div>
             <div class="brand-badge">
-                <i class="fas fa-shapes"></i>
+                <i class="fas fa-graduation-cap"></i>
                 منصة تعليمية متكاملة
             </div>
         </div>
@@ -784,8 +706,8 @@
                     <div class="absolute inset-0 flex items-center justify-center font-reem text-3xl font-bold text-white">أطلس</div>
                 </div>
                 <h2 class="text-4xl font-black leading-tight mb-4">
-                    عام دراسي جديد،<br>
-                    <span class="text-brand-300">تميّز</span> من أول يوم
+                    رحلتك نحو<br>
+                    <span class="text-brand-300">التميز</span> تبدأ هنا
                 </h2>
                 <p class="text-white/70 text-sm font-medium leading-relaxed max-w-xs">
                     منصة أطلس توفر بيئة تعليمية حديثة لطلاب الدراسات الاجتماعية مع أدوات تفاعلية ومتابعة مستمرة.
@@ -826,22 +748,7 @@
 
     <!-- Form Side -->
     <section class="form-panel">
-
-        <!-- decorative back-to-school icons, shown on every screen size -->
-        <i class="fas fa-pencil decor-icon" style="top:7%; right:9%; font-size:36px; color:#fdba74; animation-delay:0s;"></i>
-        <i class="fas fa-book decor-icon" style="bottom:10%; left:6%; font-size:42px; color:#6ee7b7; animation-delay:1.1s;"></i>
-        <i class="fas fa-apple-whole decor-icon" style="top:12%; left:8%; font-size:28px; color:#fca5a5; animation-delay:2s;"></i>
-        <i class="fas fa-ruler-combined decor-icon" style="bottom:7%; right:7%; font-size:32px; color:#7dd3fc; animation-delay:0.6s;"></i>
-        <i class="fas fa-palette decor-icon" style="top:44%; left:3%; font-size:24px; color:#c4b5fd; animation-delay:1.6s;"></i>
-
         <div class="login-card">
-
-            <div class="card-ribbon-row">
-                <div class="season-ribbon">
-                    <i class="fas fa-graduation-cap"></i>
-                    استقبال العام الدراسي الجديد
-                </div>
-            </div>
 
             <!-- Logo -->
             <div class="card-logo">
@@ -849,9 +756,9 @@
                 <div class="text">أطلس</div>
             </div>
 
-            <h1 class="text-center text-[22px] font-black text-slate-900 m-0">أهلاً بعودتك 👋</h1>
+            <h1 class="text-center text-[22px] font-black text-slate-900 m-0">أهلاً بك 👋</h1>
             <p class="text-center text-[11px] font-bold text-slate-400 mt-1.5 mb-7">
-                اختر نوع حسابك وابدأ عامك الدراسي الجديد مع Atlas
+                اختر نوع حسابك وسجّل دخولك لمنصة Atlas
             </p>
 
             <!-- Tabs -->
@@ -872,7 +779,7 @@
                     <label class="otp-label">أدخل كود الدخول المكوّن من 6 أرقام</label>
                     <div class="otp-container" id="otpContainer">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="0" autocomplete="one-time-code">
-                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="1" autocomplete="off">
+                        <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data co-index="1" autocomplete="off">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="2" autocomplete="off">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="3" autocomplete="off">
                         <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-index="4" autocomplete="off">
@@ -1132,8 +1039,8 @@
 
             await Swal.fire({
                 icon: "success",
-                title: "أهلاً بعودتك 🎉",
-                text: `عام دراسي سعيد يا ${userSnap.data().name || "بطل"}!`,
+                title: "تم الدخول بنجاح 🎉",
+                text: `أهلاً بك ${userSnap.data().name || ""}`,
                 showConfirmButton: false,
                 timer: 1300,
                 customClass: { popup: "rounded-2xl" }
@@ -1210,8 +1117,8 @@
 
             await Swal.fire({
                 icon: "success",
-                title: "أهلاً بعودتك 🎉",
-                text: "عام دراسي سعيد مع Atlas Platform",
+                title: "تم الدخول بنجاح 🎉",
+                text: "مرحباً بك في Atlas Platform",
                 showConfirmButton: false,
                 timer: 1300,
                 customClass: { popup: "rounded-2xl" }
