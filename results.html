@@ -2319,6 +2319,16 @@ function escapeHtml(text) {
 
 }
 
+
+/* =========================================
+   EXPOSE TO WINDOW
+   (onclick في الـ HTML لا يصل للدوال
+   المعرّفة داخل type="module" إلا إذا
+   ربطناها بـ window صراحة)
+========================================= */
+
+window.exportGradeImage = exportGradeImage;
+
 </script>
 
 </body>
