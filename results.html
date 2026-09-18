@@ -20,6 +20,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
 
         * {
@@ -372,10 +374,204 @@
                 0 7px 18px rgba(16,185,129,.08);
         }
 
+        .export-btn {
+            width: 100%;
+            margin-top: 14px;
+
+            padding: 13px;
+
+            border: 2px dashed #10b981;
+            border-radius: 15px;
+
+            background: #ecfdf5;
+            color: #059669;
+
+            font-size: 11px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            transition: .2s;
+        }
+
+        .export-btn:hover {
+            background: #10b981;
+            color: white;
+        }
+
+        .export-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
         .results-list {
             display: grid;
 
             gap: 10px;
+        }
+
+        /* =================================
+             EXPORT TEMPLATE (offscreen)
+        ================================== */
+
+        #exportTemplate {
+            position: fixed;
+            top: -10000px;
+            left: -10000px;
+
+            width: 900px;
+
+            background: white;
+
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        .exp-header {
+            padding: 28px 36px;
+
+            background: linear-gradient(135deg, #10b981, #047857);
+            color: white;
+        }
+
+        .exp-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .exp-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .exp-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Reem Kufi', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .exp-title h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .exp-title span {
+            font-size: 11px;
+            opacity: .85;
+            font-weight: 700;
+        }
+
+        .exp-meta {
+            text-align: left;
+            font-size: 11px;
+            font-weight: 700;
+            opacity: .9;
+            line-height: 1.9;
+        }
+
+        .exp-stats {
+            display: flex;
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .exp-stat {
+            flex: 1;
+            background: rgba(255,255,255,.14);
+            border-radius: 14px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+
+        .exp-stat b {
+            display: block;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .exp-stat span {
+            font-size: 9px;
+            font-weight: 700;
+            opacity: .85;
+        }
+
+        .exp-table-wrap {
+            padding: 24px 36px 32px;
+        }
+
+        table.exp-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.exp-table th {
+            background: #f0fdf4;
+            color: #059669;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 12px 10px;
+            text-align: right;
+            border-bottom: 2px solid #d1fae5;
+        }
+
+        table.exp-table td {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 11px 10px;
+            border-bottom: 1px solid #eef2f6;
+            color: #172033;
+        }
+
+        table.exp-table tr:nth-child(even) td {
+            background: #fbfdfe;
+        }
+
+        .exp-rank {
+            display: inline-flex;
+            width: 24px;
+            height: 24px;
+            border-radius: 8px;
+            background: #f1f5f9;
+            color: #64748b;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .exp-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .exp-pill.exc { background: #dcfce7; color: #059669; }
+        .exp-pill.good { background: #fef9c3; color: #b45309; }
+        .exp-pill.weak { background: #fee2e2; color: #dc2626; }
+
+        .exp-footer {
+            padding: 14px 36px 26px;
+            font-size: 9px;
+            color: #94a3b8;
+            font-weight: 700;
+            text-align: center;
         }
 
         .result {
@@ -820,6 +1016,17 @@
 
         </div>
 
+
+        <button
+            id="exportImageBtn"
+            class="export-btn"
+            onclick="exportGradeImage()">
+
+            <i class="fas fa-image"></i>
+            تحميل صورة مجمعة لنتائج الصف
+
+        </button>
+
     </section>
 
 
@@ -875,6 +1082,76 @@
 
 </main>
 
+
+<!-- =================================
+     OFFSCREEN EXPORT TEMPLATE
+================================== -->
+
+<div id="exportTemplate">
+
+    <div class="exp-header">
+
+        <div class="exp-header-row">
+
+            <div class="exp-brand">
+
+                <div class="exp-logo">A</div>
+
+                <div class="exp-title">
+                    <h2 id="expGradeName">نتائج الصف</h2>
+                    <span>منصة Atlas التعليمية</span>
+                </div>
+
+            </div>
+
+            <div class="exp-meta" id="expMeta"></div>
+
+        </div>
+
+        <div class="exp-stats">
+
+            <div class="exp-stat">
+                <b id="expCount">0</b>
+                <span>عدد الطلاب</span>
+            </div>
+
+            <div class="exp-stat">
+                <b id="expAvg">0%</b>
+                <span>متوسط الصف</span>
+            </div>
+
+            <div class="exp-stat">
+                <b id="expHighest">0%</b>
+                <span>أعلى نتيجة</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="exp-table-wrap">
+
+        <table class="exp-table">
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>اسم الطالب</th>
+                    <th>الاختبار</th>
+                    <th>الدرجة</th>
+                    <th>النسبة</th>
+                </tr>
+            </thead>
+
+            <tbody id="expTableBody"></tbody>
+
+        </table>
+
+    </div>
+
+    <div class="exp-footer" id="expFooter"></div>
+
+</div>
 
 
 <script type="module">
@@ -1166,13 +1443,7 @@ function updateStatistics() {
    RENDER
 ========================================= */
 
-function renderResults() {
-
-
-    const list =
-        document.getElementById(
-            "resultsList"
-        );
+function getFilteredResults() {
 
 
     const search =
@@ -1203,8 +1474,7 @@ function renderResults() {
 
 
 
-    const filtered =
-        results.filter(
+    return results.filter(
             result => {
 
 
@@ -1295,6 +1565,21 @@ function renderResults() {
             }
         );
 
+}
+
+
+
+function renderResults() {
+
+
+    const list =
+        document.getElementById(
+            "resultsList"
+        );
+
+
+    const filtered =
+        getFilteredResults();
 
 
     document.getElementById(
@@ -1467,6 +1752,254 @@ function renderResults() {
             }
         )
         .join("");
+
+}
+
+
+
+/* =========================================
+   EXPORT GRADE AS IMAGE
+========================================= */
+
+async function exportGradeImage() {
+
+
+    const grade =
+        document.getElementById(
+            "gradeFilter"
+        ).value;
+
+
+    if (!grade) {
+
+        Swal.fire({
+            icon: "info",
+            title: "اختر الصف أولاً",
+            text: "من فضلك اختر صف معين من فلتر «كل الصفوف» عشان تقدر تصدّر نتائجه كصورة واحدة.",
+            confirmButtonColor: "#10b981"
+        });
+
+        return;
+
+    }
+
+
+    const filtered =
+        getFilteredResults();
+
+
+    if (!filtered.length) {
+
+        Swal.fire({
+            icon: "warning",
+            title: "لا توجد نتائج",
+            text: "لا توجد نتائج مطابقة للفلاتر الحالية لهذا الصف.",
+            confirmButtonColor: "#10b981"
+        });
+
+        return;
+
+    }
+
+
+    const btn =
+        document.getElementById(
+            "exportImageBtn"
+        );
+
+    btn.disabled = true;
+
+    btn.innerHTML =
+        `<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الصورة...`;
+
+
+    try {
+
+
+        /* --- خد آخر نتيجة لكل طالب فقط، وترتيب من الأعلى للأقل --- */
+
+        const byStudent =
+            new Map();
+
+        filtered.forEach(
+            result => {
+
+                const key =
+                    result.studentId ||
+                    result.userId ||
+                    result.uid ||
+                    (result.studentName || result.name || "") + "";
+
+                const existing =
+                    byStudent.get(key);
+
+                if (
+                    !existing ||
+                    getTime(result.createdAt) > getTime(existing.createdAt)
+                ) {
+
+                    byStudent.set(key, result);
+
+                }
+
+            }
+        );
+
+        const rows =
+            Array.from(
+                byStudent.values()
+            )
+            .sort(
+                (a, b) =>
+                    getPercentage(b) - getPercentage(a)
+            );
+
+
+        const percentages =
+            rows.map(
+                r => getPercentage(r)
+            );
+
+        const average =
+            percentages.length
+            ?
+            percentages.reduce((a,b) => a+b, 0) / percentages.length
+            :
+            0;
+
+        const highest =
+            percentages.length
+            ?
+            Math.max(...percentages)
+            :
+            0;
+
+
+        document.getElementById(
+            "expGradeName"
+        ).textContent =
+            `نتائج ${gradeName(grade)}`;
+
+        document.getElementById(
+            "expMeta"
+        ).textContent =
+            new Intl.DateTimeFormat(
+                "ar-EG",
+                { day:"2-digit", month:"2-digit", year:"numeric" }
+            ).format(new Date());
+
+        document.getElementById(
+            "expCount"
+        ).textContent =
+            rows.length;
+
+        document.getElementById(
+            "expAvg"
+        ).textContent =
+            `${Math.round(average)}%`;
+
+        document.getElementById(
+            "expHighest"
+        ).textContent =
+            `${Math.round(highest)}%`;
+
+        document.getElementById(
+            "expFooter"
+        ).textContent =
+            `منصة Atlas التعليمية — تم إنشاء هذا الملخص تلقائيًا`;
+
+
+        document.getElementById(
+            "expTableBody"
+        ).innerHTML =
+            rows
+            .map(
+                (result, index) => {
+
+                    const percentage =
+                        getPercentage(result);
+
+                    const pillClass =
+                        percentage >= 90 ? "exc" :
+                        percentage >= 70 ? "good" :
+                        "weak";
+
+                    const student =
+                        result.studentName ||
+                        result.name ||
+                        "طالب";
+
+                    const exam =
+                        result.examTitle ||
+                        result.examName ||
+                        result.title ||
+                        "اختبار";
+
+                    return `
+                        <tr>
+                            <td><span class="exp-rank">${index + 1}</span></td>
+                            <td>${escapeHtml(student)}</td>
+                            <td>${escapeHtml(exam)}</td>
+                            <td>${escapeHtml(String(getScore(result)))}</td>
+                            <td><span class="exp-pill ${pillClass}">${Math.round(percentage)}%</span></td>
+                        </tr>
+                    `;
+
+                }
+            )
+            .join("");
+
+
+        const template =
+            document.getElementById(
+                "exportTemplate"
+            );
+
+        const canvas =
+            await html2canvas(
+                template,
+                {
+                    backgroundColor: "#ffffff",
+                    scale: 2,
+                    useCORS: true
+                }
+            );
+
+
+        const link =
+            document.createElement("a");
+
+        link.download =
+            `نتائج-${gradeName(grade)}.png`;
+
+        link.href =
+            canvas.toDataURL("image/png");
+
+        link.click();
+
+
+    } catch (error) {
+
+        console.error(
+            "Export Error:",
+            error
+        );
+
+        Swal.fire({
+            icon: "error",
+            title: "حدث خطأ",
+            text: "تعذر إنشاء صورة النتائج، حاول مرة أخرى.",
+            confirmButtonColor: "#10b981"
+        });
+
+    } finally {
+
+        btn.disabled = false;
+
+        btn.innerHTML =
+            `<i class="fas fa-image"></i> تحميل صورة مجمعة لنتائج الصف`;
+
+    }
 
 }
 
