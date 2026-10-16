@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#059669">
+
+    <title>Atlas | رسائل الطلاب</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Reem+Kufi:wght@600;700&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            font-family: 'Cairo', sans-serif;
+            color: #172033;
+            background: radial-gradient(circle at 90% -10%, rgba(16,185,129,.14), transparent 30%), #f5f7fa;
+            overflow: hidden;
+        }
+
+        button, input, textarea { font-family: inherit; }
+
+        .app { height: 100dvh; display: flex; flex-direction: column; }
+
+        .topbar {
+            background: rgba(255,255,255,.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid #e8edf2;
+            flex-shrink: 0;
+        }
+
+        .topbar-inner {
+            max-width: 1250px; margin: auto; padding: 12px 18px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 11px; }
+
+        .brand-logo {
+            width: 44px; height: 44px; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 18px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            box-shadow: 0 10px 25px rgba(16,185,129,.22);
+        }
+
+        .brand strong { display: block; font-size: 15px; font-weight: 900; }
+        .brand span { display: block; font-size: 10px; color: #94a3b8; font-weight: 800; margin-top: 1px; }
+
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 10px 14px; border-radius: 14px; background: #fff; color: #475569;
+            text-decoration: none; font-size: 12px; font-weight: 800;
+            box-shadow: 0 5px 18px rgba(15,23,42,.05); transition: .2s;
+        }
+        .back-btn:hover { color: #059669; transform: translateY(-2px); }
+
+        .layout {
+            flex: 1; min-height: 0;
+            width: 100%; max-width: 1250px; margin: auto; padding: 16px 18px 18px;
+            display: grid; grid-template-columns: 340px 1fr; gap: 16px;
+        }
+
+        .card {
+            background: #fff; border: 1px solid #e8edf2; border-radius: 24px;
+            box-shadow: 0 6px 22px rgba(15,23,42,.045);
+            display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+        }
+
+        /* ---------- القائمة ---------- */
+
+        .list-head { padding: 16px; border-bottom: 1px solid #eef2f6; }
+
+        .list-head h2 {
+            margin: 0 0 11px; font-size: 14px; font-weight: 900;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .total-unread {
+            background: #ef4444; color: #fff; border-radius: 10px;
+            font-size: 10px; padding: 2px 9px; display: none;
+        }
+
+        .search {
+            position: relative;
+        }
+        .search i {
+            position: absolute; right: 13px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; font-size: 12px;
+        }
+        .search input {
+            width: 100%; height: 42px; border: 1.5px solid #e2e8f0; border-radius: 14px;
+            padding: 0 36px 0 12px; font-size: 13px; font-weight: 600; outline: none; background: #f8fafc;
+        }
+        .search input:focus { border-color: #10b981; background: #fff; }
+
+        .conv-list { flex: 1; overflow-y: auto; padding: 8px; }
+
+        .conv {
+            display: flex; align-items: center; gap: 11px; padding: 11px;
+            border-radius: 17px; cursor: pointer; transition: .15s; border: 1px solid transparent;
+        }
+        .conv:hover { background: #f8fafc; }
+        .conv.active { background: #ecfdf5; border-color: #a7f3d0; }
+
+        .conv-avatar {
+            width: 44px; height: 44px; border-radius: 15px; flex-shrink: 0;
+            background: #dcfce7; color: #059669; font-weight: 900; font-size: 17px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .conv-info { flex: 1; min-width: 0; }
+        .conv-top { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+        .conv-name { font-size: 13px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .conv-time { font-size: 9px; color: #94a3b8; font-weight: 800; flex-shrink: 0; }
+        .conv-grade { font-size: 9px; color: #059669; font-weight: 800; }
+        .conv-last {
+            display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 2px;
+        }
+        .conv-last span {
+            font-size: 11px; color: #64748b; font-weight: 600;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .conv.unread .conv-last span { color: #172033; font-weight: 800; }
+        .unread-dot {
+            min-width: 21px; height: 21px; padding: 0 6px; border-radius: 11px;
+            background: #ef4444; color: #fff; font-size: 10px; font-weight: 900; line-height: 21px; text-align: center;
+            flex-shrink: 0;
+        }
+
+        .list-empty, .no-chat {
+            margin: auto; text-align: center; color: #94a3b8; font-size: 12px; font-weight: 700;
+            line-height: 1.9; padding: 30px 20px;
+        }
+        .list-empty i, .no-chat i { display: block; font-size: 42px; color: #d1fae5; margin-bottom: 10px; }
+
+        /* ---------- المحادثة ---------- */
+
+        .chat-pane { position: relative; }
+
+        .chat-head {
+            display: none; align-items: center; gap: 11px; padding: 13px 16px;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .chat-head.show { display: flex; }
+
+        .chat-head .conv-avatar { width: 40px; height: 40px; font-size: 15px; }
+        .chat-head-info { flex: 1; min-width: 0; }
+        .chat-head-info strong { display: block; font-size: 14px; font-weight: 900; }
+        .chat-head-info span { font-size: 10px; color: #059669; font-weight: 800; }
+
+        .head-btn {
+            width: 38px; height: 38px; border: 0; border-radius: 12px; background: #f1f5f9;
+            color: #64748b; cursor: pointer; transition: .2s;
+        }
+        .head-btn:hover { color: #ef4444; background: #fff1f2; }
+        .head-btn.back { display: none; }
+        .head-btn.back:hover { color: #059669; background: #ecfdf5; }
+
+        .msgs {
+            flex: 1; overflow-y: auto; padding: 16px; background: #f5f7fa;
+            display: flex; flex-direction: column; gap: 6px; overscroll-behavior: contain;
+        }
+
+        .day {
+            align-self: center; margin: 8px 0 4px; padding: 3px 12px; border-radius: 20px;
+            background: #e2e8f0; color: #64748b; font-size: 10px; font-weight: 800;
+        }
+
+        .msg {
+            max-width: 72%; padding: 9px 14px; border-radius: 18px;
+            font-size: 13px; font-weight: 600; line-height: 1.75;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .msg small { display: block; margin-top: 3px; font-size: 9px; font-weight: 700; opacity: .65; }
+
+        .msg.me {
+            align-self: flex-start; color: #fff; border-bottom-right-radius: 5px;
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        .msg.them {
+            align-self: flex-end; background: #fff; border: 1px solid #e8edf2; border-bottom-left-radius: 5px;
+        }
+
+        .composer {
+            display: none; align-items: flex-end; gap: 9px; padding: 11px 14px;
+            border-top: 1px solid #eef2f6; background: #fff;
+        }
+        .composer.show { display: flex; }
+
+        .composer textarea {
+            flex: 1; resize: none; min-height: 44px; max-height: 120px;
+            border: 1.5px solid #e2e8f0; border-radius: 15px; padding: 10px 14px;
+            font-size: 16px; font-weight: 600; line-height: 1.5; outline: none; background: #f8fafc;
+        }
+        .composer textarea:focus { border-color: #10b981; background: #fff; }
+
+        .send-btn {
+            width: 46px; height: 46px; border: 0; border-radius: 15px; flex-shrink: 0; cursor: pointer;
+            color: #fff; font-size: 16px; background: linear-gradient(135deg, #10b981, #047857);
+        }
+        .send-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+        #pageLoader {
+            position: fixed; inset: 0; z-index: 99999; background: #f8fafc;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; color: #64748b; font-size: 12px; transition: .3s;
+        }
+
+        /* ---------- موبايل ---------- */
+
+        @media (max-width: 800px) {
+            .layout { grid-template-columns: 1fr; padding: 10px; }
+            .chat-pane { display: none; }
+            .layout.in-chat .list-pane { display: none; }
+            .layout.in-chat .chat-pane { display: flex; }
+            .head-btn.back { display: block; }
+            .msg { max-width: 86%; }
+            .back-btn span { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="pageLoader">جاري التحميل...</div>
+
+<div class="app">
+
+    <header class="topbar">
+        <div class="topbar-inner">
+            <div class="brand">
+                <div class="brand-logo"><i class="fas fa-comments"></i></div>
+                <div>
+                    <strong>رسائل الطلاب</strong>
+                    <span>تواصل مباشر مع طلابك</span>
+                </div>
+            </div>
+
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-right"></i>
+                <span>لوحة التحكم</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="layout" id="layout">
+
+        <!-- قائمة المحادثات -->
+        <section class="card list-pane">
+
+            <div class="list-head">
+                <h2>
+                    المحادثات
+                    <span class="total-unread" id="totalUnread">0</span>
+                </h2>
+
+                <div class="search">
+                    <i class="fas fa-search"></i>
+                    <input id="searchInput" type="text" placeholder="ابحث باسم الطالب...">
+                </div>
+            </div>
+
+            <div class="conv-list" id="convList"></div>
+
+        </section>
+
+        <!-- المحادثة -->
+        <section class="card chat-pane">
+
+            <div class="chat-head" id="chatHead">
+                <button class="head-btn back" id="backBtn" type="button" aria-label="رجوع">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <div class="conv-avatar" id="headAvatar"></div>
+
+                <div class="chat-head-info">
+                    <strong id="headName"></strong>
+                    <span id="headGrade"></span>
+                </div>
+
+                <button class="head-btn" id="deleteBtn" type="button" aria-label="حذف المحادثة">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+
+            <div class="msgs" id="msgs">
+                <div class="no-chat">
+                    <i class="fas fa-comments"></i>
+                    اختار محادثة من القائمة<br>علشان تقرأ الرسائل وترد
+                </div>
+            </div>
+
+            <div class="composer" id="composer">
+                <textarea id="replyInput" rows="1" maxlength="1000" placeholder="اكتب ردك..."></textarea>
+                <button class="send-btn" id="sendBtn" type="button" aria-label="إرسال">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    doc,
+    getDoc,
+    getDocs,
+    updateDoc,
+    collection,
+    query,
+    orderBy,
+    limit,
+    onSnapshot,
+    writeBatch,
+    serverTimestamp,
+    increment
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const gradeNames = {
+    grade4: "الرابع الابتدائي",
+    grade5: "الخامس الابتدائي",
+    grade6: "السادس الابتدائي",
+    grade7: "الأول الإعدادي",
+    grade8: "الثاني الإعدادي",
+    grade9: "الثالث الإعدادي"
+};
+
+const $ = id => document.getElementById(id);
+
+let conversations = [];   // [{id, ...data}]
+let activeId = null;
+let unsubMsgs = null;
+let sending = false;
+
+
+/* =========================================
+   AUTH GUARD (أدمن فقط)
+========================================= */
+
+onAuthStateChanged(auth, async user => {
+
+    if (!user) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    try {
+
+        const snap = await getDoc(doc(db, "users", user.uid));
+
+        if (!snap.exists() || snap.data().role !== "admin") {
+            await signOut(auth);
+            window.location.href = "index.html";
+            return;
+        }
+
+        startListening();
+
+        $("pageLoader").style.opacity = "0";
+        setTimeout(() => $("pageLoader").remove(), 300);
+
+    } catch (e) {
+        console.error(e);
+        $("pageLoader").textContent = "تعذر التحميل، حدّث الصفحة.";
+    }
+
+});
+
+
+/* =========================================
+   قائمة المحادثات (لحظي)
+========================================= */
+
+function startListening() {
+
+    const q = query(collection(db, "chats"), orderBy("lastMessageAt", "desc"));
+
+    onSnapshot(q, snap => {
+
+        conversations = snap.docs.map(d => ({ id: d.id, ...d.data({ serverTimestamps: "estimate" }) }));
+
+        renderList();
+
+        // لو المحادثة المفتوحة جالها رسالة جديدة، صفّر العداد
+        const open = conversations.find(c => c.id === activeId);
+        if (open && open.unreadForAdmin > 0) markRead(activeId);
+
+    }, err => {
+        console.error(err);
+        $("convList").innerHTML =
+            `<div class="list-empty"><i class="fas fa-triangle-exclamation"></i>تعذر تحميل المحادثات.<br>راجع قواعد Firestore.</div>`;
+    });
+
+}
+
+function timeLabel(ts) {
+
+    if (!ts || !ts.toDate) return "";
+
+    const d = ts.toDate();
+    const now = new Date();
+
+    if (d.toDateString() === now.toDateString())
+        return d.toLocaleTimeString("ar-EG", { hour: "numeric", minute: "2-digit" });
+
+    return d.toLocaleDateString("ar-EG", { day: "numeric", month: "short" });
+
+}
+
+function renderList() {
+
+    const term = $("searchInput").value.trim().toLowerCase();
+
+    const list = conversations.filter(c =>
+        !term || (c.studentName || "").toLowerCase().includes(term)
+    );
+
+    const totalUnread = conversations.reduce((s, c) => s + (c.unreadForAdmin || 0), 0);
+
+    $("totalUnread").style.display = totalUnread ? "inline-block" : "none";
+    $("totalUnread").textContent = totalUnread + " جديد";
+
+    const box = $("convList");
+
+    box.innerHTML = "";
+
+    if (!list.length) {
+        box.innerHTML = `<div class="list-empty"><i class="fas fa-inbox"></i>${
+            term ? "مفيش نتائج" : "لسه مفيش رسائل من الطلاب"
+        }</div>`;
+        return;
+    }
+
+    list.forEach(c => {
+
+        const el = document.createElement("div");
+        el.className = "conv" + (c.id === activeId ? " active" : "") + (c.unreadForAdmin > 0 ? " unread" : "");
+
+        const name = c.studentName || "طالب";
+
+        const avatar = document.createElement("div");
+        avatar.className = "conv-avatar";
+        avatar.textContent = name.trim().charAt(0);
+
+        const info = document.createElement("div");
+        info.className = "conv-info";
+
+        const top = document.createElement("div");
+        top.className = "conv-top";
+
+        const n = document.createElement("div");
+        n.className = "conv-name";
+        n.textContent = name;
+
+        const t = document.createElement("div");
+        t.className = "conv-time";
+        t.textContent = timeLabel(c.lastMessageAt);
+
+        top.append(n, t);
+
+        const g = document.createElement("div");
+        g.className = "conv-grade";
+        g.textContent = gradeNames[c.grade] || "";
+
+        const last = document.createElement("div");
+        last.className = "conv-last";
+
+        const lm = document.createElement("span");
+        lm.textContent = (c.lastSender === "admin" ? "أنت: " : "") + (c.lastMessage || "");
+
+        last.appendChild(lm);
+
+        if (c.unreadForAdmin > 0) {
+            const dot = document.createElement("div");
+            dot.className = "unread-dot";
+            dot.textContent = c.unreadForAdmin > 9 ? "9+" : c.unreadForAdmin;
+            last.appendChild(dot);
+        }
+
+        info.append(top, g, last);
+        el.append(avatar, info);
+
+        el.addEventListener("click", () => openConversation(c.id));
+
+        box.appendChild(el);
+
+    });
+
+}
+
+$("searchInput").addEventListener("input", renderList);
+
+
+/* =========================================
+   فتح محادثة
+========================================= */
+
+async function markRead(id) {
+    try {
+        await updateDoc(doc(db, "chats", id), { unreadForAdmin: 0 });
+    } catch (e) { console.error(e); }
+}
+
+function openConversation(id) {
+
+    const c = conversations.find(x => x.id === id);
+
+    if (!c) return;
+
+    activeId = id;
+
+    const name = c.studentName || "طالب";
+
+    $("headAvatar").textContent = name.trim().charAt(0);
+    $("headName").textContent = name;
+    $("headGrade").textContent = gradeNames[c.grade] || "";
+
+    $("chatHead").classList.add("show");
+    $("composer").classList.add("show");
+    $("layout").classList.add("in-chat");
+
+    renderList();
+
+    if (c.unreadForAdmin > 0) markRead(id);
+
+    if (unsubMsgs) unsubMsgs();
+
+    const q = query(
+        collection(db, "chats", id, "messages"),
+        orderBy("createdAt", "desc"),
+        limit(200)
+    );
+
+    unsubMsgs = onSnapshot(q, snap => {
+
+        const list = snap.docs
+            .map(d => d.data({ serverTimestamps: "estimate" }))
+            .reverse();
+
+        renderMessages(list);
+
+    }, err => console.error(err));
+
+    setTimeout(() => $("replyInput").focus(), 100);
+
+}
+
+function dayLabel(d) {
+
+    const today = new Date();
+    const yest = new Date(Date.now() - 86400000);
+
+    if (d.toDateString() === today.toDateString()) return "اليوم";
+    if (d.toDateString() === yest.toDateString()) return "أمس";
+
+    return d.toLocaleDateString("ar-EG", { day: "numeric", month: "long", year: "numeric" });
+
+}
+
+function renderMessages(list) {
+
+    const box = $("msgs");
+
+    box.innerHTML = "";
+
+    let lastDay = "";
+
+    list.forEach(m => {
+
+        const date = m.createdAt && m.createdAt.toDate ? m.createdAt.toDate() : new Date();
+
+        if (date.toDateString() !== lastDay) {
+
+            lastDay = date.toDateString();
+
+            const d = document.createElement("div");
+            d.className = "day";
+            d.textContent = dayLabel(date);
+            box.appendChild(d);
+
+        }
+
+        const el = document.createElement("div");
+        el.className = "msg " + (m.sender === "admin" ? "me" : "them");
+
+        const text = document.createElement("span");
+        text.textContent = m.text || "";
+
+        const time = document.createElement("small");
+        time.textContent = date.toLocaleTimeString("ar-EG", { hour: "numeric", minute: "2-digit" });
+
+        el.append(text, time);
+        box.appendChild(el);
+
+    });
+
+    box.scrollTop = box.scrollHeight;
+
+}
+
+
+/* =========================================
+   إرسال رد
+========================================= */
+
+async function sendReply() {
+
+    const text = $("replyInput").value.trim();
+
+    if (!text || !activeId || sending) return;
+
+    sending = true;
+    $("sendBtn").disabled = true;
+
+    try {
+
+        const batch = writeBatch(db);
+
+        batch.set(doc(collection(db, "chats", activeId, "messages")), {
+            text: text.slice(0, 1000),
+            sender: "admin",
+            createdAt: serverTimestamp()
+        });
+
+        batch.update(doc(db, "chats", activeId), {
+            lastMessage: text.slice(0, 80),
+            lastMessageAt: serverTimestamp(),
+            lastSender: "admin",
+            unreadForStudent: increment(1),
+            unreadForAdmin: 0
+        });
+
+        await batch.commit();
+
+        $("replyInput").value = "";
+        $("replyInput").style.height = "auto";
+
+    } catch (e) {
+
+        console.error(e);
+
+        Swal.fire({
+            icon: "error",
+            title: "تعذر الإرسال",
+            text: "حاول مرة أخرى.",
+            confirmButtonColor: "#059669"
+        });
+
+    } finally {
+
+        sending = false;
+        $("sendBtn").disabled = false;
+        $("replyInput").focus();
+
+    }
+
+}
+
+$("sendBtn").addEventListener("click", sendReply);
+
+$("replyInput").addEventListener("input", e => {
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+});
+
+$("replyInput").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+        e.preventDefault();
+        sendReply();
+    }
+});
+
+
+/* =========================================
+   رجوع (موبايل) + حذف المحادثة
+========================================= */
+
+$("backBtn").addEventListener("click", () => {
+
+    $("layout").classList.remove("in-chat");
+
+    activeId = null;
+
+    if (unsubMsgs) { unsubMsgs(); unsubMsgs = null; }
+
+    renderList();
+
+});
+
+$("deleteBtn").addEventListener("click", async () => {
+
+    if (!activeId) return;
+
+    const res = await Swal.fire({
+        icon: "warning",
+        title: "حذف المحادثة؟",
+        text: "هتتحذف كل الرسائل مع الطالب ده نهائيًا.",
+        showCancelButton: true,
+        confirmButtonText: "حذف",
+        cancelButtonText: "إلغاء",
+        confirmButtonColor: "#ef4444"
+    });
+
+    if (!res.isConfirmed) return;
+
+    try {
+
+        const id = activeId;
+
+        if (unsubMsgs) { unsubMsgs(); unsubMsgs = null; }
+
+        const msgs = await getDocs(collection(db, "chats", id, "messages"));
+
+        // الـ batch حده 500 عملية
+        for (let i = 0; i < msgs.docs.length; i += 450) {
+            const b = writeBatch(db);
+            msgs.docs.slice(i, i + 450).forEach(d => b.delete(d.ref));
+            await b.commit();
+        }
+
+        const last = writeBatch(db);
+        last.delete(doc(db, "chats", id));
+        await last.commit();
+
+        activeId = null;
+
+        $("chatHead").classList.remove("show");
+        $("composer").classList.remove("show");
+        $("layout").classList.remove("in-chat");
+
+        $("msgs").innerHTML = `
+            <div class="no-chat">
+                <i class="fas fa-comments"></i>
+                اختار محادثة من القائمة<br>علشان تقرأ الرسائل وترد
+            </div>`;
+
+    } catch (e) {
+
+        console.error(e);
+
+        Swal.fire({
+            icon: "error",
+            title: "تعذر الحذف",
+            confirmButtonColor: "#059669"
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
