@@ -1424,6 +1424,33 @@
         </a>
 
 
+        <a href="chat.html"
+           class="manage-card" style="position:relative">
+
+            <div class="manage-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+
+            <div class="manage-info">
+
+                <strong>
+                    رسائل الطلاب
+                </strong>
+
+                <span>
+                    الشات والتواصل المباشر
+                </span>
+
+            </div>
+
+            <span id="chatUnreadBadge"
+                  style="display:none;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;line-height:22px;text-align:center"></span>
+
+            <i class="fas fa-chevron-left manage-arrow"></i>
+
+        </a>
+
+
         <a href="settings.html"
            class="manage-card">
 
@@ -2080,6 +2107,30 @@ function hideLoader() {
 
 }
 
+</script>
+
+<script type="module">
+import { auth, db } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+import { collection, query, where, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+// عدّاد الرسائل الجديدة على كارت "رسائل الطلاب"
+let chatUnsub = null;
+onAuthStateChanged(auth, user => {
+    if (!user || chatUnsub) return;
+    chatUnsub = onSnapshot(
+        query(collection(db, "chats"), where("unreadForAdmin", ">", 0)),
+        snap => {
+            const total = snap.docs.reduce((n, d) => n + (d.data().unreadForAdmin || 0), 0);
+            const el = document.getElementById("chatUnreadBadge");
+            if (!el) return;
+            el.style.display = total ? "block" : "none";
+            el.textContent = total > 99 ? "99+" : total;
+        },
+        () => {} // لو مش أدمن أو القواعد مش متظبطة، تجاهل بهدوء
+    );
+});
 </script>
 
 </body>
